@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Preventivas de Máquinas — Grilazer</title>
+  <style>
+    :root{
+      --bg1:#0ea5e9; --bg2:#38bdf8; --text:#0f172a; --card:#fff;
+      --muted:#64748b; --border:#e2e8f0; --ok:#16a34a; --err:#ef4444; --warn:#f59e0b;
+      --primary:#2563eb;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif;
+      color:var(--text);
+      background:linear-gradient(135deg,var(--bg1),var(--bg2));
+      min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:20px;
+    }
+    .wrap{width:100%;max-width:1200px}
+    .header{display:flex;justify-content:space-between;align-items:center;color:#fff;margin-bottom:12px}
+    .brand{display:flex;gap:10px;align-items:center}
+    .logo{width:42px;height:42px;border-radius:12px;background:#fff1;border:1px solid #fff3;display:grid;place-items:center;color:#fff;font-weight:900}
+    h1{margin:0;font-size:22px;font-weight:900}
+    .controls{display:flex;gap:8px;flex-wrap:wrap}
+    button{appearance:none;border:0;border-radius:12px;padding:10px 12px;font-weight:800;cursor:pointer}
+    .ghost{background:#fff;border:1px solid var(--border)}
+    .primary{background:var(--primary);color:#fff}
+    .ok{background:var(--ok);color:#fff}
+    .warn{background:var(--warn);color:#fff}
+    .err{background:var(--err);color:#fff}
+    .grid{display:grid;gap:12px;grid-template-columns:320px 1fr}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:0 12px 40px rgba(2,6,23,.15);padding:16px}
+    label{display:block;font-weight:600;margin:10px 0 6px}
+    input,select,textarea{
+      width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:12px;
+      background:#fff;outline:none;font-size:14px;
+    }
+    textarea{min-height:70px;resize:vertical}
+    .sep{height:1px;background:#e2e8f0;margin:12px 0}
+    .muted{color:var(--muted);font-size:12px}
+    .table{width:100%;border-collapse:collapse;overflow:hidden;border-radius:12px;margin-top:8px}
+    .table th,.table td{border:1px solid var(--border);padding:8px;font-size:13px;text-align:left;vertical-align:top}
+    .table th{background:#f1f5f9}
+    .badge{display:inline-block;padding:4px 8px;border-radius:999px;font-weight:800;font-size:11px}
+    .b-ok{background:#dcfce7;color:#14532d;border:1px solid #86efac}
+    .b-warn{background:#fef9c3;color:#713f12;border:1px solid #fde047}
+    .b-err{background:#fee2e2;color:#7f1d1d;border:1px solid #fecaca}
+    .row{display:flex;gap:6px;flex-wrap:wrap}
+    .kpi{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin:8px 0}
+    .kpi .card{padding:10px}
+    .kpi .big{font-size:22px;font-weight:900}
+    .filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:6px}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#f1f5f9;border:1px solid var(--border);font-weight:800;font-size:11px}
+    .chip-eqp{
+      border-radius:999px;border:1px solid var(--border);padding:6px 10px;margin:3px 0;
+      display:flex;justify-content:space-between;align-items:center;font-size:12px;cursor:pointer;
+      background:#f8fafc;
+    }
+    .chip-eqp span{font-weight:600}
+    .chip-eqp small{color:var(--muted);margin-left:4px}
+    .chip-eqp.active{background:#dbeafe;border-color:#2563eb}
+    .chip-eqp button{padding:4px 6px;font-size:11px;border-radius:999px}
+    #syncStatus{font-size:11px;color:var(--muted);margin-top:4px}
+    @media (max-width:980px){.grid{grid-template-columns:1fr}}
+    @media print{
+      body{background:#fff;padding:0}
+      .controls{display:none}
+      .card{box-shadow:none;border:1px solid #ddd}
+    }
+  </style>
+
+  <!-- Firebase compat (mais simples pra HTML puro) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <div class="brand">
+      <div class="logo">GR</div>
+      <h1>Preventivas de Máquinas — Grilazer</h1>
+    </div>
+    <div class="controls">
+      <button class="ghost" id="btnNovoEqp">Novo equipamento</button>
+      <button class="ghost" id="btnImport">Importar JSON</button>
+      <input id="importInput" type="file" accept="application/json" style="display:none">
+      <button class="primary" id="btnExport">Exportar JSON</button>
+      <button class="ghost" onclick="window.print()">Imprimir</button>
+    </div>
+  </div>
+
+  <div class="grid">
+    <!-- LADO ESQUERDO -->
+    <div class="card">
+      <h3 style="margin:0 0 4px 0">Equipamento</h3>
+      <div class="muted" id="infoEqpSel">Nenhum equipamento selecionado.</div>
+      <div id="syncStatus">Sincronização: carregando…</div>
+
+      <label for="eqNome">Nome do equipamento</label>
+      <input id="eqNome" placeholder="Ex.: Prensa Hidráulica 30T">
+      <label for="eqLocal">Localização</label>
+      <input id="eqLocal" placeholder="Ex.: Metalúrgica, Setor A">
+      <label for="eqSerie">Nº de Série / Patrimônio</label>
+      <input id="eqSerie" placeholder="Ex.: SER-000123 / PAT-045">
+      <div class="row" style="margin-top:8px">
+        <button class="primary" id="btnSalvarEqp">Salvar equipamento</button>
+        <button class="ghost" id="btnLimparEqp">Limpar</button>
+      </div>
+
+      <div class="sep"></div>
+
+      <h4 style="margin:0 0 4px 0">Equipamentos cadastrados</h4>
+      <div class="muted">Clique para selecionar e cadastrar as tarefas dentro de cada máquina.</div>
+      <div id="listaEqp" style="margin-top:6px;max-height:220px;overflow:auto;"></div>
+
+      <div class="sep"></div>
+
+      <h3 style="margin:0 0 4px 0">Nova tarefa para o equipamento selecionado</h3>
+      <label for="tkTitulo">Título da tarefa</label>
+      <input id="tkTitulo" placeholder="Ex.: Lubrificar guias e mancais">
+      <div class="row">
+        <div style="flex:1;min-width:140px">
+          <label for="tkPeriodo">Periodicidade</label>
+          <select id="tkPeriodo">
+            <option value="30">30 dias</option>
+            <option value="90">90 dias</option>
+            <option value="180">180 dias</option>
+            <option value="360">360 dias</option>
+          </select>
+        </div>
+        <div style="flex:1;min-width:140px">
+          <label for="tkUltima">Última execução</label>
+          <input id="tkUltima" type="date">
+        </div>
+      </div>
+      <label for="tkObs">Observações</label>
+      <textarea id="tkObs" placeholder="Materiais, torque, check-list, segurança, etc."></textarea>
+      <div class="row" style="margin-top:8px">
+        <button class="primary" id="btnAddTarefa">Adicionar tarefa</button>
+        <button class="ghost" id="btnLimparTarefa">Limpar</button>
+      </div>
+      <div class="muted" style="margin-top:4px">
+        Dica: se nunca foi feita, deixe a última execução em branco — a próxima será calculada a partir de hoje.
+      </div>
+    </div>
+
+    <!-- LADO DIREITO -->
+    <div class="card">
+      <div class="filters">
+        <input id="busca" placeholder="Buscar por equipamento/tarefa…" style="flex:1;min-width:200px">
+        <span class="pill">Hoje: <span id="today"></span></span>
+        <select id="selFiltro">
+          <option value="todos">Todos</option>
+          <option value="atrasadas">Atrasadas</option>
+          <option value="sete">Próx. 7 dias</option>
+          <option value="trinta">Próx. 30 dias</option>
+        </select>
+      </div>
+
+      <div class="kpi">
+        <div class="card">
+          <div>Atrasadas</div>
+          <div class="big" id="kpiAtr">0</div>
+        </div>
+        <div class="card">
+          <div>Até 7 dias</div>
+          <div class="big" id="kpi7">0</div>
+        </div>
+        <div class="card">
+          <div>Até 30 dias</div>
+          <div class="big" id="kpi30">0</div>
+        </div>
+        <div class="card">
+          <div>Total tarefas</div>
+          <div class="big" id="kpiTot">0</div>
+        </div>
+      </div>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Equipamento</th>
+            <th>Tarefa</th>
+            <th>Período</th>
+            <th>Última</th>
+            <th>Próxima</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div style="margin-top:10px;color:#fff9;text-align:center;font-size:12px">
+    Grilazer — Preventivas
+  </div>
+</div>
+
+<script>
+  // 🔗 CONFIG FIREBASE – usando o SEU projeto preventivas-27185
+  const firebaseConfig = {
+    apiKey: "AIzaSyDNrOyDmI5NOkVuG3yh8HkDrn4dqYXOrW0",
+    authDomain: "preventivas-27185.firebaseapp.com",
+    databaseURL: "https://preventivas-27185-default-rtdb.firebaseio.com",
+    projectId: "preventivas-27185",
+    storageBucket: "preventivas-27185.firebasestorage.app",
+    messagingSenderId: "862235462324",
+    appId: "1:862235462324:web:bcf4948b6b5bb96cbee5e1",
+    measurementId: "G-8D16CFDLZV"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+  const DB_PATH = "preventivas_grilazer"; // nó no banco
+
+  // ======= LÓGICA DO APP =======
+  const todayISO = ()=> new Date().toISOString().slice(0,10);
+  const addDays = (iso, n)=>{
+    const d = iso? new Date(iso) : new Date();
+    d.setHours(12,0,0,0);
+    d.setDate(d.getDate()+n);
+    const o = new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10);
+    return o;
+  };
+  const diffDays = (a,b)=> Math.floor((new Date(a)-new Date(b))/(1000*60*60*24));
+  const fmtBR = (iso)=> iso? new Date(iso+'T00:00:00').toLocaleDateString('pt-BR') : '—';
+  const uid = ()=> 'id-'+Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(4);
+
+  let store = { equipamentos: [] };
+  let selectedEqpId = null;
+
+  const eqNome = document.getElementById('eqNome');
+  const eqLocal = document.getElementById('eqLocal');
+  const eqSerie = document.getElementById('eqSerie');
+  const infoEqpSel = document.getElementById('infoEqpSel');
+  const listaEqp = document.getElementById('listaEqp');
+  const syncStatus = document.getElementById('syncStatus');
+
+  const tkTitulo = document.getElementById('tkTitulo');
+  const tkPeriodo = document.getElementById('tkPeriodo');
+  const tkUltima = document.getElementById('tkUltima');
+  const tkObs = document.getElementById('tkObs');
+
+  const busca = document.getElementById('busca');
+  const selFiltro = document.getElementById('selFiltro');
+  const todaySpan = document.getElementById('today');
+
+  const kpiAtr = document.getElementById('kpiAtr');
+  const kpi7 = document.getElementById('kpi7');
+  const kpi30 = document.getElementById('kpi30');
+  const kpiTot = document.getElementById('kpiTot');
+  const tbody = document.getElementById('tbody');
+
+  const btnSalvarEqp = document.getElementById('btnSalvarEqp');
+  const btnLimparEqp = document.getElementById('btnLimparEqp');
+  const btnAddTarefa = document.getElementById('btnAddTarefa');
+  const btnLimparTarefa = document.getElementById('btnLimparTarefa');
+  const btnNovoEqp = document.getElementById('btnNovoEqp');
+  const btnExport = document.getElementById('btnExport');
+  const btnImport = document.getElementById('btnImport');
+  const inputImport = document.getElementById('importInput');
+
+  function setSyncStatus(text){
+    syncStatus.textContent = "Sincronização: " + text;
+  }
+
+  function loadLocal(){
+    try{
+      const raw = localStorage.getItem('preventivas');
+      if(raw){ store = JSON.parse(raw); }
+    }catch{}
+  }
+  function saveLocal(){
+    try{ localStorage.setItem('preventivas', JSON.stringify(store)); }catch{}
+  }
+
+  function saveRemote(){
+    setSyncStatus("enviando ao servidor…");
+    db.ref(DB_PATH).set(store)
+      .then(()=> setSyncStatus("ok (sincronizado)"))
+      .catch(err=>{
+        console.error(err);
+        setSyncStatus("erro ao sincronizar (ver console)");
+      });
+  }
+
+  function fullSave(){
+    saveLocal();
+    saveRemote();
+  }
+
+  function syncFromFirebaseOnce(){
+    setSyncStatus("carregando do servidor…");
+    db.ref(DB_PATH).once("value")
+      .then(snapshot=>{
+        const val = snapshot.val();
+        if(val && Array.isArray(val.equipamentos)){
+          store = val;
+          saveLocal();
+        }
+      })
+      .catch(err=>{
+        console.error(err);
+        setSyncStatus("erro ao carregar (usando dados locais)");
+      })
+      .finally(()=>{
+        renderEqpList();
+        renderTabela();
+        setSyncStatus("ok");
+      });
+  }
+
+  function clearEqpForm(){
+    selectedEqpId = null;
+    eqNome.value=''; eqLocal.value=''; eqSerie.value='';
+    infoEqpSel.textContent = 'Nenhum equipamento selecionado.';
+    renderEqpList();
+    renderTabela();
+  }
+  function clearTaskForm(){
+    tkTitulo.value=''; tkPeriodo.value='30'; tkUltima.value=''; tkObs.value='';
+  }
+
+  function setSelectedEqp(eqp){
+    if(!eqp){
+      clearEqpForm();
+      return;
+    }
+    selectedEqpId = eqp.id;
+    eqNome.value = eqp.nome;
+    eqLocal.value = eqp.local || '';
+    eqSerie.value = eqp.serie || '';
+    infoEqpSel.textContent = 'Editando: ' + eqp.nome;
+    renderEqpList();
+    renderTabela();
+  }
+
+  function renderEqpList(){
+    listaEqp.innerHTML = '';
+    if(!store.equipamentos.length){
+      listaEqp.innerHTML = '<div class="muted">Nenhum equipamento cadastrado ainda.</div>';
+      return;
+    }
+    store.equipamentos.forEach(eqp=>{
+      const div = document.createElement('div');
+      div.className = 'chip-eqp' + (eqp.id===selectedEqpId ? ' active' : '');
+      const span = document.createElement('div');
+      span.innerHTML = '<span>'+eqp.nome+'</span><small>'+(eqp.local||'')+'</small>';
+      const btnDel = document.createElement('button');
+      btnDel.className = 'err';
+      btnDel.textContent = '×';
+      btnDel.title = 'Excluir equipamento';
+      btnDel.addEventListener('click', (ev)=>{
+        ev.stopPropagation();
+        if(confirm('Excluir equipamento e todas as tarefas dele?')){
+          store.equipamentos = store.equipamentos.filter(e=> e.id!==eqp.id);
+          if(selectedEqpId===eqp.id) selectedEqpId=null;
+          fullSave();
+          renderEqpList();
+          renderTabela();
+        }
+      });
+      div.appendChild(span);
+      div.appendChild(btnDel);
+      div.addEventListener('click', ()=> setSelectedEqp(eqp));
+      listaEqp.appendChild(div);
+    });
+  }
+
+  function addOrUpdateEquipamento(){
+    const nome = eqNome.value.trim();
+    if(!nome){ alert('Informe o nome do equipamento'); return; }
+    if(selectedEqpId){
+      const eqp = store.equipamentos.find(e=> e.id===selectedEqpId);
+      if(eqp){
+        eqp.nome = nome;
+        eqp.local = eqLocal.value.trim();
+        eqp.serie = eqSerie.value.trim();
+      }
+    }else{
+      const eqp = {
+        id: uid(),
+        nome,
+        local: eqLocal.value.trim(),
+        serie: eqSerie.value.trim(),
+        tarefas: []
+      };
+      store.equipamentos.push(eqp);
+      selectedEqpId = eqp.id;
+    }
+    fullSave();
+    setSelectedEqp(store.equipamentos.find(e=> e.id===selectedEqpId));
+  }
+
+  function addTarefa(){
+    if(!selectedEqpId){
+      alert('Selecione ou salve um equipamento primeiro.');
+      return;
+    }
+    const titulo = tkTitulo.value.trim();
+    if(!titulo){ alert('Informe o título da tarefa'); return; }
+    const periodo = parseInt(tkPeriodo.value,10);
+    const ultimaISO = tkUltima.value || '';
+    const obs = tkObs.value.trim();
+    const eqp = store.equipamentos.find(e=> e.id===selectedEqpId);
+    if(!eqp){ alert('Erro: equipamento não encontrado.'); return; }
+    eqp.tarefas.push({
+      id: uid(),
+      titulo,
+      periodo,
+      ultimaISO,
+      obs
+    });
+    fullSave();
+    clearTaskForm();
+    renderTabela();
+  }
+
+  function computeNext(ultimaISO, periodo){
+    const base = ultimaISO || todayISO();
+    return addDays(base, periodo);
+  }
+  function statusFor(nextISO){
+    const t = todayISO();
+    if(nextISO < t) return {label:'ATRASADA', cls:'b-err'};
+    const d = diffDays(nextISO, t);
+    if(d <= 7) return {label:'EM BREVE', cls:'b-warn'};
+    return {label:'OK', cls:'b-ok'};
+  }
+
+  function renderTabela(){
+    const rows = [];
+    store.equipamentos.forEach(eqp=>{
+      (eqp.tarefas||[]).forEach(tk=>{
+        const nextISO = computeNext(tk.ultimaISO, tk.periodo);
+        rows.push({
+          eqpId:eqp.id,
+          tkId:tk.id,
+          equipamento:eqp.nome,
+          tarefa:tk.titulo,
+          periodo:tk.periodo,
+          ultima:tk.ultimaISO || '',
+          proxima:nextISO,
+          status:statusFor(nextISO),
+          local:eqp.local||'',
+          serie:eqp.serie||'',
+          obs:tk.obs||''
+        });
+      });
+    });
+
+    const t = todayISO();
+    const atr = rows.filter(r=> r.proxima < t).length;
+    const ate7 = rows.filter(r=> {
+      const d = diffDays(r.proxima, t);
+      return d>=0 && d<=7;
+    }).length;
+    const ate30 = rows.filter(r=> {
+      const d = diffDays(r.proxima, t);
+      return d>=0 && d<=30;
+    }).length;
+    kpiAtr.textContent = atr;
+    kpi7.textContent = ate7;
+    kpi30.textContent = ate30;
+    kpiTot.textContent = rows.length;
+
+    const q = (busca.value||'').trim().toLowerCase();
+    const fil = selFiltro.value;
+
+    let lista = rows;
+    if(selectedEqpId){
+      lista = lista.filter(r=> r.eqpId === selectedEqpId);
+    }
+    lista = lista.filter(r=>{
+      const passBusca = !q || `${r.equipamento} ${r.tarefa} ${r.local} ${r.serie}`.toLowerCase().includes(q);
+      let passFiltro = true;
+      const d = diffDays(r.proxima, t);
+      if(fil==='atrasadas') passFiltro = r.proxima < t;
+      else if(fil==='sete') passFiltro = d>=0 && d<=7;
+      else if(fil==='trinta') passFiltro = d>=0 && d<=30;
+      return passBusca && passFiltro;
+    });
+
+    lista.sort((a,b)=> a.proxima.localeCompare(b.proxima));
+
+    tbody.innerHTML = '';
+    if(!lista.length){
+      const tr = document.createElement('tr');
+      tr.innerHTML = '<td colspan="7" class="muted">Nenhuma tarefa cadastrada para o filtro atual.</td>';
+      tbody.appendChild(tr);
+      return;
+    }
+
+    lista.forEach(r=>{
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><b>${r.equipamento}</b><div class="muted">${r.local||''} ${r.serie?('• '+r.serie):''}</div></td>
+        <td>${r.tarefa}<div class="muted">${r.obs||''}</div></td>
+        <td>${r.periodo}d</td>
+        <td>${fmtBR(r.ultima)}</td>
+        <td>${fmtBR(r.proxima)}</td>
+        <td><span class="badge ${r.status.cls}">${r.status.label}</span></td>
+        <td>
+          <div class="row">
+            <button class="ok" data-done="${r.eqpId}|${r.tkId}">Feita hoje</button>
+            <button class="ghost" data-edit="${r.eqpId}|${r.tkId}">Editar</button>
+            <button class="err" data-del="${r.eqpId}|${r.tkId}">X</button>
+          </div>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  tbody.addEventListener('click', (ev)=>{
+    const t = ev.target;
+    if(!(t instanceof HTMLElement)) return;
+    if(t.hasAttribute('data-done')){
+      const [eqpId, tkId] = t.getAttribute('data-done').split('|');
+      const eqp = store.equipamentos.find(e=> e.id===eqpId);
+      const tk = eqp?.tarefas.find(x=> x.id===tkId);
+      if(tk){
+        tk.ultimaISO = todayISO();
+        fullSave();
+        renderTabela();
+      }
+    }else if(t.hasAttribute('data-edit')){
+      const [eqpId, tkId] = t.getAttribute('data-edit').split('|');
+      const eqp = store.equipamentos.find(e=> e.id===eqpId);
+      const tk = eqp?.tarefas.find(x=> x.id===tkId);
+      if(eqp && tk){
+        setSelectedEqp(eqp);
+        tkTitulo.value = tk.titulo;
+        tkPeriodo.value = String(tk.periodo);
+        tkUltima.value = tk.ultimaISO || '';
+        tkObs.value = tk.obs || '';
+        window.scrollTo({top:0,behavior:'smooth'});
+      }
+    }else if(t.hasAttribute('data-del')){
+      const [eqpId, tkId] = t.getAttribute('data-del').split('|');
+      const eqp = store.equipamentos.find(e=> e.id===eqpId);
+      if(!eqp) return;
+      if(confirm('Excluir esta tarefa?')){
+        eqp.tarefas = eqp.tarefas.filter(x=> x.id!==tkId);
+        fullSave();
+        renderTabela();
+      }
+    }
+  });
+
+  btnSalvarEqp.addEventListener('click', addOrUpdateEquipamento);
+  btnLimparEqp.addEventListener('click', clearEqpForm);
+  btnAddTarefa.addEventListener('click', addTarefa);
+  btnLimparTarefa.addEventListener('click', clearTaskForm);
+  btnNovoEqp.addEventListener('click', clearEqpForm);
+
+  busca.addEventListener('input', renderTabela);
+  selFiltro.addEventListener('change', renderTabela);
+
+  btnExport.addEventListener('click', ()=>{
+    const blob = new Blob([JSON.stringify(store,null,2)], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'preventivas.json';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+
+  btnImport.addEventListener('click', ()=> inputImport.click());
+  inputImport.addEventListener('change', (e)=>{
+    const f = e.target.files && e.target.files[0];
+    if(!f) return;
+    const reader = new FileReader();
+    reader.onload = ()=>{
+      try{
+        const data = JSON.parse(String(reader.result));
+        if(data && Array.isArray(data.equipamentos)){
+          store = data;
+          fullSave();
+          renderEqpList();
+          renderTabela();
+          alert('Importado com sucesso!');
+        }else alert('Arquivo inválido.');
+      }catch(err){ alert('Erro ao importar: '+err); }
+    };
+    reader.readAsText(f);
+    inputImport.value='';
+  });
+
+  (function init(){
+    todaySpan.textContent = new Date().toLocaleDateString('pt-BR');
+    loadLocal();
+    renderEqpList();
+    renderTabela();
+    syncFromFirebaseOnce();
+  })();
+</script>
+</body>
+</html>
