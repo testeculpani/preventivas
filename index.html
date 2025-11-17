@@ -70,7 +70,7 @@
     }
   </style>
 
-  <!-- Firebase compat (HTML simples) -->
+  <!-- Firebase compat (mais simples pra HTML puro) -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 </head>
@@ -200,7 +200,7 @@
 </div>
 
 <script>
-  // 🔗 CONFIG FIREBASE – projeto preventivas-27185
+  // 🔗 CONFIG FIREBASE – usando o SEU projeto preventivas-27185
   const firebaseConfig = {
     apiKey: "AIzaSyDNrOyDmI5NOkVuG3yh8HkDrn4dqYXOrW0",
     authDomain: "preventivas-27185.firebaseapp.com",
@@ -214,9 +214,9 @@
 
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
-  const DB_PATH = "preventivas_grilazer";
+  const DB_PATH = "preventivas_grilazer"; // nó no banco
 
-  // ======= LÓGICA DO APP (sem notificações) =======
+  // ======= LÓGICA DO APP =======
   const todayISO = ()=> new Date().toISOString().slice(0,10);
   const addDays = (iso, n)=>{
     const d = iso? new Date(iso) : new Date();
@@ -569,7 +569,6 @@
     URL.revokeObjectURL(a.href);
   });
 
-  // 👉 Parte do import + init que você falou
   btnImport.addEventListener('click', ()=> inputImport.click());
   inputImport.addEventListener('change', (e)=>{
     const f = e.target.files && e.target.files[0];
