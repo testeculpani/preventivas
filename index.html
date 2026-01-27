@@ -7,28 +7,26 @@
 
   <style>
     :root{
-      --bg0:#070A12;
-      --bg1:#0B1220;
-      --bg2:#0E1A2E;
-      --card:#0E1628;
-      --card2:#0B1324;
-      --text:#EAF0FF;
-      --muted:#AAB6D4;
-      --muted2:#7F8AA8;
-      --border:rgba(255,255,255,.10);
-      --border2:rgba(255,255,255,.06);
+      --bg:#f3f5f8;
+      --panel:#ffffff;
+      --panel2:#fbfcfe;
+      --text:#0f172a;
+      --muted:#64748b;
+      --border:#e5e7eb;
+      --border2:#eef2f7;
 
-      --primary:#3B82F6; /* azul */
-      --primary2:#2563EB;
-      --ok:#22C55E;
-      --warn:#F59E0B;
-      --err:#EF4444;
+      --primary:#2563eb;
+      --primary2:#1d4ed8;
 
-      --shadow: 0 18px 60px rgba(0,0,0,.45);
-      --shadow2: 0 10px 30px rgba(0,0,0,.35);
+      --ok:#16a34a;
+      --warn:#f59e0b;
+      --err:#ef4444;
 
-      --radius:18px;
-      --radius2:14px;
+      --shadow: 0 14px 35px rgba(15,23,42,.10);
+      --shadow2: 0 10px 25px rgba(15,23,42,.08);
+
+      --radius:14px;
+      --radius2:12px;
     }
 
     *{box-sizing:border-box}
@@ -38,15 +36,14 @@
       font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Arial, sans-serif;
       color:var(--text);
       background:
-        radial-gradient(1200px 600px at 20% -10%, rgba(59,130,246,.22), transparent 60%),
-        radial-gradient(900px 500px at 90% 10%, rgba(34,197,94,.12), transparent 55%),
-        radial-gradient(700px 400px at 50% 105%, rgba(245,158,11,.10), transparent 55%),
-        linear-gradient(180deg, var(--bg0), var(--bg1) 30%, var(--bg2));
+        radial-gradient(1200px 600px at 15% -10%, rgba(37,99,235,.12), transparent 60%),
+        radial-gradient(900px 500px at 90% 10%, rgba(22,163,74,.08), transparent 55%),
+        linear-gradient(180deg, #f7f8fb, var(--bg));
       min-height:100dvh;
       padding:18px;
     }
 
-    /* ========= LOGIN ========= */
+    /* LOGIN */
     #login-screen{
       width:100%;
       min-height:calc(100dvh - 36px);
@@ -58,60 +55,50 @@
       width:100%;
       max-width:420px;
       padding:18px;
-      border-radius:22px;
+      border-radius:18px;
       border:1px solid var(--border);
-      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      background: linear-gradient(180deg, #fff, #fbfcff);
       box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
       display:flex;
       flex-direction:column;
       gap:10px;
     }
-    .login-card h1{margin:0;font-size:18px;font-weight:900;letter-spacing:.2px}
+    .login-card h1{margin:0;font-size:18px;font-weight:900}
     .login-card p{margin:0;color:var(--muted);font-size:13px;line-height:1.35}
     .field{display:flex;flex-direction:column;gap:6px;margin-top:6px}
     .field label{font-size:12px;color:var(--muted);font-weight:700}
     .field input{
       width:100%;
       padding:10px 12px;
-      border-radius:14px;
+      border-radius:12px;
       border:1px solid var(--border);
-      background: rgba(0,0,0,.25);
+      background:#fff;
       color:var(--text);
       outline:none;
       font-size:14px;
     }
     .field input:focus{
-      border-color: rgba(59,130,246,.6);
-      box-shadow: 0 0 0 3px rgba(59,130,246,.20);
+      border-color: rgba(37,99,235,.45);
+      box-shadow: 0 0 0 3px rgba(37,99,235,.12);
     }
     .btn{
       margin-top:8px;
       width:100%;
       padding:10px 12px;
       border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
+      border:1px solid rgba(37,99,235,.25);
       background: linear-gradient(135deg, var(--primary), var(--primary2));
       color:#fff;
       font-weight:900;
       cursor:pointer;
-      box-shadow: 0 10px 25px rgba(37,99,235,.25);
+      box-shadow: 0 10px 20px rgba(37,99,235,.18);
     }
     .btn:disabled{opacity:.65;cursor:wait}
-    .login-error{
-      margin-top:4px;
-      font-size:12px;
-      color:#FFB4B4;
-      min-height:14px;
-    }
-    .login-foot{font-size:11px;color:var(--muted2);margin-top:2px}
+    .login-error{margin-top:4px;font-size:12px;color:var(--err);min-height:14px}
+    .login-foot{font-size:11px;color:var(--muted);margin-top:2px}
 
-    /* ========= APP ========= */
-    .wrap{
-      width:100%;
-      max-width:1200px;
-      margin:0 auto;
-    }
+    /* APP */
+    .wrap{width:100%;max-width:1200px;margin:0 auto}
 
     .topbar{
       display:flex;
@@ -119,61 +106,64 @@
       align-items:flex-start;
       gap:12px;
       padding:14px 14px;
-      border-radius:22px;
+      border-radius:18px;
       border:1px solid var(--border);
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      backdrop-filter: blur(10px);
+      background: linear-gradient(180deg, #fff, #fbfcff);
       box-shadow: var(--shadow2);
       margin-bottom:14px;
     }
-
-    .brand{
-      display:flex;gap:10px;align-items:center;
-      min-width:240px;
-    }
+    .brand{display:flex;gap:10px;align-items:center;min-width:260px}
     .logo{
       width:44px;height:44px;border-radius:14px;
-      border:1px solid rgba(255,255,255,.12);
-      background: linear-gradient(135deg, rgba(59,130,246,.25), rgba(255,255,255,.05));
+      border:1px solid var(--border);
+      background: linear-gradient(135deg, rgba(37,99,235,.12), rgba(37,99,235,.03));
       display:grid;place-items:center;
       font-weight:1000;
-      letter-spacing:.3px;
+      letter-spacing:.2px;
+      color:#0b2a7a;
     }
-    .brand h1{
-      margin:0;
-      font-size:16px;
-      font-weight:950;
-      line-height:1.1;
-    }
+    .brand h1{margin:0;font-size:16px;font-weight:950;line-height:1.1}
     #userInfoTop{font-size:11px;color:var(--muted);margin-top:4px}
 
     .controls{
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      gap:8px;
-      align-items:center;
+      display:flex;flex-wrap:wrap;justify-content:flex-end;
+      gap:8px;align-items:center;
     }
 
     button{
       appearance:none;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:14px;
+      border:1px solid var(--border);
+      border-radius:12px;
       padding:9px 11px;
       font-weight:900;
       cursor:pointer;
       color:var(--text);
-      background: rgba(255,255,255,.04);
-      transition: transform .08s ease, background .12s ease, border-color .12s ease;
+      background: #fff;
+      transition: transform .08s ease, box-shadow .12s ease, border-color .12s ease;
+      box-shadow: 0 1px 0 rgba(15,23,42,.04);
     }
-    button:hover{background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.16)}
+    button:hover{border-color:#cbd5e1;box-shadow: 0 8px 18px rgba(15,23,42,.08)}
     button:active{transform: translateY(1px)}
-    .primary{background: linear-gradient(135deg, var(--primary), var(--primary2)); border-color: rgba(59,130,246,.35)}
-    .primary:hover{border-color: rgba(59,130,246,.60)}
-    .ok{background: linear-gradient(135deg, rgba(34,197,94,.95), rgba(22,163,74,.95)); border-color: rgba(34,197,94,.35)}
-    .warn{background: linear-gradient(135deg, rgba(245,158,11,.95), rgba(217,119,6,.95)); border-color: rgba(245,158,11,.35)}
-    .err{background: linear-gradient(135deg, rgba(239,68,68,.95), rgba(220,38,38,.95)); border-color: rgba(239,68,68,.35)}
-    .ghost{background: rgba(255,255,255,.04)}
+    .ghost{background:#fff}
+    .primary{
+      color:#fff;
+      border-color: rgba(37,99,235,.25);
+      background: linear-gradient(135deg, var(--primary), var(--primary2));
+      box-shadow: 0 10px 20px rgba(37,99,235,.18);
+    }
+    .primary:hover{box-shadow: 0 14px 28px rgba(37,99,235,.20)}
+    .ok{
+      color:#fff;border-color: rgba(22,163,74,.25);
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+    }
+    .warn{
+      color:#fff;border-color: rgba(245,158,11,.25);
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    }
+    .err{
+      color:#fff;border-color: rgba(239,68,68,.25);
+      background: linear-gradient(135deg, #f87171, #ef4444);
+    }
 
     .grid{
       display:grid;
@@ -184,10 +174,9 @@
 
     .card{
       border:1px solid var(--border);
-      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
-      border-radius: var(--radius);
+      background: linear-gradient(180deg, var(--panel), var(--panel2));
+      border-radius: 18px;
       box-shadow: var(--shadow2);
-      backdrop-filter: blur(10px);
       padding:14px;
     }
 
@@ -201,29 +190,29 @@
       display:block;
       font-weight:800;
       margin:10px 0 6px;
-      color: rgba(234,240,255,.92);
+      color: rgba(15,23,42,.85);
       font-size:12px;
     }
     input,select,textarea{
       width:100%;
       padding:10px 12px;
       border:1px solid var(--border);
-      border-radius:14px;
-      background: rgba(0,0,0,.22);
+      border-radius:12px;
+      background:#fff;
       color: var(--text);
       outline:none;
       font-size:14px;
     }
     textarea{min-height:76px;resize:vertical}
     input:focus,select:focus,textarea:focus{
-      border-color: rgba(59,130,246,.65);
-      box-shadow: 0 0 0 3px rgba(59,130,246,.18);
+      border-color: rgba(37,99,235,.40);
+      box-shadow: 0 0 0 3px rgba(37,99,235,.12);
     }
 
     .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-    #syncStatus{font-size:11px;color:var(--muted2);margin-top:6px}
+    #syncStatus{font-size:11px;color:var(--muted);margin-top:6px}
 
-    /* Lista equipamentos (sidebar) */
+    /* Lista equipamentos */
     #listaEqp{
       margin-top:8px;
       max-height:260px;
@@ -231,7 +220,7 @@
       padding-right:2px;
     }
     #listaEqp::-webkit-scrollbar{width:8px}
-    #listaEqp::-webkit-scrollbar-thumb{background: rgba(255,255,255,.10);border-radius:999px}
+    #listaEqp::-webkit-scrollbar-thumb{background: rgba(15,23,42,.12);border-radius:999px}
 
     .chip-eqp{
       border-radius:999px;
@@ -243,26 +232,28 @@
       align-items:center;
       font-size:12px;
       cursor:pointer;
-      background: rgba(255,255,255,.03);
+      background: #fff;
       transition: background .12s ease, border-color .12s ease, transform .08s ease;
       gap:10px;
     }
-    .chip-eqp:hover{background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.18)}
+    .chip-eqp:hover{background: #f8fafc; border-color:#cbd5e1}
     .chip-eqp:active{transform: translateY(1px)}
     .chip-eqp span{font-weight:900}
-    .chip-eqp small{color:var(--muted2);margin-left:6px}
+    .chip-eqp small{color:var(--muted);margin-left:6px}
     .chip-eqp.active{
-      background: rgba(59,130,246,.18);
-      border-color: rgba(59,130,246,.45);
+      background: rgba(37,99,235,.08);
+      border-color: rgba(37,99,235,.35);
     }
     .chip-eqp button{
       padding:6px 10px;
       font-size:11px;
       border-radius:999px;
       white-space:nowrap;
+      box-shadow:none;
     }
+    .chip-eqp button:hover{box-shadow:none}
 
-    /* Painel da direita */
+    /* Direita */
     .filters{
       display:flex;
       gap:8px;
@@ -276,7 +267,7 @@
       gap:6px;
       padding:8px 10px;
       border-radius:999px;
-      background: rgba(255,255,255,.04);
+      background: #fff;
       border:1px solid var(--border);
       font-weight:900;
       font-size:11px;
@@ -292,6 +283,7 @@
     .kpi .card{
       padding:12px;
       border-radius:16px;
+      box-shadow: 0 10px 20px rgba(15,23,42,.06);
     }
     .kpi .big{
       font-size:22px;
@@ -308,18 +300,18 @@
       border-radius:16px;
       margin-top:8px;
       border:1px solid var(--border);
-      background: rgba(0,0,0,.18);
+      background:#fff;
     }
     .table th,.table td{
       padding:10px 10px;
       font-size:13px;
       text-align:left;
       vertical-align:top;
-      border-bottom:1px solid rgba(255,255,255,.06);
+      border-bottom:1px solid var(--border2);
     }
     .table th{
-      background: rgba(255,255,255,.04);
-      color: rgba(234,240,255,.90);
+      background: #f8fafc;
+      color: rgba(15,23,42,.75);
       font-size:12px;
       letter-spacing:.2px;
       position:sticky;
@@ -335,16 +327,16 @@
       font-weight:1000;
       font-size:11px;
       letter-spacing:.2px;
-      border:1px solid rgba(255,255,255,.10);
+      border:1px solid var(--border);
+      background:#fff;
     }
-    .b-ok{background: rgba(34,197,94,.15); color: #CFFDE2; border-color: rgba(34,197,94,.25)}
-    .b-warn{background: rgba(245,158,11,.18); color: #FFE7B4; border-color: rgba(245,158,11,.25)}
-    .b-err{background: rgba(239,68,68,.18); color: #FFD0D0; border-color: rgba(239,68,68,.25)}
+    .b-ok{background: #ecfdf5; color:#166534; border-color:#86efac}
+    .b-warn{background:#fffbeb; color:#92400e; border-color:#fde68a}
+    .b-err{background:#fef2f2; color:#991b1b; border-color:#fecaca}
 
-    /* rodapé */
     .foot{
       margin-top:12px;
-      color:rgba(234,240,255,.55);
+      color:rgba(100,116,139,.9);
       text-align:center;
       font-size:12px;
     }
@@ -359,7 +351,7 @@
       body{background:#fff;color:#000;padding:0}
       #login-screen{display:none !important}
       .controls{display:none !important}
-      .card,.topbar{box-shadow:none !important; backdrop-filter:none !important}
+      .card,.topbar{box-shadow:none !important}
       .table{background:#fff}
     }
   </style>
@@ -411,20 +403,17 @@
 
       <div class="controls">
         <button class="ghost" id="btnNovoEqp">Novo equipamento</button>
-        <button class="ghost" id="btnImport">Importar JSON</button>
-        <input id="importInput" type="file" accept="application/json" style="display:none">
-        <button class="primary" id="btnExport">Exportar JSON</button>
         <button class="ghost" onclick="window.print()">Imprimir</button>
         <button class="ghost" id="btnLogout">Sair</button>
       </div>
     </div>
 
     <div class="grid">
-      <!-- LADO ESQUERDO -->
+      <!-- ESQUERDA -->
       <div class="card">
         <div class="row" style="justify-content:space-between;gap:10px">
           <div>
-            <h3>Equipamento</h3>
+            <h3>Cadastro de Equipamento</h3>
             <div class="muted" id="infoEqpSel">Nenhum equipamento selecionado.</div>
             <div id="syncStatus">Sincronização: carregando…</div>
           </div>
@@ -491,7 +480,7 @@
         </div>
       </div>
 
-      <!-- LADO DIREITO -->
+      <!-- DIREITA -->
       <div class="card">
         <div class="filters">
           <input id="busca" placeholder="Buscar por equipamento/tarefa…" style="flex:1;min-width:220px">
@@ -641,25 +630,9 @@
   const btnAddTarefa = document.getElementById('btnAddTarefa');
   const btnLimparTarefa = document.getElementById('btnLimparTarefa');
   const btnNovoEqp = document.getElementById('btnNovoEqp');
-  const btnExport = document.getElementById('btnExport');
-  const btnImport = document.getElementById('btnImport');
-  const inputImport = document.getElementById('importInput');
 
   function setSyncStatus(text){
     if(syncStatus) syncStatus.textContent = "Sincronização: " + text;
-  }
-
-  // Garantir compatibilidade e defaults (ativos)
-  function normalizeStore(){
-    if(!store || typeof store !== 'object') store = { equipamentos: [] };
-    if(!Array.isArray(store.equipamentos)) store.equipamentos = [];
-    store.equipamentos.forEach(e=>{
-      if(e.ativo === undefined) e.ativo = true;
-      if(!Array.isArray(e.tarefas)) e.tarefas = [];
-      e.tarefas.forEach(t=>{
-        if(t.ativo === undefined) t.ativo = true;
-      });
-    });
   }
 
   function loadLocal(){
@@ -667,7 +640,6 @@
       const raw = localStorage.getItem('preventivas');
       if(raw){ store = JSON.parse(raw); }
     }catch{}
-    normalizeStore();
   }
   function saveLocal(){
     try{ localStorage.setItem('preventivas', JSON.stringify(store)); }catch{}
@@ -684,7 +656,6 @@
   }
 
   function fullSave(){
-    normalizeStore();
     saveLocal();
     saveRemote();
   }
@@ -696,7 +667,6 @@
         const val = snapshot.val();
         if(val && Array.isArray(val.equipamentos)){
           store = val;
-          normalizeStore();
           saveLocal();
         }
       })
@@ -744,31 +714,25 @@
   function renderEqpList(){
     if(!listaEqp) return;
     listaEqp.innerHTML = '';
-
-    const ativos = store.equipamentos.filter(e=> e.ativo !== false);
-
-    if(!ativos.length){
+    if(!store.equipamentos.length){
       listaEqp.innerHTML = '<div class="muted">Nenhum equipamento cadastrado ainda.</div>';
       return;
     }
-
-    ativos.forEach(eqp=>{
+    store.equipamentos.forEach(eqp=>{
       const div = document.createElement('div');
       div.className = 'chip-eqp' + (eqp.id===selectedEqpId ? ' active' : '');
 
       const span = document.createElement('div');
       span.innerHTML = '<span>'+eqp.nome+'</span><small>'+(eqp.local||'')+'</small>';
 
-      // 🔒 SEM EXCLUSÃO: ARQUIVAR
-      const btnArc = document.createElement('button');
-      btnArc.className = 'warn';
-      btnArc.textContent = 'Arquivar';
-      btnArc.title = 'Arquivar equipamento (não exclui do Firebase)';
-      btnArc.addEventListener('click', (ev)=>{
+      const btnDel = document.createElement('button');
+      btnDel.className = 'err';
+      btnDel.textContent = 'Excluir';
+      btnDel.title = 'Excluir equipamento';
+      btnDel.addEventListener('click', (ev)=>{
         ev.stopPropagation();
-        if(confirm('Arquivar este equipamento e esconder as tarefas dele? (não exclui do Firebase)')){
-          eqp.ativo = false;
-          (eqp.tarefas||[]).forEach(t=> t.ativo = false);
+        if(confirm('Excluir equipamento e todas as tarefas dele?')){
+          store.equipamentos = store.equipamentos.filter(e=> e.id!==eqp.id);
           if(selectedEqpId===eqp.id) selectedEqpId=null;
           fullSave();
           renderEqpList();
@@ -777,7 +741,7 @@
       });
 
       div.appendChild(span);
-      div.appendChild(btnArc);
+      div.appendChild(btnDel);
       div.addEventListener('click', ()=> setSelectedEqp(eqp));
       listaEqp.appendChild(div);
     });
@@ -786,14 +750,12 @@
   function addOrUpdateEquipamento(){
     const nome = (eqNome && eqNome.value.trim()) || '';
     if(!nome){ alert('Informe o nome do equipamento'); return; }
-
     if(selectedEqpId){
       const eqp = store.equipamentos.find(e=> e.id===selectedEqpId);
       if(eqp){
         eqp.nome = nome;
         eqp.local = eqLocal ? eqLocal.value.trim() : '';
         eqp.serie = eqSerie ? eqSerie.value.trim() : '';
-        if(eqp.ativo === undefined) eqp.ativo = true;
       }
     }else{
       const eqp = {
@@ -801,8 +763,7 @@
         nome,
         local: eqLocal ? eqLocal.value.trim() : '',
         serie: eqSerie ? eqSerie.value.trim() : '',
-        tarefas: [],
-        ativo: true
+        tarefas: []
       };
       store.equipamentos.push(eqp);
       selectedEqpId = eqp.id;
@@ -818,24 +779,18 @@
     }
     const titulo = (tkTitulo && tkTitulo.value.trim()) || '';
     if(!titulo){ alert('Informe o título da tarefa'); return; }
-
     const periodo = tkPeriodo ? parseInt(tkPeriodo.value,10) : 30;
     const ultimaISO = tkUltima ? (tkUltima.value || '') : '';
     const obs = tkObs ? tkObs.value.trim() : '';
-
     const eqp = store.equipamentos.find(e=> e.id===selectedEqpId);
     if(!eqp){ alert('Erro: equipamento não encontrado.'); return; }
-    if(eqp.ativo === false){ alert('Este equipamento está arquivado.'); return; }
-
     eqp.tarefas.push({
       id: uid(),
       titulo,
       periodo,
       ultimaISO,
-      obs,
-      ativo: true
+      obs
     });
-
     fullSave();
     clearTaskForm();
     renderTabela();
@@ -855,30 +810,25 @@
 
   function renderTabela(){
     if(!tbody) return;
-
     const rows = [];
-    store.equipamentos
-      .filter(e=> e.ativo !== false)
-      .forEach(eqp=>{
-        (eqp.tarefas||[])
-          .filter(t=> t.ativo !== false)
-          .forEach(tk=>{
-            const nextISO = computeNext(tk.ultimaISO, tk.periodo);
-            rows.push({
-              eqpId:eqp.id,
-              tkId:tk.id,
-              equipamento:eqp.nome,
-              tarefa:tk.titulo,
-              periodo:tk.periodo,
-              ultima:tk.ultimaISO || '',
-              proxima:nextISO,
-              status:statusFor(nextISO),
-              local:eqp.local||'',
-              serie:eqp.serie||'',
-              obs:tk.obs||''
-            });
-          });
+    store.equipamentos.forEach(eqp=>{
+      (eqp.tarefas||[]).forEach(tk=>{
+        const nextISO = computeNext(tk.ultimaISO, tk.periodo);
+        rows.push({
+          eqpId:eqp.id,
+          tkId:tk.id,
+          equipamento:eqp.nome,
+          tarefa:tk.titulo,
+          periodo:tk.periodo,
+          ultima:tk.ultimaISO || '',
+          proxima:nextISO,
+          status:statusFor(nextISO),
+          local:eqp.local||'',
+          serie:eqp.serie||'',
+          obs:tk.obs||''
+        });
       });
+    });
 
     const t = todayISO();
     const atr = rows.filter(r=> r.proxima < t).length;
@@ -900,11 +850,9 @@
     const fil = selFiltro ? selFiltro.value : 'todos';
 
     let lista = rows;
-
     if(selectedEqpId){
       lista = lista.filter(r=> r.eqpId === selectedEqpId);
     }
-
     lista = lista.filter(r=>{
       const passBusca = !q || `${r.equipamento} ${r.tarefa} ${r.local} ${r.serie}`.toLowerCase().includes(q);
       let passFiltro = true;
@@ -938,7 +886,7 @@
           <div class="row">
             <button class="ok" data-done="${r.eqpId}|${r.tkId}">Feita hoje</button>
             <button class="ghost" data-edit="${r.eqpId}|${r.tkId}">Editar</button>
-            <button class="warn" data-arc="${r.eqpId}|${r.tkId}">Arquivar</button>
+            <button class="err" data-del="${r.eqpId}|${r.tkId}">Excluir</button>
           </div>
         </td>
       `;
@@ -973,14 +921,12 @@
           if(tkObs)     tkObs.value     = tk.obs || '';
           window.scrollTo({top:0,behavior:'smooth'});
         }
-      }else if(t.hasAttribute('data-arc')){
-        const [eqpId, tkId] = t.getAttribute('data-arc').split('|');
+      }else if(t.hasAttribute('data-del')){
+        const [eqpId, tkId] = t.getAttribute('data-del').split('|');
         const eqp = store.equipamentos.find(e=> e.id===eqpId);
-        const tk = eqp?.tarefas.find(x=> x.id===tkId);
-        if(!eqp || !tk) return;
-
-        if(confirm('Arquivar esta tarefa? (não exclui do Firebase)')){
-          tk.ativo = false;
+        if(!eqp) return;
+        if(confirm('Excluir esta tarefa?')){
+          eqp.tarefas = (eqp.tarefas||[]).filter(x=> x.id!==tkId);
           fullSave();
           renderTabela();
         }
@@ -1007,42 +953,6 @@
     if(btnNovoEqp)     btnNovoEqp.addEventListener('click', clearEqpForm);
     if(busca)          busca.addEventListener('input', renderTabela);
     if(selFiltro)      selFiltro.addEventListener('change', renderTabela);
-
-    if(btnExport){
-      btnExport.addEventListener('click', ()=>{
-        normalizeStore();
-        const blob = new Blob([JSON.stringify(store,null,2)], {type:'application/json'});
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = 'preventivas.json';
-        a.click();
-        URL.revokeObjectURL(a.href);
-      });
-    }
-
-    if(btnImport && inputImport){
-      btnImport.addEventListener('click', ()=> inputImport.click());
-      inputImport.addEventListener('change', (e)=>{
-        const f = e.target.files && e.target.files[0];
-        if(!f) return;
-        const reader = new FileReader();
-        reader.onload = ()=>{
-          try{
-            const data = JSON.parse(String(reader.result));
-            if(data && Array.isArray(data.equipamentos)){
-              store = data;
-              normalizeStore();
-              fullSave();
-              renderEqpList();
-              renderTabela();
-              alert('Importado com sucesso!');
-            }else alert('Arquivo inválido.');
-          }catch(err){ alert('Erro ao importar: '+err); }
-        };
-        reader.readAsText(f);
-        inputImport.value='';
-      });
-    }
   }
 
   // ======= AUTENTICAÇÃO =======
