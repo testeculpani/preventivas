@@ -24,9 +24,6 @@
 
       --shadow: 0 14px 35px rgba(15,23,42,.10);
       --shadow2: 0 10px 25px rgba(15,23,42,.08);
-
-      --radius:18px;
-      --radius2:12px;
     }
 
     *{box-sizing:border-box}
@@ -237,7 +234,7 @@
     .pane{display:none}
     .pane.active{display:block}
 
-    /* Lista equipamentos */
+    /* Lista máquinas */
     #listaEqp{
       margin-top:8px;
       max-height:280px;
@@ -426,9 +423,9 @@
       </div>
 
       <div class="controls">
-        <button class="ghost" id="btnNovoEqp">Novo</button>
-        <button class="ghost" onclick="window.print()">Imprimir</button>
-        <button class="ghost" id="btnLogout">Sair</button>
+        <button class="ghost" id="btnNovoEqp" type="button">Novo</button>
+        <button class="ghost" type="button" onclick="window.print()">Imprimir</button>
+        <button class="ghost" id="btnLogout" type="button">Sair</button>
       </div>
     </div>
 
@@ -472,7 +469,7 @@
 
         <!-- PANE TAREFAS -->
         <div class="pane" id="paneTarefas">
-          <h3>Nova tarefa</h3>
+          <h3>Cadastro de Tarefa</h3>
           <div class="muted">Selecione a máquina e cadastre a tarefa</div>
 
           <label for="selEqpTarefa">Máquina</label>
@@ -627,6 +624,10 @@
   let selectedEqpId = null;
   let appInitialized = false;
 
+  // ====== MODO EDIÇÃO DE TAREFA ======
+  let editingTask = null; // { eqpId, tkId }
+  let originalBtnAddText = null;
+
   // Tabs
   const tabMaquinas = document.getElementById('tabMaquinas');
   const tabTarefas  = document.getElementById('tabTarefas');
@@ -675,6 +676,20 @@
 
   function setSyncStatus(text){
     syncStatus.textContent = "Sincronização: " + text;
+  }
+
+  function setTaskMode(isEdit){
+    if(!originalBtnAddText) originalBtnAddText = btnAddTarefa.textContent || "Adicionar";
+    if(isEdit){
+      btnAddTarefa.textContent = "Salvar alterações";
+      btnAddTarefa.classList.add("warn");
+      btnAddTarefa.classList.remove("primary");
+    }else{
+      btnAddTarefa.textContent = originalBtnAddText || "Adicionar";
+      btnAddTarefa.classList.add("primary");
+      btnAddTarefa.classList.remove("warn");
+      editingTask = null;
+    }
   }
 
   function loadLocal(){
@@ -732,11 +747,13 @@
     renderEqpSelect();
     renderTabela();
   }
+
   function clearTaskForm(){
     tkTitulo.value  = '';
     tkPeriodo.value = '30';
     tkUltima.value  = '';
     tkObs.value     = '';
+    setTaskMode(false); // volta para "Adicionar"
   }
 
   function setSelectedEqp(eqp){
@@ -751,10 +768,10 @@
     infoEqpSel.textContent = 'Editando: ' + eqp.nome;
 
     // sincroniza o SELECT da aba Tarefas
-    if(selEqpTarefa){
-      selEqpTarefa.value = eqp.id;
-      hintEqpTarefa.textContent = (eqp.local ? ("Local: " + eqp.local + " • ") : "") + (eqp.serie ? ("Patrimônio/Série: " + eqp.serie) : "");
-    }
+    selEqpTarefa.value = eqp.id;
+    hintEqpTarefa.textContent =
+      (eqp.local ? ("Local: " + eqp.local + " • ") : "") +
+      (eqp.serie ? ("Patrimônio/Série: " + eqp.serie) : "");
 
     renderEqpList();
     renderTabela();
@@ -804,8 +821,6 @@
   }
 
   function renderEqpSelect(){
-    if(!selEqpTarefa) return;
-
     selEqpTarefa.innerHTML = '';
     if(!store.equipamentos.length){
       const opt = document.createElement('option');
@@ -831,11 +846,13 @@
       selEqpTarefa.appendChild(opt);
     });
 
-    // tenta manter seleção
+    // manter seleção se possível
     if(selectedEqpId && store.equipamentos.some(e=> e.id===selectedEqpId)){
       selEqpTarefa.value = selectedEqpId;
       const eqp = store.equipamentos.find(e=> e.id===selectedEqpId);
-      hintEqpTarefa.textContent = (eqp.local ? ("Local: " + eqp.local + " • ") : "") + (eqp.serie ? ("Patrimônio/Série: " + eqp.serie) : "");
+      hintEqpTarefa.textContent =
+        (eqp.local ? ("Local: " + eqp.local + " • ") : "") +
+        (eqp.serie ? ("Patrimônio/Série: " + eqp.serie) : "");
     }else{
       selEqpTarefa.value = '';
       hintEqpTarefa.textContent = '';
@@ -871,33 +888,56 @@
     setSelectedEqp(store.equipamentos.find(e=> e.id===selectedEqpId));
   }
 
+  // Adicionar OU Salvar edição
   function addTarefa(){
-    // agora pega do SELECT
-    const eqpIdSel = selEqpTarefa ? selEqpTarefa.value : '';
+    const eqpIdSel = selEqpTarefa.value || '';
     if(!eqpIdSel){
       alert('Selecione a máquina para cadastrar a tarefa.');
       return;
     }
-    selectedEqpId = eqpIdSel;
 
     const titulo = tkTitulo.value.trim();
-    if(!titulo){ alert('Informe o título da tarefa'); return; }
+    if(!titulo){
+      alert('Informe o título da tarefa');
+      return;
+    }
 
     const periodo = parseInt(tkPeriodo.value,10) || 30;
     const ultimaISO = tkUltima.value || '';
     const obs = tkObs.value.trim();
 
     const eqp = store.equipamentos.find(e=> e.id===eqpIdSel);
-    if(!eqp){ alert('Erro: máquina não encontrada.'); return; }
+    if(!eqp){
+      alert('Erro: máquina não encontrada.');
+      return;
+    }
 
+    // ✅ EDITAR
+    if(editingTask && editingTask.eqpId === eqpIdSel){
+      const tk = (eqp.tarefas||[]).find(t=> t.id === editingTask.tkId);
+      if(!tk){
+        alert('Erro: tarefa não encontrada.');
+        setTaskMode(false);
+        return;
+      }
+      tk.titulo = titulo;
+      tk.periodo = periodo;
+      tk.ultimaISO = ultimaISO;
+      tk.obs = obs;
+
+      fullSave();
+      renderTabela();
+      clearTaskForm();
+      alert('Tarefa atualizada!');
+      return;
+    }
+
+    // ✅ ADICIONAR
     eqp.tarefas.push({ id: uid(), titulo, periodo, ultimaISO, obs });
 
     fullSave();
-    clearTaskForm();
     renderTabela();
-
-    // opcional: já mostra a máquina selecionada também no cadastro
-    setSelectedEqp(eqp);
+    clearTaskForm();
   }
 
   function computeNext(ultimaISO, periodo){
@@ -948,13 +988,6 @@
 
     let lista = rows;
 
-    // filtro de equipamento selecionado (se houver)
-    if(selectedEqpId){
-      // só aplica quando tiver alguma seleção explícita
-      // (se quiser sempre mostrar tudo, basta comentar as 2 linhas abaixo)
-      // lista = lista.filter(r=> r.eqpId === selectedEqpId);
-    }
-
     lista = lista.filter(r=>{
       const passBusca = !q || `${r.equipamento} ${r.tarefa} ${r.local} ${r.serie}`.toLowerCase().includes(q);
       let passFiltro = true;
@@ -986,9 +1019,9 @@
         <td><span class="badge ${r.status.cls}">${r.status.label}</span></td>
         <td>
           <div class="row">
-            <button class="ok" data-done="${r.eqpId}|${r.tkId}">Feita hoje</button>
-            <button class="ghost" data-edit="${r.eqpId}|${r.tkId}">Editar</button>
-            <button class="err" data-del="${r.eqpId}|${r.tkId}">Excluir</button>
+            <button class="ok" data-done="${r.eqpId}|${r.tkId}" type="button">Feita hoje</button>
+            <button class="ghost" data-edit="${r.eqpId}|${r.tkId}" type="button">Editar</button>
+            <button class="err" data-del="${r.eqpId}|${r.tkId}" type="button">Excluir</button>
           </div>
         </td>
       `;
@@ -1021,12 +1054,18 @@
         selectedEqpId = eqp.id;
         renderEqpSelect();
         selEqpTarefa.value = eqp.id;
-        hintEqpTarefa.textContent = (eqp.local ? ("Local: " + eqp.local + " • ") : "") + (eqp.serie ? ("Patrimônio/Série: " + eqp.serie) : "");
+        hintEqpTarefa.textContent =
+          (eqp.local ? ("Local: " + eqp.local + " • ") : "") +
+          (eqp.serie ? ("Patrimônio/Série: " + eqp.serie) : "");
 
         tkTitulo.value  = tk.titulo;
         tkPeriodo.value = String(tk.periodo);
         tkUltima.value  = tk.ultimaISO || '';
         tkObs.value     = tk.obs || '';
+
+        // ✅ ativa modo edição
+        editingTask = { eqpId, tkId };
+        setTaskMode(true);
 
         window.scrollTo({top:0,behavior:'smooth'});
       }
@@ -1038,6 +1077,10 @@
         eqp.tarefas = (eqp.tarefas||[]).filter(x=> x.id!==tkId);
         fullSave();
         renderTabela();
+        // se estava editando essa tarefa, cancela modo edição
+        if(editingTask && editingTask.eqpId===eqpId && editingTask.tkId===tkId){
+          clearTaskForm();
+        }
       }
     }
   });
@@ -1058,7 +1101,7 @@
     tabMaquinas.addEventListener('click', ()=> openTab('maquinas'));
     tabTarefas.addEventListener('click', ()=> openTab('tarefas'));
 
-    // seleção via select
+    // seleção via select (trocar máquina cancela edição)
     selEqpTarefa.addEventListener('change', ()=>{
       const id = selEqpTarefa.value;
       selectedEqpId = id || null;
@@ -1066,6 +1109,7 @@
       hintEqpTarefa.textContent = eqp
         ? ((eqp.local ? ("Local: " + eqp.local + " • ") : "") + (eqp.serie ? ("Patrimônio/Série: " + eqp.serie) : ""))
         : '';
+      setTaskMode(false);
     });
 
     // botões
@@ -1082,6 +1126,9 @@
     // filtros
     busca.addEventListener('input', renderTabela);
     selFiltro.addEventListener('change', renderTabela);
+
+    // garante estado inicial do botão
+    setTaskMode(false);
   }
 
   // ===== AUTH =====
