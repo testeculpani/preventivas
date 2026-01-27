@@ -4,201 +4,363 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Preventivas de Máquinas — Grilazer (Admin)</title>
+
   <style>
     :root{
-      --bg1:#0ea5e9; --bg2:#38bdf8; --text:#0f172a; --card:#fff;
-      --muted:#64748b; --border:#e2e8f0; --ok:#16a34a; --err:#ef4444; --warn:#f59e0b;
-      --primary:#2563eb;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif;
-      color:var(--text);
-      background:linear-gradient(135deg,var(--bg1),var(--bg2));
-      min-height:100dvh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:20px;
+      --bg0:#070A12;
+      --bg1:#0B1220;
+      --bg2:#0E1A2E;
+      --card:#0E1628;
+      --card2:#0B1324;
+      --text:#EAF0FF;
+      --muted:#AAB6D4;
+      --muted2:#7F8AA8;
+      --border:rgba(255,255,255,.10);
+      --border2:rgba(255,255,255,.06);
+
+      --primary:#3B82F6; /* azul */
+      --primary2:#2563EB;
+      --ok:#22C55E;
+      --warn:#F59E0B;
+      --err:#EF4444;
+
+      --shadow: 0 18px 60px rgba(0,0,0,.45);
+      --shadow2: 0 10px 30px rgba(0,0,0,.35);
+
+      --radius:18px;
+      --radius2:14px;
     }
 
-    /* LOGIN */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 600px at 20% -10%, rgba(59,130,246,.22), transparent 60%),
+        radial-gradient(900px 500px at 90% 10%, rgba(34,197,94,.12), transparent 55%),
+        radial-gradient(700px 400px at 50% 105%, rgba(245,158,11,.10), transparent 55%),
+        linear-gradient(180deg, var(--bg0), var(--bg1) 30%, var(--bg2));
+      min-height:100dvh;
+      padding:18px;
+    }
+
+    /* ========= LOGIN ========= */
     #login-screen{
       width:100%;
-      max-width:420px;
-      margin:auto;
+      min-height:calc(100dvh - 36px);
       display:flex;
       align-items:center;
       justify-content:center;
     }
     .login-card{
       width:100%;
-      padding:20px 18px;
-      border-radius:16px;
+      max-width:420px;
+      padding:18px;
+      border-radius:22px;
       border:1px solid var(--border);
-      background:linear-gradient(145deg,#ffffff,#f8fafc);
-      box-shadow:0 10px 25px rgba(15,23,42,0.20);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
       display:flex;
       flex-direction:column;
       gap:10px;
     }
-    .login-card h1{
-      margin:0;
-      font-size:20px;
-      font-weight:900;
-    }
-    .login-card p{
-      margin:0;
-      font-size:0.9rem;
-      color:var(--muted);
-    }
-    .field{
-      display:flex;
-      flex-direction:column;
-      gap:4px;
-      margin-top:6px;
-    }
-    .field label{
-      font-size:0.8rem;
-      color:var(--muted);
-      font-weight:600;
-    }
+    .login-card h1{margin:0;font-size:18px;font-weight:900;letter-spacing:.2px}
+    .login-card p{margin:0;color:var(--muted);font-size:13px;line-height:1.35}
+    .field{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+    .field label{font-size:12px;color:var(--muted);font-weight:700}
     .field input{
-      padding:9px 10px;
-      border-radius:10px;
+      width:100%;
+      padding:10px 12px;
+      border-radius:14px;
       border:1px solid var(--border);
-      font-size:0.9rem;
+      background: rgba(0,0,0,.25);
+      color:var(--text);
       outline:none;
+      font-size:14px;
     }
     .field input:focus{
-      border-color:var(--primary);
-      box-shadow:0 0 0 1px rgba(37,99,235,0.20);
+      border-color: rgba(59,130,246,.6);
+      box-shadow: 0 0 0 3px rgba(59,130,246,.20);
     }
     .btn{
-      margin-top:10px;
+      margin-top:8px;
       width:100%;
-      padding:9px 10px;
+      padding:10px 12px;
       border-radius:999px;
-      border:none;
-      font-size:0.9rem;
-      font-weight:700;
+      border:1px solid rgba(255,255,255,.12);
+      background: linear-gradient(135deg, var(--primary), var(--primary2));
+      color:#fff;
+      font-weight:900;
       cursor:pointer;
-      background:linear-gradient(135deg,#2563eb,#1d4ed8);
-      color:#ffffff;
+      box-shadow: 0 10px 25px rgba(37,99,235,.25);
     }
-    .btn:disabled{
-      opacity:0.6;
-      cursor:wait;
-    }
+    .btn:disabled{opacity:.65;cursor:wait}
     .login-error{
-      margin-top:6px;
-      font-size:0.8rem;
-      color:var(--err);
+      margin-top:4px;
+      font-size:12px;
+      color:#FFB4B4;
       min-height:14px;
     }
-    .login-foot{
-      font-size:0.75rem;
-      color:var(--muted);
-      margin-top:4px;
-    }
+    .login-foot{font-size:11px;color:var(--muted2);margin-top:2px}
 
-    /* APP ORIGINAL */
+    /* ========= APP ========= */
     .wrap{
       width:100%;
       max-width:1200px;
+      margin:0 auto;
     }
-    .header{
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      padding:14px 14px;
+      border-radius:22px;
+      border:1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow2);
+      margin-bottom:14px;
+    }
+
+    .brand{
+      display:flex;gap:10px;align-items:center;
+      min-width:240px;
+    }
+    .logo{
+      width:44px;height:44px;border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: linear-gradient(135deg, rgba(59,130,246,.25), rgba(255,255,255,.05));
+      display:grid;place-items:center;
+      font-weight:1000;
+      letter-spacing:.3px;
+    }
+    .brand h1{
+      margin:0;
+      font-size:16px;
+      font-weight:950;
+      line-height:1.1;
+    }
+    #userInfoTop{font-size:11px;color:var(--muted);margin-top:4px}
+
+    .controls{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      gap:8px;
+      align-items:center;
+    }
+
+    button{
+      appearance:none;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:14px;
+      padding:9px 11px;
+      font-weight:900;
+      cursor:pointer;
+      color:var(--text);
+      background: rgba(255,255,255,.04);
+      transition: transform .08s ease, background .12s ease, border-color .12s ease;
+    }
+    button:hover{background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.16)}
+    button:active{transform: translateY(1px)}
+    .primary{background: linear-gradient(135deg, var(--primary), var(--primary2)); border-color: rgba(59,130,246,.35)}
+    .primary:hover{border-color: rgba(59,130,246,.60)}
+    .ok{background: linear-gradient(135deg, rgba(34,197,94,.95), rgba(22,163,74,.95)); border-color: rgba(34,197,94,.35)}
+    .warn{background: linear-gradient(135deg, rgba(245,158,11,.95), rgba(217,119,6,.95)); border-color: rgba(245,158,11,.35)}
+    .err{background: linear-gradient(135deg, rgba(239,68,68,.95), rgba(220,38,38,.95)); border-color: rgba(239,68,68,.35)}
+    .ghost{background: rgba(255,255,255,.04)}
+
+    .grid{
+      display:grid;
+      gap:14px;
+      grid-template-columns: 360px 1fr;
+      align-items:start;
+    }
+
+    .card{
+      border:1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+      border-radius: var(--radius);
+      box-shadow: var(--shadow2);
+      backdrop-filter: blur(10px);
+      padding:14px;
+    }
+
+    h3,h4{margin:0}
+    h3{font-size:14px;font-weight:950}
+    h4{font-size:13px;font-weight:900;color:var(--text);opacity:.95}
+    .muted{color:var(--muted);font-size:12px;line-height:1.35}
+    .sep{height:1px;background: var(--border2);margin:12px 0}
+
+    label{
+      display:block;
+      font-weight:800;
+      margin:10px 0 6px;
+      color: rgba(234,240,255,.92);
+      font-size:12px;
+    }
+    input,select,textarea{
+      width:100%;
+      padding:10px 12px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      background: rgba(0,0,0,.22);
+      color: var(--text);
+      outline:none;
+      font-size:14px;
+    }
+    textarea{min-height:76px;resize:vertical}
+    input:focus,select:focus,textarea:focus{
+      border-color: rgba(59,130,246,.65);
+      box-shadow: 0 0 0 3px rgba(59,130,246,.18);
+    }
+
+    .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    #syncStatus{font-size:11px;color:var(--muted2);margin-top:6px}
+
+    /* Lista equipamentos (sidebar) */
+    #listaEqp{
+      margin-top:8px;
+      max-height:260px;
+      overflow:auto;
+      padding-right:2px;
+    }
+    #listaEqp::-webkit-scrollbar{width:8px}
+    #listaEqp::-webkit-scrollbar-thumb{background: rgba(255,255,255,.10);border-radius:999px}
+
+    .chip-eqp{
+      border-radius:999px;
+      border:1px solid var(--border);
+      padding:8px 10px;
+      margin:6px 0;
       display:flex;
       justify-content:space-between;
       align-items:center;
-      color:#fff;
-      margin-bottom:12px
+      font-size:12px;
+      cursor:pointer;
+      background: rgba(255,255,255,.03);
+      transition: background .12s ease, border-color .12s ease, transform .08s ease;
+      gap:10px;
     }
-    .brand{display:flex;gap:10px;align-items:center}
-    .logo{
-      width:42px;height:42px;border-radius:12px;
-      background:#fff1;border:1px solid #fff3;
-      display:grid;place-items:center;color:#fff;font-weight:900
+    .chip-eqp:hover{background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.18)}
+    .chip-eqp:active{transform: translateY(1px)}
+    .chip-eqp span{font-weight:900}
+    .chip-eqp small{color:var(--muted2);margin-left:6px}
+    .chip-eqp.active{
+      background: rgba(59,130,246,.18);
+      border-color: rgba(59,130,246,.45);
     }
-    h1{margin:0;font-size:22px;font-weight:900}
-    .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-    button{
-      appearance:none;border:0;border-radius:12px;
-      padding:10px 12px;font-weight:800;cursor:pointer
+    .chip-eqp button{
+      padding:6px 10px;
+      font-size:11px;
+      border-radius:999px;
+      white-space:nowrap;
     }
-    .ghost{background:#fff;border:1px solid var(--border)}
-    .primary{background:var(--primary);color:#fff}
-    .ok{background:var(--ok);color:#fff}
-    .warn{background:var(--warn);color:#fff}
-    .err{background:var(--err);color:#fff}
-    .grid{display:grid;gap:12px;grid-template-columns:320px 1fr}
-    .card{
-      background:var(--card);border:1px solid var(--border);
-      border-radius:16px;box-shadow:0 12px 40px rgba(2,6,23,.15);padding:16px
-    }
-    label{display:block;font-weight:600;margin:10px 0 6px}
-    input,select,textarea{
-      width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:12px;
-      background:#fff;outline:none;font-size:14px;
-    }
-    textarea{min-height:70px;resize:vertical}
-    .sep{height:1px;background:#e2e8f0;margin:12px 0}
-    .muted{color:var(--muted);font-size:12px}
-    .table{
-      width:100%;border-collapse:collapse;overflow:hidden;
-      border-radius:12px;margin-top:8px
-    }
-    .table th,.table td{
-      border:1px solid var(--border);padding:8px;
-      font-size:13px;text-align:left;vertical-align:top
-    }
-    .table th{background:#f1f5f9}
-    .badge{
-      display:inline-block;padding:4px 8px;border-radius:999px;
-      font-weight:800;font-size:11px
-    }
-    .b-ok{background:#dcfce7;color:#14532d;border:1px solid #86efac}
-    .b-warn{background:#fef9c3;color:#713f12;border:1px solid #fde047}
-    .b-err{background:#fee2e2;color:#7f1d1d;border:1px solid #fecaca}
-    .row{display:flex;gap:6px;flex-wrap:wrap}
-    .kpi{
-      display:grid;gap:8px;
-      grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-      margin:8px 0
-    }
-    .kpi .card{padding:10px}
-    .kpi .big{font-size:22px;font-weight:900}
+
+    /* Painel da direita */
     .filters{
-      display:flex;gap:8px;flex-wrap:wrap;
-      align-items:center;margin-bottom:6px
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-bottom:10px
     }
     .pill{
-      display:inline-block;padding:6px 10px;border-radius:999px;
-      background:#f1f5f9;border:1px solid var(--border);
-      font-weight:800;font-size:11px
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:8px 10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.04);
+      border:1px solid var(--border);
+      font-weight:900;
+      font-size:11px;
+      color: var(--muted);
     }
-    .chip-eqp{
-      border-radius:999px;border:1px solid var(--border);padding:6px 10px;margin:3px 0;
-      display:flex;justify-content:space-between;align-items:center;
-      font-size:12px;cursor:pointer;background:#f8fafc;
-    }
-    .chip-eqp span{font-weight:600}
-    .chip-eqp small{color:var(--muted);margin-left:4px}
-    .chip-eqp button{padding:4px 6px;font-size:11px;border-radius:999px}
-    .chip-eqp.active{background:#dbeafe;border-color:#2563eb}
-    #syncStatus{font-size:11px;color:var(--muted);margin-top:4px}
-    #userInfoTop{font-size:11px;color:#e5e7eb;margin-top:2px}
 
-    @media (max-width:980px){
+    .kpi{
+      display:grid;
+      gap:10px;
+      grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+      margin:10px 0 6px;
+    }
+    .kpi .card{
+      padding:12px;
+      border-radius:16px;
+    }
+    .kpi .big{
+      font-size:22px;
+      font-weight:1000;
+      margin-top:4px;
+      letter-spacing:.2px;
+    }
+
+    .table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      overflow:hidden;
+      border-radius:16px;
+      margin-top:8px;
+      border:1px solid var(--border);
+      background: rgba(0,0,0,.18);
+    }
+    .table th,.table td{
+      padding:10px 10px;
+      font-size:13px;
+      text-align:left;
+      vertical-align:top;
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .table th{
+      background: rgba(255,255,255,.04);
+      color: rgba(234,240,255,.90);
+      font-size:12px;
+      letter-spacing:.2px;
+      position:sticky;
+      top:0;
+      z-index:1;
+    }
+    .table tr:last-child td{border-bottom:none}
+
+    .badge{
+      display:inline-block;
+      padding:5px 10px;
+      border-radius:999px;
+      font-weight:1000;
+      font-size:11px;
+      letter-spacing:.2px;
+      border:1px solid rgba(255,255,255,.10);
+    }
+    .b-ok{background: rgba(34,197,94,.15); color: #CFFDE2; border-color: rgba(34,197,94,.25)}
+    .b-warn{background: rgba(245,158,11,.18); color: #FFE7B4; border-color: rgba(245,158,11,.25)}
+    .b-err{background: rgba(239,68,68,.18); color: #FFD0D0; border-color: rgba(239,68,68,.25)}
+
+    /* rodapé */
+    .foot{
+      margin-top:12px;
+      color:rgba(234,240,255,.55);
+      text-align:center;
+      font-size:12px;
+    }
+
+    @media (max-width: 980px){
+      body{padding:12px}
       .grid{grid-template-columns:1fr}
-      .controls{justify-content:flex-end}
+      .brand{min-width:auto}
+      .controls{justify-content:flex-start}
     }
     @media print{
-      body{background:#fff;padding:0;display:block}
+      body{background:#fff;color:#000;padding:0}
       #login-screen{display:none !important}
-      .controls{display:none}
-      .card{box-shadow:none;border:1px solid #ddd}
+      .controls{display:none !important}
+      .card,.topbar{box-shadow:none !important; backdrop-filter:none !important}
+      .table{background:#fff}
     }
   </style>
 
@@ -207,6 +369,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
 </head>
+
 <body>
 
   <!-- TELA DE LOGIN -->
@@ -229,14 +392,15 @@
       <div class="login-error" id="loginError"></div>
 
       <div class="login-foot">
-        Os usuários válidos são gerenciados no Firebase Authentication (modo E-mail/Senha).
+        Usuários válidos são gerenciados no Firebase Authentication (E-mail/Senha).
       </div>
     </div>
   </section>
 
   <!-- APP PROTEGIDO -->
   <div class="wrap" id="app-wrap" style="display:none">
-    <div class="header">
+
+    <div class="topbar">
       <div class="brand">
         <div class="logo">GR</div>
         <div>
@@ -244,6 +408,7 @@
           <div id="userInfoTop"></div>
         </div>
       </div>
+
       <div class="controls">
         <button class="ghost" id="btnNovoEqp">Novo equipamento</button>
         <button class="ghost" id="btnImport">Importar JSON</button>
@@ -257,32 +422,45 @@
     <div class="grid">
       <!-- LADO ESQUERDO -->
       <div class="card">
-        <h3 style="margin:0 0 4px 0">Equipamento</h3>
-        <div class="muted" id="infoEqpSel">Nenhum equipamento selecionado.</div>
-        <div id="syncStatus">Sincronização: carregando…</div>
+        <div class="row" style="justify-content:space-between;gap:10px">
+          <div>
+            <h3>Equipamento</h3>
+            <div class="muted" id="infoEqpSel">Nenhum equipamento selecionado.</div>
+            <div id="syncStatus">Sincronização: carregando…</div>
+          </div>
+        </div>
 
         <label for="eqNome">Nome do equipamento</label>
         <input id="eqNome" placeholder="Ex.: Prensa Hidráulica 30T">
+
         <label for="eqLocal">Localização</label>
         <input id="eqLocal" placeholder="Ex.: Metalúrgica, Setor A">
+
         <label for="eqSerie">Nº de Série / Patrimônio</label>
         <input id="eqSerie" placeholder="Ex.: SER-000123 / PAT-045">
-        <div class="row" style="margin-top:8px">
+
+        <div class="row" style="margin-top:10px">
           <button class="primary" id="btnSalvarEqp">Salvar equipamento</button>
           <button class="ghost" id="btnLimparEqp">Limpar</button>
         </div>
 
         <div class="sep"></div>
 
-        <h4 style="margin:0 0 4px 0">Equipamentos cadastrados</h4>
-        <div class="muted">Clique para selecionar e cadastrar as tarefas dentro de cada máquina.</div>
-        <div id="listaEqp" style="margin-top:6px;max-height:220px;overflow:auto;"></div>
+        <div class="row" style="justify-content:space-between;align-items:baseline">
+          <h4>Equipamentos cadastrados</h4>
+          <span class="muted">Clique para selecionar</span>
+        </div>
+
+        <div id="listaEqp"></div>
 
         <div class="sep"></div>
 
-        <h3 style="margin:0 0 4px 0">Nova tarefa para o equipamento selecionado</h3>
+        <h3>Nova tarefa</h3>
+        <div class="muted">para o equipamento selecionado</div>
+
         <label for="tkTitulo">Título da tarefa</label>
         <input id="tkTitulo" placeholder="Ex.: Lubrificar guias e mancais">
+
         <div class="row">
           <div style="flex:1;min-width:140px">
             <label for="tkPeriodo">Periodicidade</label>
@@ -293,18 +471,22 @@
               <option value="360">360 dias</option>
             </select>
           </div>
+
           <div style="flex:1;min-width:140px">
             <label for="tkUltima">Última execução</label>
             <input id="tkUltima" type="date">
           </div>
         </div>
+
         <label for="tkObs">Observações</label>
         <textarea id="tkObs" placeholder="Materiais, torque, check-list, segurança, etc."></textarea>
-        <div class="row" style="margin-top:8px">
+
+        <div class="row" style="margin-top:10px">
           <button class="primary" id="btnAddTarefa">Adicionar tarefa</button>
           <button class="ghost" id="btnLimparTarefa">Limpar</button>
         </div>
-        <div class="muted" style="margin-top:4px">
+
+        <div class="muted" style="margin-top:6px">
           Dica: se nunca foi feita, deixe a última execução em branco — a próxima será calculada a partir de hoje.
         </div>
       </div>
@@ -312,7 +494,7 @@
       <!-- LADO DIREITO -->
       <div class="card">
         <div class="filters">
-          <input id="busca" placeholder="Buscar por equipamento/tarefa…" style="flex:1;min-width:200px">
+          <input id="busca" placeholder="Buscar por equipamento/tarefa…" style="flex:1;min-width:220px">
           <span class="pill">Hoje: <span id="today"></span></span>
           <select id="selFiltro">
             <option value="todos">Todos</option>
@@ -324,19 +506,19 @@
 
         <div class="kpi">
           <div class="card">
-            <div>Atrasadas</div>
+            <div class="muted">Atrasadas</div>
             <div class="big" id="kpiAtr">0</div>
           </div>
           <div class="card">
-            <div>Até 7 dias</div>
+            <div class="muted">Até 7 dias</div>
             <div class="big" id="kpi7">0</div>
           </div>
           <div class="card">
-            <div>Até 30 dias</div>
+            <div class="muted">Até 30 dias</div>
             <div class="big" id="kpi30">0</div>
           </div>
           <div class="card">
-            <div>Total tarefas</div>
+            <div class="muted">Total tarefas</div>
             <div class="big" id="kpiTot">0</div>
           </div>
         </div>
@@ -358,9 +540,7 @@
       </div>
     </div>
 
-    <div style="margin-top:10px;color:#fff9;text-align:center;font-size:12px">
-      Grilazer — Preventivas
-    </div>
+    <div class="foot">Grilazer — Preventivas</div>
   </div>
 
 <script>
@@ -469,11 +649,25 @@
     if(syncStatus) syncStatus.textContent = "Sincronização: " + text;
   }
 
+  // Garantir compatibilidade e defaults (ativos)
+  function normalizeStore(){
+    if(!store || typeof store !== 'object') store = { equipamentos: [] };
+    if(!Array.isArray(store.equipamentos)) store.equipamentos = [];
+    store.equipamentos.forEach(e=>{
+      if(e.ativo === undefined) e.ativo = true;
+      if(!Array.isArray(e.tarefas)) e.tarefas = [];
+      e.tarefas.forEach(t=>{
+        if(t.ativo === undefined) t.ativo = true;
+      });
+    });
+  }
+
   function loadLocal(){
     try{
       const raw = localStorage.getItem('preventivas');
       if(raw){ store = JSON.parse(raw); }
     }catch{}
+    normalizeStore();
   }
   function saveLocal(){
     try{ localStorage.setItem('preventivas', JSON.stringify(store)); }catch{}
@@ -490,6 +684,7 @@
   }
 
   function fullSave(){
+    normalizeStore();
     saveLocal();
     saveRemote();
   }
@@ -501,6 +696,7 @@
         const val = snapshot.val();
         if(val && Array.isArray(val.equipamentos)){
           store = val;
+          normalizeStore();
           saveLocal();
         }
       })
@@ -548,31 +744,40 @@
   function renderEqpList(){
     if(!listaEqp) return;
     listaEqp.innerHTML = '';
-    if(!store.equipamentos.length){
+
+    const ativos = store.equipamentos.filter(e=> e.ativo !== false);
+
+    if(!ativos.length){
       listaEqp.innerHTML = '<div class="muted">Nenhum equipamento cadastrado ainda.</div>';
       return;
     }
-    store.equipamentos.forEach(eqp=>{
+
+    ativos.forEach(eqp=>{
       const div = document.createElement('div');
       div.className = 'chip-eqp' + (eqp.id===selectedEqpId ? ' active' : '');
+
       const span = document.createElement('div');
       span.innerHTML = '<span>'+eqp.nome+'</span><small>'+(eqp.local||'')+'</small>';
-      const btnDel = document.createElement('button');
-      btnDel.className = 'err';
-      btnDel.textContent = '×';
-      btnDel.title = 'Excluir equipamento';
-      btnDel.addEventListener('click', (ev)=>{
+
+      // 🔒 SEM EXCLUSÃO: ARQUIVAR
+      const btnArc = document.createElement('button');
+      btnArc.className = 'warn';
+      btnArc.textContent = 'Arquivar';
+      btnArc.title = 'Arquivar equipamento (não exclui do Firebase)';
+      btnArc.addEventListener('click', (ev)=>{
         ev.stopPropagation();
-        if(confirm('Excluir equipamento e todas as tarefas dele?')){
-          store.equipamentos = store.equipamentos.filter(e=> e.id!==eqp.id);
+        if(confirm('Arquivar este equipamento e esconder as tarefas dele? (não exclui do Firebase)')){
+          eqp.ativo = false;
+          (eqp.tarefas||[]).forEach(t=> t.ativo = false);
           if(selectedEqpId===eqp.id) selectedEqpId=null;
           fullSave();
           renderEqpList();
           renderTabela();
         }
       });
+
       div.appendChild(span);
-      div.appendChild(btnDel);
+      div.appendChild(btnArc);
       div.addEventListener('click', ()=> setSelectedEqp(eqp));
       listaEqp.appendChild(div);
     });
@@ -581,12 +786,14 @@
   function addOrUpdateEquipamento(){
     const nome = (eqNome && eqNome.value.trim()) || '';
     if(!nome){ alert('Informe o nome do equipamento'); return; }
+
     if(selectedEqpId){
       const eqp = store.equipamentos.find(e=> e.id===selectedEqpId);
       if(eqp){
         eqp.nome = nome;
         eqp.local = eqLocal ? eqLocal.value.trim() : '';
         eqp.serie = eqSerie ? eqSerie.value.trim() : '';
+        if(eqp.ativo === undefined) eqp.ativo = true;
       }
     }else{
       const eqp = {
@@ -594,7 +801,8 @@
         nome,
         local: eqLocal ? eqLocal.value.trim() : '',
         serie: eqSerie ? eqSerie.value.trim() : '',
-        tarefas: []
+        tarefas: [],
+        ativo: true
       };
       store.equipamentos.push(eqp);
       selectedEqpId = eqp.id;
@@ -610,18 +818,24 @@
     }
     const titulo = (tkTitulo && tkTitulo.value.trim()) || '';
     if(!titulo){ alert('Informe o título da tarefa'); return; }
+
     const periodo = tkPeriodo ? parseInt(tkPeriodo.value,10) : 30;
     const ultimaISO = tkUltima ? (tkUltima.value || '') : '';
     const obs = tkObs ? tkObs.value.trim() : '';
+
     const eqp = store.equipamentos.find(e=> e.id===selectedEqpId);
     if(!eqp){ alert('Erro: equipamento não encontrado.'); return; }
+    if(eqp.ativo === false){ alert('Este equipamento está arquivado.'); return; }
+
     eqp.tarefas.push({
       id: uid(),
       titulo,
       periodo,
       ultimaISO,
-      obs
+      obs,
+      ativo: true
     });
+
     fullSave();
     clearTaskForm();
     renderTabela();
@@ -641,25 +855,30 @@
 
   function renderTabela(){
     if(!tbody) return;
+
     const rows = [];
-    store.equipamentos.forEach(eqp=>{
-      (eqp.tarefas||[]).forEach(tk=>{
-        const nextISO = computeNext(tk.ultimaISO, tk.periodo);
-        rows.push({
-          eqpId:eqp.id,
-          tkId:tk.id,
-          equipamento:eqp.nome,
-          tarefa:tk.titulo,
-          periodo:tk.periodo,
-          ultima:tk.ultimaISO || '',
-          proxima:nextISO,
-          status:statusFor(nextISO),
-          local:eqp.local||'',
-          serie:eqp.serie||'',
-          obs:tk.obs||''
-        });
+    store.equipamentos
+      .filter(e=> e.ativo !== false)
+      .forEach(eqp=>{
+        (eqp.tarefas||[])
+          .filter(t=> t.ativo !== false)
+          .forEach(tk=>{
+            const nextISO = computeNext(tk.ultimaISO, tk.periodo);
+            rows.push({
+              eqpId:eqp.id,
+              tkId:tk.id,
+              equipamento:eqp.nome,
+              tarefa:tk.titulo,
+              periodo:tk.periodo,
+              ultima:tk.ultimaISO || '',
+              proxima:nextISO,
+              status:statusFor(nextISO),
+              local:eqp.local||'',
+              serie:eqp.serie||'',
+              obs:tk.obs||''
+            });
+          });
       });
-    });
 
     const t = todayISO();
     const atr = rows.filter(r=> r.proxima < t).length;
@@ -671,6 +890,7 @@
       const d = diffDays(r.proxima, t);
       return d>=0 && d<=30;
     }).length;
+
     if(kpiAtr) kpiAtr.textContent = atr;
     if(kpi7)  kpi7.textContent = ate7;
     if(kpi30) kpi30.textContent = ate30;
@@ -680,9 +900,11 @@
     const fil = selFiltro ? selFiltro.value : 'todos';
 
     let lista = rows;
+
     if(selectedEqpId){
       lista = lista.filter(r=> r.eqpId === selectedEqpId);
     }
+
     lista = lista.filter(r=>{
       const passBusca = !q || `${r.equipamento} ${r.tarefa} ${r.local} ${r.serie}`.toLowerCase().includes(q);
       let passFiltro = true;
@@ -716,7 +938,7 @@
           <div class="row">
             <button class="ok" data-done="${r.eqpId}|${r.tkId}">Feita hoje</button>
             <button class="ghost" data-edit="${r.eqpId}|${r.tkId}">Editar</button>
-            <button class="err" data-del="${r.eqpId}|${r.tkId}">X</button>
+            <button class="warn" data-arc="${r.eqpId}|${r.tkId}">Arquivar</button>
           </div>
         </td>
       `;
@@ -729,6 +951,7 @@
     tbody.addEventListener('click', (ev)=>{
       const t = ev.target;
       if(!(t instanceof HTMLElement)) return;
+
       if(t.hasAttribute('data-done')){
         const [eqpId, tkId] = t.getAttribute('data-done').split('|');
         const eqp = store.equipamentos.find(e=> e.id===eqpId);
@@ -750,12 +973,14 @@
           if(tkObs)     tkObs.value     = tk.obs || '';
           window.scrollTo({top:0,behavior:'smooth'});
         }
-      }else if(t.hasAttribute('data-del')){
-        const [eqpId, tkId] = t.getAttribute('data-del').split('|');
+      }else if(t.hasAttribute('data-arc')){
+        const [eqpId, tkId] = t.getAttribute('data-arc').split('|');
         const eqp = store.equipamentos.find(e=> e.id===eqpId);
-        if(!eqp) return;
-        if(confirm('Excluir esta tarefa?')){
-          eqp.tarefas = eqp.tarefas.filter(x=> x.id!==tkId);
+        const tk = eqp?.tarefas.find(x=> x.id===tkId);
+        if(!eqp || !tk) return;
+
+        if(confirm('Arquivar esta tarefa? (não exclui do Firebase)')){
+          tk.ativo = false;
           fullSave();
           renderTabela();
         }
@@ -767,7 +992,9 @@
   function initAppOnce(){
     if(appInitialized) return;
     appInitialized = true;
+
     if(todaySpan) todaySpan.textContent = new Date().toLocaleDateString('pt-BR');
+
     loadLocal();
     renderEqpList();
     renderTabela();
@@ -780,8 +1007,10 @@
     if(btnNovoEqp)     btnNovoEqp.addEventListener('click', clearEqpForm);
     if(busca)          busca.addEventListener('input', renderTabela);
     if(selFiltro)      selFiltro.addEventListener('change', renderTabela);
+
     if(btnExport){
       btnExport.addEventListener('click', ()=>{
+        normalizeStore();
         const blob = new Blob([JSON.stringify(store,null,2)], {type:'application/json'});
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
@@ -790,6 +1019,7 @@
         URL.revokeObjectURL(a.href);
       });
     }
+
     if(btnImport && inputImport){
       btnImport.addEventListener('click', ()=> inputImport.click());
       inputImport.addEventListener('change', (e)=>{
@@ -801,6 +1031,7 @@
             const data = JSON.parse(String(reader.result));
             if(data && Array.isArray(data.equipamentos)){
               store = data;
+              normalizeStore();
               fullSave();
               renderEqpList();
               renderTabela();
@@ -821,7 +1052,6 @@
       initAppOnce();
     }else{
       if(user && !allowedEmails.includes(user.email)){
-        // logou mas não tem permissão
         auth.signOut();
       }
       showLogin();
@@ -863,8 +1093,8 @@
     });
   }
 
-  // Ao carregar, mostrar login por padrão até o Firebase responder
   showLogin();
 </script>
+
 </body>
 </html>
