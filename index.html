@@ -44,7 +44,7 @@
       background: linear-gradient(180deg, #fafbff, var(--bg));
     }
 
-    /* ========== LOGIN ========== */
+    /* LOGIN */
     #login-screen{
       min-height:100dvh;
       display:flex;
@@ -58,7 +58,7 @@
     }
     .login-card{
       width:100%;
-      max-width:420px;
+      max-width:440px;
       padding:18px;
       border-radius:18px;
       border:1px solid var(--border);
@@ -100,8 +100,23 @@
     .btn:disabled{opacity:.65;cursor:wait}
     .login-error{margin-top:4px;font-size:12px;color:var(--err);min-height:14px}
     .login-foot{font-size:11px;color:var(--muted);margin-top:2px}
+    .devbox{
+      margin-top:8px;
+      border:1px dashed rgba(239,68,68,.35);
+      background:#fff;
+      border-radius:14px;
+      padding:10px;
+      display:none;
+    }
+    .devbox b{display:block;font-size:12px}
+    .devbox pre{
+      margin:6px 0 0 0;
+      font-size:11px;
+      white-space:pre-wrap;
+      color:#7f1d1d;
+    }
 
-    /* ========== APP SHELL (ERP) ========== */
+    /* APP SHELL */
     #app-shell{display:none; min-height:100dvh;}
     .shell{
       display:grid;
@@ -215,7 +230,6 @@
       font-size:11px;
     }
 
-    /* Controls */
     button{
       appearance:none;
       border:1px solid var(--border);
@@ -235,7 +249,6 @@
       background: linear-gradient(135deg, var(--primary), var(--primary2));
       box-shadow: 0 10px 18px rgba(37,99,235,.16);
     }
-    .ghost{background:#fff}
     .danger{
       color:#fff;
       border-color: rgba(239,68,68,.25);
@@ -252,12 +265,7 @@
       background: linear-gradient(135deg, #fbbf24, #f59e0b);
     }
 
-    /* Content */
-    .content{
-      margin-top:14px;
-      display:grid;
-      gap:14px;
-    }
+    .content{margin-top:14px;display:grid;gap:14px}
     .card{
       border:1px solid var(--border);
       background: linear-gradient(180deg, var(--panel), var(--panel2));
@@ -269,7 +277,6 @@
     .muted{color:var(--muted);font-size:12px;line-height:1.35}
     .sep{height:1px;background: var(--border2);margin:12px 0}
 
-    /* Grid inside pages */
     .grid-2{
       display:grid;
       grid-template-columns: 420px 1fr;
@@ -299,13 +306,12 @@
       box-shadow: 0 0 0 3px rgba(37,99,235,.12);
     }
 
+    .filters{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+    .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .right-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;align-items:center}
+
     /* Lists */
-    .list{
-      margin-top:10px;
-      max-height:320px;
-      overflow:auto;
-      padding-right:2px;
-    }
+    .list{margin-top:10px;max-height:320px;overflow:auto;padding-right:2px}
     .item{
       display:flex;
       justify-content:space-between;
@@ -355,18 +361,12 @@
       overflow:hidden;
       background:#fff;
     }
-    table{
-      width:100%;
-      border-collapse:separate;
-      border-spacing:0;
-      font-size:13px;
-    }
+    table{width:100%;border-collapse:separate;border-spacing:0;font-size:13px}
     thead th{
       position:sticky; top:0; z-index:2;
       background:#f8fafc;
       color: rgba(15,23,42,.75);
       font-size:12px;
-      letter-spacing:.2px;
       text-align:left;
       padding:10px 10px;
       border-bottom:1px solid var(--border2);
@@ -392,14 +392,6 @@
     .b-ok{background:#ecfdf5;color:#166534;border-color:#86efac}
     .b-warn{background:#fffbeb;color:#92400e;border-color:#fde68a}
     .b-err{background:#fef2f2;color:#991b1b;border-color:#fecaca}
-
-    .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-    .right-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;align-items:center}
-
-    /* Filters bar */
-    .filters{
-      display:flex; gap:8px; flex-wrap:wrap; align-items:center;
-    }
 
     /* Pages */
     .page{display:none}
@@ -427,18 +419,14 @@
       gap:10px;
       align-items:flex-start;
     }
-    .toast .dot{
-      width:10px;height:10px;border-radius:999px;margin-top:4px;
-      background: var(--primary);
-      flex:0 0 auto;
-    }
+    .toast .dot{width:10px;height:10px;border-radius:999px;margin-top:4px;background: var(--primary)}
     .toast.ok .dot{background: var(--ok)}
     .toast.warn .dot{background: var(--warn)}
     .toast.err .dot{background: var(--err)}
     .toast b{display:block;font-size:12px;font-weight:1000}
     .toast p{margin:2px 0 0 0;font-size:12px;color:var(--muted);line-height:1.3}
 
-    /* Modal */
+    /* Modal confirm */
     .modal{
       position:fixed; inset:0;
       background: rgba(2,6,23,.55);
@@ -477,7 +465,6 @@
       background:#fff;
     }
 
-    /* Responsive */
     @media (max-width: 1020px){
       .shell{grid-template-columns: 1fr}
       .sidebar{
@@ -501,8 +488,7 @@
 </head>
 
 <body>
-
-  <!-- ========== LOGIN ========== -->
+  <!-- LOGIN -->
   <section id="login-screen">
     <div class="login-card">
       <h1>Preventivas — Grilazer</h1>
@@ -518,19 +504,21 @@
         <input type="password" id="loginSenha" autocomplete="current-password" placeholder="••••••••">
       </div>
 
-      <button class="btn" id="btnLogin">Entrar</button>
+      <button class="btn" id="btnLogin" type="button">Entrar</button>
       <div class="login-error" id="loginError"></div>
 
-      <div class="login-foot">
-        Usuários são gerenciados no Firebase Authentication (E-mail/Senha).
+      <div class="devbox" id="devbox">
+        <b>Erro interno detectado:</b>
+        <pre id="devboxText"></pre>
       </div>
+
+      <div class="login-foot">Usuários gerenciados no Firebase Authentication (E-mail/Senha).</div>
     </div>
   </section>
 
-  <!-- ========== APP ========== -->
+  <!-- APP -->
   <div id="app-shell">
     <div class="shell">
-      <!-- Sidebar -->
       <aside class="sidebar">
         <div class="sb-brand">
           <div class="sb-logo">GR</div>
@@ -540,25 +528,16 @@
           </div>
         </div>
 
-        <nav class="sb-nav" style="margin-top:12px">
-          <div class="nav-item active" data-nav="dashboard">
-            <div class="nav-ico">📊</div> Dashboard
-          </div>
-          <div class="nav-item" data-nav="maquinas">
-            <div class="nav-ico">🏭</div> Máquinas
-          </div>
-          <div class="nav-item" data-nav="tarefas">
-            <div class="nav-ico">🧰</div> Tarefas
-          </div>
-          <div class="nav-item" data-nav="relatorios">
-            <div class="nav-ico">🧾</div> Relatórios
-          </div>
+        <nav class="sb-nav">
+          <div class="nav-item active" data-nav="dashboard"><div class="nav-ico">📊</div>Dashboard</div>
+          <div class="nav-item" data-nav="maquinas"><div class="nav-ico">🏭</div>Máquinas</div>
+          <div class="nav-item" data-nav="tarefas"><div class="nav-ico">🧰</div>Tarefas</div>
+          <div class="nav-item" data-nav="relatorios"><div class="nav-ico">🧾</div>Relatórios</div>
         </nav>
 
         <div class="sb-foot">
           <div class="muted" id="userInfoSide">—</div>
           <div class="muted" id="syncStatus">Sincronização: carregando…</div>
-
           <div class="row">
             <button class="ghost" id="btnPrintGlobal" type="button">Imprimir</button>
             <button class="ghost" id="btnLogout" type="button">Sair</button>
@@ -566,14 +545,12 @@
         </div>
       </aside>
 
-      <!-- Main -->
       <main class="main">
         <div class="topbar">
           <div class="topbar-left">
             <b id="pageTitle">Dashboard</b>
             <small id="pageSubtitle">Visão geral das preventivas</small>
           </div>
-
           <div class="topbar-right">
             <span class="pill">Hoje: <span id="today"></span></span>
             <span class="pill" id="netPill">Status: —</span>
@@ -581,35 +558,20 @@
         </div>
 
         <div class="content">
-          <!-- ========== PAGE: DASHBOARD ========== -->
+
+          <!-- DASHBOARD -->
           <section class="page active" id="page-dashboard">
             <div class="card">
-              <div class="row" style="justify-content:space-between; align-items:baseline">
+              <div class="row" style="justify-content:space-between;align-items:baseline">
                 <h2>Indicadores</h2>
                 <div class="muted">Acompanhe atrasos e próximos vencimentos</div>
               </div>
 
               <div class="kpis">
-                <div class="kpi">
-                  <div class="label">Atrasadas</div>
-                  <div class="value" id="kpiAtr">0</div>
-                  <div class="hint">Próxima ação: priorizar as vencidas</div>
-                </div>
-                <div class="kpi">
-                  <div class="label">Até 7 dias</div>
-                  <div class="value" id="kpi7">0</div>
-                  <div class="hint">Planejamento da semana</div>
-                </div>
-                <div class="kpi">
-                  <div class="label">Até 30 dias</div>
-                  <div class="value" id="kpi30">0</div>
-                  <div class="hint">Planejamento do mês</div>
-                </div>
-                <div class="kpi">
-                  <div class="label">Total de tarefas</div>
-                  <div class="value" id="kpiTot">0</div>
-                  <div class="hint" id="kpiMeta">—</div>
-                </div>
+                <div class="kpi"><div class="label">Atrasadas</div><div class="value" id="kpiAtr">0</div><div class="hint">Priorize vencidas</div></div>
+                <div class="kpi"><div class="label">Até 7 dias</div><div class="value" id="kpi7">0</div><div class="hint">Planejamento semanal</div></div>
+                <div class="kpi"><div class="label">Até 30 dias</div><div class="value" id="kpi30">0</div><div class="hint">Planejamento mensal</div></div>
+                <div class="kpi"><div class="label">Total de tarefas</div><div class="value" id="kpiTot">0</div><div class="hint" id="kpiMeta">—</div></div>
               </div>
             </div>
 
@@ -649,7 +611,7 @@
             </div>
           </section>
 
-          <!-- ========== PAGE: MÁQUINAS ========== -->
+          <!-- MÁQUINAS -->
           <section class="page" id="page-maquinas">
             <div class="grid-2">
               <div class="card">
@@ -674,9 +636,7 @@
                 </div>
 
                 <div class="sep"></div>
-                <div class="muted">
-                  Dica: mantenha “Local/Setor” padronizado (ex.: Pintura, Montagem, Metalúrgica) para facilitar relatórios.
-                </div>
+                <div class="muted">Padronize “Local/Setor” para facilitar filtros e relatórios.</div>
               </div>
 
               <div class="card">
@@ -696,7 +656,7 @@
             </div>
           </section>
 
-          <!-- ========== PAGE: TAREFAS ========== -->
+          <!-- TAREFAS -->
           <section class="page" id="page-tarefas">
             <div class="grid-2">
               <div class="card">
@@ -704,7 +664,7 @@
                   <h2>Cadastro de Tarefa</h2>
                   <button class="ghost" id="btnLimparTarefa" type="button">Limpar</button>
                 </div>
-                <div class="muted">Selecione a máquina e cadastre a tarefa. Para editar, use o botão “Editar” na tabela.</div>
+                <div class="muted">Selecione a máquina e cadastre. Para editar, use “Editar” na tabela.</div>
 
                 <label for="selEqpTarefa">Máquina</label>
                 <select id="selEqpTarefa"></select>
@@ -737,9 +697,7 @@
                 </div>
 
                 <div class="sep"></div>
-                <div class="muted">
-                  Dica: “Feita hoje” atualiza automaticamente a data da última execução.
-                </div>
+                <div class="muted">“Feita hoje” atualiza automaticamente a data da última execução.</div>
               </div>
 
               <div class="card">
@@ -780,12 +738,12 @@
             </div>
           </section>
 
-          <!-- ========== PAGE: RELATÓRIOS ========== -->
+          <!-- RELATÓRIOS -->
           <section class="page" id="page-relatorios">
             <div class="card">
               <div class="row" style="justify-content:space-between; align-items:baseline">
                 <h2>Relatórios</h2>
-                <div class="muted">Gere um relatório para imprimir ou exportar CSV</div>
+                <div class="muted">Impressão + CSV</div>
               </div>
 
               <div class="sep"></div>
@@ -812,9 +770,7 @@
                   </div>
 
                   <div class="sep"></div>
-                  <div class="muted">
-                    Observação: o relatório considera a “Próxima execução” calculada pela periodicidade.
-                  </div>
+                  <div class="muted">Relatório usa a “Próxima execução” calculada.</div>
                 </div>
 
                 <div>
@@ -849,7 +805,7 @@
     </div>
   </div>
 
-  <!-- Toasts -->
+  <!-- Toast -->
   <div class="toast-wrap" id="toastWrap"></div>
 
   <!-- Confirm Modal -->
@@ -870,985 +826,930 @@
   </div>
 
 <script>
-/* =========================
-   CONFIG FIREBASE
-========================= */
-const firebaseConfig = {
-  apiKey: "AIzaSyDNrOyDmI5NOkVuG3yh8HkDrn4dqYXOrW0",
-  authDomain: "preventivas-27185.firebaseapp.com",
-  databaseURL: "https://preventivas-27185-default-rtdb.firebaseio.com",
-  projectId: "preventivas-27185",
-  storageBucket: "preventivas-27185.firebasestorage.app",
-  messagingSenderId: "862235462324",
-  appId: "1:862235462324:web:bcf4948b6b5bb96cbee5e1",
-  measurementId: "G-8D16CFDLZV"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-const auth = firebase.auth();
-const DB_PATH = "preventivas_grilazer";
-
-// e-mails autorizados
-const allowedEmails = ["engenhariagrilazer@gmail.com"];
-
-/* =========================
-   ELEMENTOS
-========================= */
-const loginScreen = document.getElementById("login-screen");
-const appShell = document.getElementById("app-shell");
-const loginEmail = document.getElementById("loginEmail");
-const loginSenha = document.getElementById("loginSenha");
-const btnLogin = document.getElementById("btnLogin");
-const loginError = document.getElementById("loginError");
-const btnLogout = document.getElementById("btnLogout");
-const btnPrintGlobal = document.getElementById("btnPrintGlobal");
-
-const userInfoSide = document.getElementById("userInfoSide");
-const syncStatus = document.getElementById("syncStatus");
-const todaySpan = document.getElementById("today");
-const netPill = document.getElementById("netPill");
-
-// nav
-const navItems = Array.from(document.querySelectorAll(".nav-item"));
-const pages = {
-  dashboard: document.getElementById("page-dashboard"),
-  maquinas: document.getElementById("page-maquinas"),
-  tarefas: document.getElementById("page-tarefas"),
-  relatorios: document.getElementById("page-relatorios")
-};
-const pageTitle = document.getElementById("pageTitle");
-const pageSubtitle = document.getElementById("pageSubtitle");
-
-// dashboard
-const kpiAtr = document.getElementById("kpiAtr");
-const kpi7 = document.getElementById("kpi7");
-const kpi30 = document.getElementById("kpi30");
-const kpiTot = document.getElementById("kpiTot");
-const kpiMeta = document.getElementById("kpiMeta");
-const dashFiltro = document.getElementById("dashFiltro");
-const tbodyDash = document.getElementById("tbodyDash");
-const btnGoRelatorio = document.getElementById("btnGoRelatorio");
-
-// maquinas
-const eqNome = document.getElementById("eqNome");
-const eqLocal = document.getElementById("eqLocal");
-const eqSerie = document.getElementById("eqSerie");
-const infoEqpSel = document.getElementById("infoEqpSel");
-const listaEqp = document.getElementById("listaEqp");
-const emptyEqp = document.getElementById("emptyEqp");
-const countEqp = document.getElementById("countEqp");
-const buscaEqp = document.getElementById("buscaEqp");
-const btnNovoEqp = document.getElementById("btnNovoEqp");
-const btnSalvarEqp = document.getElementById("btnSalvarEqp");
-const btnLimparEqp = document.getElementById("btnLimparEqp");
-
-// tarefas
-const selEqpTarefa = document.getElementById("selEqpTarefa");
-const hintEqpTarefa = document.getElementById("hintEqpTarefa");
-const tkTitulo = document.getElementById("tkTitulo");
-const tkPeriodo = document.getElementById("tkPeriodo");
-const tkUltima = document.getElementById("tkUltima");
-const tkObs = document.getElementById("tkObs");
-const btnSalvarTarefa = document.getElementById("btnSalvarTarefa");
-const btnLimparTarefa = document.getElementById("btnLimparTarefa");
-const busca = document.getElementById("busca");
-const selFiltro = document.getElementById("selFiltro");
-const tbody = document.getElementById("tbody");
-
-// relatorios
-const repFiltro = document.getElementById("repFiltro");
-const repLocal = document.getElementById("repLocal");
-const repMaquina = document.getElementById("repMaquina");
-const btnGerarRelatorio = document.getElementById("btnGerarRelatorio");
-const btnBaixarCSV = document.getElementById("btnBaixarCSV");
-const repCount = document.getElementById("repCount");
-const tbodyRep = document.getElementById("tbodyRep");
-
-// toast
-const toastWrap = document.getElementById("toastWrap");
-
-// confirm modal
-const confirmModal = document.getElementById("confirmModal");
-const confirmTitle = document.getElementById("confirmTitle");
-const confirmText = document.getElementById("confirmText");
-const confirmClose = document.getElementById("confirmClose");
-const confirmCancel = document.getElementById("confirmCancel");
-const confirmOk = document.getElementById("confirmOk");
-let __confirmResolve = null;
-
-/* =========================
-   ESTADO / STORE
-========================= */
-let store = { equipamentos: [] };
-let selectedEqpId = null;
-let appInitialized = false;
-
-// modo edição de tarefa
-let editingTask = null; // {eqpId, tkId}
-
-/* =========================
-   HELPERS
-========================= */
-const todayISO = ()=> new Date().toISOString().slice(0,10);
-const addDays = (iso, n)=>{
-  const d = iso ? new Date(iso) : new Date();
-  d.setHours(12,0,0,0);
-  d.setDate(d.getDate() + n);
-  return new Date(d.getTime() - d.getTimezoneOffset()*60000).toISOString().slice(0,10);
-};
-const diffDays = (a,b)=> Math.floor((new Date(a) - new Date(b)) / (1000*60*60*24));
-const fmtBR = (iso)=> iso ? new Date(iso+'T00:00:00').toLocaleDateString('pt-BR') : '—';
-const uid = ()=> 'id-'+Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(4);
-
-function escapeHtml(str){
-  return String(str ?? "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-
-function toast(type, title, msg, ms=2600){
-  const el = document.createElement("div");
-  el.className = "toast " + (type || "");
-  el.innerHTML = `
-    <div class="dot"></div>
-    <div>
-      <b>${escapeHtml(title || "Aviso")}</b>
-      <p>${escapeHtml(msg || "")}</p>
-    </div>
-  `;
-  toastWrap.appendChild(el);
-  setTimeout(()=>{ el.style.opacity="0"; el.style.transform="translateY(4px)"; }, ms-350);
-  setTimeout(()=>{ el.remove(); }, ms);
-}
-
-function setSyncStatus(text){
-  syncStatus.textContent = "Sincronização: " + text;
-}
-
-function computeNext(ultimaISO, periodo){
-  const base = ultimaISO || todayISO();
-  return addDays(base, periodo);
-}
-function statusFor(nextISO){
-  const t = todayISO();
-  if(nextISO < t) return {label:'ATRASADA', cls:'b-err'};
-  const d = diffDays(nextISO, t);
-  if(d === 0) return {label:'VENCE HOJE', cls:'b-warn'};
-  if(d <= 7) return {label:'EM BREVE', cls:'b-warn'};
-  return {label:'OK', cls:'b-ok'};
-}
-
-/* =========================
-   CONFIRM MODAL
-========================= */
-function confirmBox(title, text){
-  confirmTitle.textContent = title || "Confirmar";
-  confirmText.textContent = text || "Tem certeza?";
-  confirmModal.classList.add("show");
-  return new Promise(resolve=>{
-    __confirmResolve = resolve;
-  });
-}
-function closeConfirm(result){
-  confirmModal.classList.remove("show");
-  if(__confirmResolve){
-    __confirmResolve(!!result);
-    __confirmResolve = null;
+(function(){
+  // ====== MINI DEBUG PARA VOCÊ VER O ERRO NA TELA ======
+  const devbox = document.getElementById("devbox");
+  const devboxText = document.getElementById("devboxText");
+  function showDevError(err){
+    if(!devbox || !devboxText) return;
+    devbox.style.display = "block";
+    devboxText.textContent = String(err && (err.stack || err.message) ? (err.stack || err.message) : err);
   }
-}
-confirmClose.addEventListener("click", ()=> closeConfirm(false));
-confirmCancel.addEventListener("click", ()=> closeConfirm(false));
-confirmOk.addEventListener("click", ()=> closeConfirm(true));
-confirmModal.addEventListener("click", (e)=>{
-  if(e.target === confirmModal) closeConfirm(false);
-});
+  window.addEventListener("error", (e)=> showDevError(e.error || e.message));
+  window.addEventListener("unhandledrejection", (e)=> showDevError(e.reason || "Promise rejeitada"));
 
-/* =========================
-   LOCAL STORAGE (backup)
-========================= */
-function loadLocal(){
-  try{
-    const raw = localStorage.getItem("preventivas");
-    if(raw) store = JSON.parse(raw);
-  }catch{}
-}
-function saveLocal(){
-  try{ localStorage.setItem("preventivas", JSON.stringify(store)); }catch{}
-}
-
-/* =========================
-   FIREBASE SYNC
-========================= */
-function saveRemote(){
-  setSyncStatus("enviando ao servidor…");
-  db.ref(DB_PATH).set(store)
-    .then(()=> setSyncStatus("ok (sincronizado)"))
-    .catch(err=>{
-      console.error(err);
-      setSyncStatus("erro ao sincronizar (ver console)");
-      toast("warn","Sem sincronizar","Falha ao enviar. Dados estão no navegador (local).");
-    });
-}
-
-function fullSave(){
-  saveLocal();
-  saveRemote();
-}
-
-function syncFromFirebaseOnce(){
-  setSyncStatus("carregando do servidor…");
-  db.ref(DB_PATH).once("value")
-    .then(snapshot=>{
-      const val = snapshot.val();
-      if(val && Array.isArray(val.equipamentos)){
-        store = val;
-        saveLocal();
-      }
-    })
-    .catch(err=>{
-      console.error(err);
-      setSyncStatus("erro ao carregar (usando dados locais)");
-      toast("warn","Modo local","Não consegui carregar do servidor. Vou usar os dados do navegador.");
-    })
-    .finally(()=>{
-      setSyncStatus("ok");
-      renderAll();
-    });
-}
-
-/* =========================
-   NAVEGAÇÃO
-========================= */
-function goPage(key){
-  navItems.forEach(n=> n.classList.toggle("active", n.dataset.nav===key));
-  Object.keys(pages).forEach(k=> pages[k].classList.toggle("active", k===key));
-
-  const titles = {
-    dashboard: ["Dashboard","Visão geral das preventivas"],
-    maquinas: ["Máquinas","Cadastro e gestão de equipamentos"],
-    tarefas: ["Tarefas","Cadastro, edição e controle"],
-    relatorios: ["Relatórios","Geração para impressão e CSV"]
+  // ====== FIREBASE CONFIG ======
+  const firebaseConfig = {
+    apiKey: "AIzaSyDNrOyDmI5NOkVuG3yh8HkDrn4dqYXOrW0",
+    authDomain: "preventivas-27185.firebaseapp.com",
+    databaseURL: "https://preventivas-27185-default-rtdb.firebaseio.com",
+    projectId: "preventivas-27185",
+    storageBucket: "preventivas-27185.firebasestorage.app",
+    messagingSenderId: "862235462324",
+    appId: "1:862235462324:web:bcf4948b6b5bb96cbee5e1",
+    measurementId: "G-8D16CFDLZV"
   };
-  pageTitle.textContent = titles[key]?.[0] || "Preventivas";
-  pageSubtitle.textContent = titles[key]?.[1] || "";
 
-  // atualizar prévia relatório ao entrar
-  if(key==="relatorios") renderRelatorioPreview();
-}
-navItems.forEach(n=> n.addEventListener("click", ()=> goPage(n.dataset.nav)));
-
-/* =========================
-   MÁQUINAS (CRUD)
-========================= */
-function clearEqpForm(){
-  selectedEqpId = null;
-  eqNome.value = "";
-  eqLocal.value = "";
-  eqSerie.value = "";
-  infoEqpSel.textContent = "Nenhuma máquina selecionada.";
-  renderMaquinasList();
-  renderEqpSelects();
-  renderTabelas();
-}
-
-function setSelectedEqp(eqp){
-  selectedEqpId = eqp?.id || null;
-  if(!eqp){
-    clearEqpForm();
-    return;
-  }
-  eqNome.value = eqp.nome || "";
-  eqLocal.value = eqp.local || "";
-  eqSerie.value = eqp.serie || "";
-  infoEqpSel.textContent = "Editando: " + (eqp.nome || "—");
-  renderMaquinasList();
-  renderEqpSelects();
-  renderTabelas();
-}
-
-function addOrUpdateEquipamento(){
-  const nome = (eqNome.value || "").trim();
-  if(!nome){ toast("err","Campo obrigatório","Informe o nome da máquina."); return; }
-
-  if(selectedEqpId){
-    const eqp = store.equipamentos.find(e=> e.id===selectedEqpId);
-    if(eqp){
-      eqp.nome = nome;
-      eqp.local = (eqLocal.value||"").trim();
-      eqp.serie = (eqSerie.value||"").trim();
-      fullSave();
-      toast("ok","Salvo","Máquina atualizada com sucesso.");
-      setSelectedEqp(eqp);
-    }
+  // Se o firebase não carregou, já mostra
+  if(!window.firebase){
+    showDevError("Firebase não carregou. Verifique a internet / bloqueio de scripts.");
     return;
   }
 
-  const eqp = {
-    id: uid(),
-    nome,
-    local: (eqLocal.value||"").trim(),
-    serie: (eqSerie.value||"").trim(),
-    tarefas: []
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+  const auth = firebase.auth();
+  const DB_PATH = "preventivas_grilazer";
+  const allowedEmails = ["engenhariagrilazer@gmail.com"];
+
+  // ====== PEGAR ELEMENTOS (SAFE) ======
+  const $ = (id)=> document.getElementById(id);
+
+  const loginScreen = $("login-screen");
+  const appShell = $("app-shell");
+  const loginEmail = $("loginEmail");
+  const loginSenha = $("loginSenha");
+  const btnLogin = $("btnLogin");
+  const loginError = $("loginError");
+  const btnLogout = $("btnLogout");
+  const btnPrintGlobal = $("btnPrintGlobal");
+
+  const userInfoSide = $("userInfoSide");
+  const syncStatus = $("syncStatus");
+  const todaySpan = $("today");
+  const netPill = $("netPill");
+
+  const navItems = Array.from(document.querySelectorAll(".nav-item"));
+  const pages = {
+    dashboard: $("page-dashboard"),
+    maquinas: $("page-maquinas"),
+    tarefas: $("page-tarefas"),
+    relatorios: $("page-relatorios")
   };
-  store.equipamentos.push(eqp);
-  selectedEqpId = eqp.id;
-  fullSave();
-  toast("ok","Salvo","Máquina cadastrada com sucesso.");
-  setSelectedEqp(eqp);
-}
+  const pageTitle = $("pageTitle");
+  const pageSubtitle = $("pageSubtitle");
 
-async function deleteEquipamento(eqpId){
-  const eqp = store.equipamentos.find(e=> e.id===eqpId);
-  if(!eqp) return;
-  const ok = await confirmBox("Excluir máquina", `Excluir "${eqp.nome}" e todas as tarefas dela?`);
-  if(!ok) return;
+  const kpiAtr = $("kpiAtr");
+  const kpi7 = $("kpi7");
+  const kpi30 = $("kpi30");
+  const kpiTot = $("kpiTot");
+  const kpiMeta = $("kpiMeta");
+  const dashFiltro = $("dashFiltro");
+  const tbodyDash = $("tbodyDash");
+  const btnGoRelatorio = $("btnGoRelatorio");
 
-  store.equipamentos = store.equipamentos.filter(e=> e.id!==eqpId);
-  if(selectedEqpId===eqpId) selectedEqpId=null;
-  fullSave();
-  toast("ok","Excluído","Máquina removida.");
-  renderAll();
-}
+  const eqNome = $("eqNome");
+  const eqLocal = $("eqLocal");
+  const eqSerie = $("eqSerie");
+  const infoEqpSel = $("infoEqpSel");
+  const listaEqp = $("listaEqp");
+  const emptyEqp = $("emptyEqp");
+  const countEqp = $("countEqp");
+  const buscaEqp = $("buscaEqp");
+  const btnNovoEqp = $("btnNovoEqp");
+  const btnSalvarEqp = $("btnSalvarEqp");
+  const btnLimparEqp = $("btnLimparEqp");
 
-function renderMaquinasList(){
-  const q = (buscaEqp.value || "").trim().toLowerCase();
-  const list = store.equipamentos
-    .slice()
-    .sort((a,b)=> (a.nome||"").localeCompare(b.nome||""))
-    .filter(e=> !q || `${e.nome} ${e.local||""} ${e.serie||""}`.toLowerCase().includes(q));
+  const selEqpTarefa = $("selEqpTarefa");
+  const hintEqpTarefa = $("hintEqpTarefa");
+  const tkTitulo = $("tkTitulo");
+  const tkPeriodo = $("tkPeriodo");
+  const tkUltima = $("tkUltima");
+  const tkObs = $("tkObs");
+  const btnSalvarTarefa = $("btnSalvarTarefa");
+  const btnLimparTarefa = $("btnLimparTarefa");
+  const busca = $("busca");
+  const selFiltro = $("selFiltro");
+  const tbody = $("tbody");
 
-  listaEqp.innerHTML = "";
-  countEqp.textContent = `${store.equipamentos.length} máquinas`;
-  emptyEqp.style.display = store.equipamentos.length ? "none" : "block";
+  const repFiltro = $("repFiltro");
+  const repLocal = $("repLocal");
+  const repMaquina = $("repMaquina");
+  const btnGerarRelatorio = $("btnGerarRelatorio");
+  const btnBaixarCSV = $("btnBaixarCSV");
+  const repCount = $("repCount");
+  const tbodyRep = $("tbodyRep");
 
-  list.forEach(eqp=>{
-    const div = document.createElement("div");
-    div.className = "item" + (eqp.id===selectedEqpId ? " active" : "");
-    const sub = [eqp.local, eqp.serie].filter(Boolean).join(" • ");
-    div.innerHTML = `
+  const toastWrap = $("toastWrap");
+
+  const confirmModal = $("confirmModal");
+  const confirmTitle = $("confirmTitle");
+  const confirmText = $("confirmText");
+  const confirmClose = $("confirmClose");
+  const confirmCancel = $("confirmCancel");
+  const confirmOk = $("confirmOk");
+  let __confirmResolve = null;
+
+  // ====== HELPERS ======
+  const todayISO = ()=> new Date().toISOString().slice(0,10);
+  const addDays = (iso, n)=>{
+    const d = iso ? new Date(iso) : new Date();
+    d.setHours(12,0,0,0);
+    d.setDate(d.getDate() + n);
+    return new Date(d.getTime() - d.getTimezoneOffset()*60000).toISOString().slice(0,10);
+  };
+  const diffDays = (a,b)=> Math.floor((new Date(a) - new Date(b)) / (1000*60*60*24));
+  const fmtBR = (iso)=> iso ? new Date(iso+'T00:00:00').toLocaleDateString('pt-BR') : '—';
+  const uid = ()=> 'id-'+Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(4);
+
+  function escapeHtml(str){
+    return String(str ?? "")
+      .replace(/&/g,"&amp;")
+      .replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;")
+      .replace(/'/g,"&#039;");
+  }
+
+  function toast(type, title, msg, ms=2600){
+    if(!toastWrap) return;
+    const el = document.createElement("div");
+    el.className = "toast " + (type || "");
+    el.innerHTML = `
+      <div class="dot"></div>
       <div>
-        <b>${escapeHtml(eqp.nome||"—")}</b>
-        <small>${escapeHtml(sub || "—")}</small>
-      </div>
-      <div class="actions">
-        <button class="icon-btn danger" title="Excluir" data-del="${eqp.id}" type="button">🗑</button>
+        <b>${escapeHtml(title || "Aviso")}</b>
+        <p>${escapeHtml(msg || "")}</p>
       </div>
     `;
-    div.addEventListener("click", (ev)=>{
-      const t = ev.target;
-      if(t instanceof HTMLElement && t.closest("[data-del]")) return;
-      setSelectedEqp(eqp);
-    });
-    div.querySelector("[data-del]").addEventListener("click", (ev)=>{
-      ev.stopPropagation();
-      deleteEquipamento(eqp.id);
-    });
-    listaEqp.appendChild(div);
-  });
-}
-
-function renderEqpSelects(){
-  // select em tarefas
-  selEqpTarefa.innerHTML = "";
-  // select em relatorio
-  repMaquina.innerHTML = "";
-
-  const has = store.equipamentos.length > 0;
-
-  const opt0 = document.createElement("option");
-  opt0.value = "";
-  opt0.textContent = has ? "Selecione uma máquina…" : "Cadastre uma máquina primeiro";
-  selEqpTarefa.appendChild(opt0);
-  selEqpTarefa.disabled = !has;
-
-  const optR0 = document.createElement("option");
-  optR0.value = "";
-  optR0.textContent = "Todas as máquinas";
-  repMaquina.appendChild(optR0);
-
-  store.equipamentos
-    .slice()
-    .sort((a,b)=> (a.nome||"").localeCompare(b.nome||""))
-    .forEach(e=>{
-      const o = document.createElement("option");
-      o.value = e.id;
-      o.textContent = e.nome;
-      selEqpTarefa.appendChild(o);
-
-      const o2 = document.createElement("option");
-      o2.value = e.id;
-      o2.textContent = e.nome;
-      repMaquina.appendChild(o2);
-    });
-
-  if(selectedEqpId && store.equipamentos.some(e=> e.id===selectedEqpId)){
-    selEqpTarefa.value = selectedEqpId;
-    const eqp = store.equipamentos.find(e=> e.id===selectedEqpId);
-    hintEqpTarefa.textContent = buildEqpHint(eqp);
-  }else{
-    selEqpTarefa.value = "";
-    hintEqpTarefa.textContent = "";
+    toastWrap.appendChild(el);
+    setTimeout(()=>{ el.style.opacity="0"; el.style.transform="translateY(4px)"; }, Math.max(200, ms-350));
+    setTimeout(()=>{ el.remove(); }, ms);
   }
-}
 
-function buildEqpHint(eqp){
-  const parts = [];
-  if(eqp.local) parts.push("Local: " + eqp.local);
-  if(eqp.serie) parts.push("Patrimônio/Série: " + eqp.serie);
-  return parts.join(" • ");
-}
+  function setSyncStatus(text){
+    if(syncStatus) syncStatus.textContent = "Sincronização: " + text;
+  }
 
-/* =========================
-   TAREFAS (CRUD + EDIT SAVE)
-========================= */
-function clearTaskForm(){
-  tkTitulo.value = "";
-  tkPeriodo.value = "30";
-  tkUltima.value = "";
-  tkObs.value = "";
-  editingTask = null;
-  btnSalvarTarefa.textContent = "Adicionar";
-  btnSalvarTarefa.classList.remove("warn");
-  btnSalvarTarefa.classList.add("primary");
-}
+  function computeNext(ultimaISO, periodo){
+    const base = ultimaISO || todayISO();
+    return addDays(base, periodo);
+  }
+  function statusFor(nextISO){
+    const t = todayISO();
+    if(nextISO < t) return {label:'ATRASADA', cls:'b-err'};
+    const d = diffDays(nextISO, t);
+    if(d === 0) return {label:'VENCE HOJE', cls:'b-warn'};
+    if(d <= 7) return {label:'EM BREVE', cls:'b-warn'};
+    return {label:'OK', cls:'b-ok'};
+  }
 
-function setTaskModeEdit(){
-  btnSalvarTarefa.textContent = "Salvar alterações";
-  btnSalvarTarefa.classList.remove("primary");
-  btnSalvarTarefa.classList.add("warn");
-}
+  // ====== CONFIRM MODAL ======
+  function confirmBox(title, text){
+    if(!confirmModal || !confirmTitle || !confirmText) return Promise.resolve(window.confirm(text || "Confirmar?"));
+    confirmTitle.textContent = title || "Confirmar";
+    confirmText.textContent = text || "Tem certeza?";
+    confirmModal.classList.add("show");
+    return new Promise(resolve=>{ __confirmResolve = resolve; });
+  }
+  function closeConfirm(result){
+    if(confirmModal) confirmModal.classList.remove("show");
+    if(__confirmResolve){
+      __confirmResolve(!!result);
+      __confirmResolve = null;
+    }
+  }
+  if(confirmClose) confirmClose.addEventListener("click", ()=> closeConfirm(false));
+  if(confirmCancel) confirmCancel.addEventListener("click", ()=> closeConfirm(false));
+  if(confirmOk) confirmOk.addEventListener("click", ()=> closeConfirm(true));
+  if(confirmModal) confirmModal.addEventListener("click", (e)=>{ if(e.target === confirmModal) closeConfirm(false); });
 
-function saveTask(){
-  const eqpId = selEqpTarefa.value || "";
-  if(!eqpId){ toast("err","Seleção obrigatória","Selecione a máquina."); return; }
-  const titulo = (tkTitulo.value||"").trim();
-  if(!titulo){ toast("err","Campo obrigatório","Informe o título da tarefa."); return; }
+  // ====== STORE ======
+  let store = { equipamentos: [] };
+  let selectedEqpId = null;
+  let appInitialized = false;
+  let editingTask = null; // {eqpId, tkId}
 
-  const periodo = parseInt(tkPeriodo.value,10) || 30;
-  const ultimaISO = tkUltima.value || "";
-  const obs = (tkObs.value||"").trim();
+  function loadLocal(){
+    try{
+      const raw = localStorage.getItem("preventivas");
+      if(raw) store = JSON.parse(raw);
+    }catch{}
+  }
+  function saveLocal(){
+    try{ localStorage.setItem("preventivas", JSON.stringify(store)); }catch{}
+  }
 
-  const eqp = store.equipamentos.find(e=> e.id===eqpId);
-  if(!eqp){ toast("err","Erro","Máquina não encontrada."); return; }
-  if(!Array.isArray(eqp.tarefas)) eqp.tarefas = [];
+  function saveRemote(){
+    setSyncStatus("enviando ao servidor…");
+    return db.ref(DB_PATH).set(store)
+      .then(()=> setSyncStatus("ok (sincronizado)"))
+      .catch(err=>{
+        console.error(err);
+        setSyncStatus("erro ao sincronizar");
+        toast("warn","Sem sincronizar","Falha ao enviar. Dados ficaram salvos no navegador.");
+      });
+  }
 
-  // EDITAR
-  if(editingTask && editingTask.eqpId === eqpId){
-    const tk = eqp.tarefas.find(t=> t.id===editingTask.tkId);
-    if(!tk){
-      toast("warn","Aviso","Tarefa não encontrada. Vou voltar para adicionar.");
-      clearTaskForm();
+  function fullSave(){
+    saveLocal();
+    return saveRemote();
+  }
+
+  function syncFromFirebaseOnce(){
+    setSyncStatus("carregando do servidor…");
+    db.ref(DB_PATH).once("value")
+      .then(snapshot=>{
+        const val = snapshot.val();
+        if(val && Array.isArray(val.equipamentos)){
+          store = val;
+          saveLocal();
+        }
+      })
+      .catch(err=>{
+        console.error(err);
+        setSyncStatus("erro ao carregar (usando local)");
+        toast("warn","Modo local","Não consegui carregar do servidor. Vou usar dados locais.");
+      })
+      .finally(()=>{
+        setSyncStatus("ok");
+        renderAll();
+      });
+  }
+
+  // ====== NAV ======
+  function goPage(key){
+    navItems.forEach(n=> n.classList.toggle("active", n.dataset.nav===key));
+    Object.keys(pages).forEach(k=>{
+      if(pages[k]) pages[k].classList.toggle("active", k===key);
+    });
+
+    const titles = {
+      dashboard: ["Dashboard","Visão geral das preventivas"],
+      maquinas: ["Máquinas","Cadastro e gestão de equipamentos"],
+      tarefas: ["Tarefas","Cadastro, edição e controle"],
+      relatorios: ["Relatórios","Geração para impressão e CSV"]
+    };
+    if(pageTitle) pageTitle.textContent = titles[key]?.[0] || "Preventivas";
+    if(pageSubtitle) pageSubtitle.textContent = titles[key]?.[1] || "";
+
+    if(key==="relatorios") renderRelatorioPreview();
+  }
+  navItems.forEach(n=> n.addEventListener("click", ()=> goPage(n.dataset.nav)));
+
+  // ====== CRUD MÁQUINAS ======
+  function clearEqpForm(){
+    selectedEqpId = null;
+    if(eqNome) eqNome.value = "";
+    if(eqLocal) eqLocal.value = "";
+    if(eqSerie) eqSerie.value = "";
+    if(infoEqpSel) infoEqpSel.textContent = "Nenhuma máquina selecionada.";
+    renderMaquinasList();
+    renderEqpSelects();
+    renderTabelas();
+  }
+
+  function setSelectedEqp(eqp){
+    selectedEqpId = eqp?.id || null;
+    if(!eqp) return clearEqpForm();
+    if(eqNome) eqNome.value = eqp.nome || "";
+    if(eqLocal) eqLocal.value = eqp.local || "";
+    if(eqSerie) eqSerie.value = eqp.serie || "";
+    if(infoEqpSel) infoEqpSel.textContent = "Editando: " + (eqp.nome || "—");
+    renderMaquinasList();
+    renderEqpSelects();
+    renderTabelas();
+  }
+
+  function addOrUpdateEquipamento(){
+    const nome = (eqNome?.value || "").trim();
+    if(!nome){ toast("err","Campo obrigatório","Informe o nome da máquina."); return; }
+
+    if(selectedEqpId){
+      const eqp = store.equipamentos.find(e=> e.id===selectedEqpId);
+      if(eqp){
+        eqp.nome = nome;
+        eqp.local = (eqLocal?.value || "").trim();
+        eqp.serie = (eqSerie?.value || "").trim();
+        fullSave();
+        toast("ok","Salvo","Máquina atualizada.");
+        setSelectedEqp(eqp);
+      }
       return;
     }
-    tk.titulo = titulo;
-    tk.periodo = periodo;
-    tk.ultimaISO = ultimaISO;
-    tk.obs = obs;
 
+    const eqp = {
+      id: uid(),
+      nome,
+      local: (eqLocal?.value || "").trim(),
+      serie: (eqSerie?.value || "").trim(),
+      tarefas: []
+    };
+    store.equipamentos.push(eqp);
+    selectedEqpId = eqp.id;
     fullSave();
-    toast("ok","Atualizado","Tarefa atualizada.");
+    toast("ok","Salvo","Máquina cadastrada.");
+    setSelectedEqp(eqp);
+  }
+
+  async function deleteEquipamento(eqpId){
+    const eqp = store.equipamentos.find(e=> e.id===eqpId);
+    if(!eqp) return;
+    const ok = await confirmBox("Excluir máquina", `Excluir "${eqp.nome}" e todas as tarefas?`);
+    if(!ok) return;
+
+    store.equipamentos = store.equipamentos.filter(e=> e.id!==eqpId);
+    if(selectedEqpId===eqpId) selectedEqpId=null;
+    fullSave();
+    toast("ok","Excluído","Máquina removida.");
+    renderAll();
+  }
+
+  function renderMaquinasList(){
+    if(!listaEqp || !countEqp || !emptyEqp) return;
+
+    const q = (buscaEqp?.value || "").trim().toLowerCase();
+    const list = store.equipamentos
+      .slice()
+      .sort((a,b)=> (a.nome||"").localeCompare(b.nome||""))
+      .filter(e=> !q || `${e.nome} ${e.local||""} ${e.serie||""}`.toLowerCase().includes(q));
+
+    listaEqp.innerHTML = "";
+    countEqp.textContent = `${store.equipamentos.length} máquinas`;
+    emptyEqp.style.display = store.equipamentos.length ? "none" : "block";
+
+    list.forEach(eqp=>{
+      const div = document.createElement("div");
+      div.className = "item" + (eqp.id===selectedEqpId ? " active" : "");
+      const sub = [eqp.local, eqp.serie].filter(Boolean).join(" • ");
+      div.innerHTML = `
+        <div>
+          <b>${escapeHtml(eqp.nome||"—")}</b>
+          <small>${escapeHtml(sub || "—")}</small>
+        </div>
+        <div class="actions">
+          <button class="icon-btn danger" title="Excluir" data-del="${eqp.id}" type="button">🗑</button>
+        </div>
+      `;
+      div.addEventListener("click", (ev)=>{
+        const t = ev.target;
+        if(t instanceof HTMLElement && t.closest("[data-del]")) return;
+        setSelectedEqp(eqp);
+      });
+      const delBtn = div.querySelector("[data-del]");
+      if(delBtn) delBtn.addEventListener("click", (ev)=>{ ev.stopPropagation(); deleteEquipamento(eqp.id); });
+      listaEqp.appendChild(div);
+    });
+  }
+
+  function buildEqpHint(eqp){
+    const parts = [];
+    if(eqp.local) parts.push("Local: " + eqp.local);
+    if(eqp.serie) parts.push("Patrimônio/Série: " + eqp.serie);
+    return parts.join(" • ");
+  }
+
+  function renderEqpSelects(){
+    if(!selEqpTarefa || !repMaquina) return;
+
+    selEqpTarefa.innerHTML = "";
+    repMaquina.innerHTML = "";
+
+    const has = store.equipamentos.length > 0;
+
+    const opt0 = document.createElement("option");
+    opt0.value = "";
+    opt0.textContent = has ? "Selecione uma máquina…" : "Cadastre uma máquina primeiro";
+    selEqpTarefa.appendChild(opt0);
+    selEqpTarefa.disabled = !has;
+
+    const optR0 = document.createElement("option");
+    optR0.value = "";
+    optR0.textContent = "Todas as máquinas";
+    repMaquina.appendChild(optR0);
+
+    store.equipamentos
+      .slice()
+      .sort((a,b)=> (a.nome||"").localeCompare(b.nome||""))
+      .forEach(e=>{
+        const o = document.createElement("option");
+        o.value = e.id;
+        o.textContent = e.nome;
+        selEqpTarefa.appendChild(o);
+
+        const o2 = document.createElement("option");
+        o2.value = e.id;
+        o2.textContent = e.nome;
+        repMaquina.appendChild(o2);
+      });
+
+    if(selectedEqpId && store.equipamentos.some(e=> e.id===selectedEqpId)){
+      selEqpTarefa.value = selectedEqpId;
+      const eqp = store.equipamentos.find(e=> e.id===selectedEqpId);
+      if(hintEqpTarefa) hintEqpTarefa.textContent = eqp ? buildEqpHint(eqp) : "";
+    }else{
+      selEqpTarefa.value = "";
+      if(hintEqpTarefa) hintEqpTarefa.textContent = "";
+    }
+  }
+
+  // ====== TAREFAS (ADD + EDIT + SAVE) ======
+  function clearTaskForm(){
+    if(tkTitulo) tkTitulo.value = "";
+    if(tkPeriodo) tkPeriodo.value = "30";
+    if(tkUltima) tkUltima.value = "";
+    if(tkObs) tkObs.value = "";
+    editingTask = null;
+    if(btnSalvarTarefa){
+      btnSalvarTarefa.textContent = "Adicionar";
+      btnSalvarTarefa.classList.remove("warn");
+      btnSalvarTarefa.classList.add("primary");
+    }
+  }
+  function setTaskModeEdit(){
+    if(btnSalvarTarefa){
+      btnSalvarTarefa.textContent = "Salvar alterações";
+      btnSalvarTarefa.classList.remove("primary");
+      btnSalvarTarefa.classList.add("warn");
+    }
+  }
+
+  function saveTask(){
+    const eqpId = (selEqpTarefa?.value || "");
+    if(!eqpId){ toast("err","Seleção obrigatória","Selecione a máquina."); return; }
+    const titulo = (tkTitulo?.value || "").trim();
+    if(!titulo){ toast("err","Campo obrigatório","Informe o título da tarefa."); return; }
+
+    const periodo = parseInt(tkPeriodo?.value || "30",10) || 30;
+    const ultimaISO = tkUltima?.value || "";
+    const obs = (tkObs?.value || "").trim();
+
+    const eqp = store.equipamentos.find(e=> e.id===eqpId);
+    if(!eqp){ toast("err","Erro","Máquina não encontrada."); return; }
+    if(!Array.isArray(eqp.tarefas)) eqp.tarefas = [];
+
+    if(editingTask && editingTask.eqpId === eqpId){
+      const tk = eqp.tarefas.find(t=> t.id===editingTask.tkId);
+      if(!tk){
+        toast("warn","Aviso","Tarefa não encontrada. Voltando para adicionar.");
+        clearTaskForm();
+        return;
+      }
+      tk.titulo = titulo;
+      tk.periodo = periodo;
+      tk.ultimaISO = ultimaISO;
+      tk.obs = obs;
+
+      fullSave();
+      toast("ok","Atualizado","Tarefa atualizada.");
+      clearTaskForm();
+      renderTabelas();
+      return;
+    }
+
+    eqp.tarefas.push({ id: uid(), titulo, periodo, ultimaISO, obs });
+    fullSave();
+    toast("ok","Salvo","Tarefa adicionada.");
     clearTaskForm();
     renderTabelas();
-    return;
   }
 
-  // ADICIONAR
-  eqp.tarefas.push({
-    id: uid(),
-    titulo,
-    periodo,
-    ultimaISO,
-    obs
-  });
+  async function deleteTask(eqpId, tkId){
+    const eqp = store.equipamentos.find(e=> e.id===eqpId);
+    const tk = eqp?.tarefas?.find(t=> t.id===tkId);
+    if(!eqp || !tk) return;
 
-  fullSave();
-  toast("ok","Salvo","Tarefa adicionada.");
-  clearTaskForm();
-  renderTabelas();
-}
+    const ok = await confirmBox("Excluir tarefa", `Excluir "${tk.titulo}" da máquina "${eqp.nome}"?`);
+    if(!ok) return;
 
-async function deleteTask(eqpId, tkId){
-  const eqp = store.equipamentos.find(e=> e.id===eqpId);
-  const tk = eqp?.tarefas?.find(t=> t.id===tkId);
-  if(!eqp || !tk) return;
-
-  const ok = await confirmBox("Excluir tarefa", `Excluir a tarefa "${tk.titulo}" da máquina "${eqp.nome}"?`);
-  if(!ok) return;
-
-  eqp.tarefas = eqp.tarefas.filter(t=> t.id!==tkId);
-  fullSave();
-  toast("ok","Excluído","Tarefa removida.");
-  if(editingTask && editingTask.eqpId===eqpId && editingTask.tkId===tkId){
-    clearTaskForm();
+    eqp.tarefas = eqp.tarefas.filter(t=> t.id!==tkId);
+    fullSave();
+    toast("ok","Excluído","Tarefa removida.");
+    if(editingTask && editingTask.eqpId===eqpId && editingTask.tkId===tkId) clearTaskForm();
+    renderTabelas();
   }
-  renderTabelas();
-}
 
-function markDoneToday(eqpId, tkId){
-  const eqp = store.equipamentos.find(e=> e.id===eqpId);
-  const tk = eqp?.tarefas?.find(t=> t.id===tkId);
-  if(!eqp || !tk) return;
+  function markDoneToday(eqpId, tkId){
+    const eqp = store.equipamentos.find(e=> e.id===eqpId);
+    const tk = eqp?.tarefas?.find(t=> t.id===tkId);
+    if(!eqp || !tk) return;
 
-  tk.ultimaISO = todayISO();
-  fullSave();
-  toast("ok","Concluída","Marcada como feita hoje.");
-  renderTabelas();
-}
+    tk.ultimaISO = todayISO();
+    fullSave();
+    toast("ok","Concluída","Marcada como feita hoje.");
+    renderTabelas();
+  }
 
-function editTask(eqpId, tkId){
-  const eqp = store.equipamentos.find(e=> e.id===eqpId);
-  const tk = eqp?.tarefas?.find(t=> t.id===tkId);
-  if(!eqp || !tk) return;
+  function editTask(eqpId, tkId){
+    const eqp = store.equipamentos.find(e=> e.id===eqpId);
+    const tk = eqp?.tarefas?.find(t=> t.id===tkId);
+    if(!eqp || !tk) return;
 
-  goPage("tarefas");
-  selectedEqpId = eqp.id;
-  renderEqpSelects();
+    goPage("tarefas");
+    selectedEqpId = eqp.id;
+    renderEqpSelects();
 
-  selEqpTarefa.value = eqp.id;
-  hintEqpTarefa.textContent = buildEqpHint(eqp);
+    if(selEqpTarefa) selEqpTarefa.value = eqp.id;
+    if(hintEqpTarefa) hintEqpTarefa.textContent = buildEqpHint(eqp);
 
-  tkTitulo.value = tk.titulo || "";
-  tkPeriodo.value = String(tk.periodo || 30);
-  tkUltima.value = tk.ultimaISO || "";
-  tkObs.value = tk.obs || "";
+    if(tkTitulo) tkTitulo.value = tk.titulo || "";
+    if(tkPeriodo) tkPeriodo.value = String(tk.periodo || 30);
+    if(tkUltima) tkUltima.value = tk.ultimaISO || "";
+    if(tkObs) tkObs.value = tk.obs || "";
 
-  editingTask = { eqpId, tkId };
-  setTaskModeEdit();
-  window.scrollTo({top:0,behavior:"smooth"});
-}
+    editingTask = { eqpId, tkId };
+    setTaskModeEdit();
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
 
-/* =========================
-   ROWS (dados unificados)
-========================= */
-function buildRows(){
-  const rows = [];
-  store.equipamentos.forEach(eqp=>{
-    (eqp.tarefas || []).forEach(tk=>{
-      const nextISO = computeNext(tk.ultimaISO, tk.periodo);
-      rows.push({
-        eqpId:eqp.id,
-        tkId:tk.id,
-        equipamento:eqp.nome || "—",
-        local:eqp.local || "",
-        serie:eqp.serie || "",
-        tarefa:tk.titulo || "—",
-        periodo: tk.periodo || 30,
-        ultima: tk.ultimaISO || "",
-        proxima: nextISO,
-        status: statusFor(nextISO),
-        obs: tk.obs || ""
+  // ====== DADOS UNIFICADOS ======
+  function buildRows(){
+    const rows = [];
+    store.equipamentos.forEach(eqp=>{
+      (eqp.tarefas || []).forEach(tk=>{
+        const nextISO = computeNext(tk.ultimaISO, tk.periodo);
+        rows.push({
+          eqpId:eqp.id,
+          tkId:tk.id,
+          equipamento:eqp.nome || "—",
+          local:eqp.local || "",
+          serie:eqp.serie || "",
+          tarefa:tk.titulo || "—",
+          periodo: tk.periodo || 30,
+          ultima: tk.ultimaISO || "",
+          proxima: nextISO,
+          status: statusFor(nextISO),
+          obs: tk.obs || ""
+        });
       });
     });
-  });
-  rows.sort((a,b)=> a.proxima.localeCompare(b.proxima));
-  return rows;
-}
+    rows.sort((a,b)=> a.proxima.localeCompare(b.proxima));
+    return rows;
+  }
 
-/* =========================
-   RENDER TABELAS / KPI
-========================= */
-function renderTabelas(){
-  const rows = buildRows();
+  // ====== RENDER KPI/TABELAS ======
+  function renderDash(rows){
+    if(!tbodyDash) return;
+    const t = todayISO();
+    const mode = dashFiltro?.value || "todas";
+    let list = rows.slice();
 
-  // KPI
-  const t = todayISO();
-  const atr = rows.filter(r=> r.proxima < t).length;
-  const ate7 = rows.filter(r=> { const d = diffDays(r.proxima, t); return d>=0 && d<=7; }).length;
-  const ate30 = rows.filter(r=> { const d = diffDays(r.proxima, t); return d>=0 && d<=30; }).length;
+    if(mode==="atrasadas") list = list.filter(r=> r.proxima < t);
+    else if(mode==="sete") list = list.filter(r=> { const d=diffDays(r.proxima,t); return d>=0 && d<=7; });
+    else if(mode==="trinta") list = list.filter(r=> { const d=diffDays(r.proxima,t); return d>=0 && d<=30; });
 
-  kpiAtr.textContent = atr;
-  kpi7.textContent = ate7;
-  kpi30.textContent = ate30;
-  kpiTot.textContent = rows.length;
-  kpiMeta.textContent = `${store.equipamentos.length} máquinas cadastradas`;
+    list = list.slice(0,20);
 
-  // TABLE: tarefas (page tarefas)
-  const q = (busca.value || "").trim().toLowerCase();
-  const fil = selFiltro.value;
+    tbodyDash.innerHTML = "";
+    if(!list.length){
+      tbodyDash.innerHTML = `<tr><td colspan="5" class="muted">Nenhuma tarefa para este filtro.</td></tr>`;
+      return;
+    }
 
-  const lista = rows.filter(r=>{
-    const passBusca = !q || `${r.equipamento} ${r.tarefa} ${r.local} ${r.serie}`.toLowerCase().includes(q);
-    let passFiltro = true;
-    const d = diffDays(r.proxima, t);
-    if(fil==="atrasadas") passFiltro = r.proxima < t;
-    else if(fil==="sete") passFiltro = d>=0 && d<=7;
-    else if(fil==="trinta") passFiltro = d>=0 && d<=30;
-    return passBusca && passFiltro;
-  });
-
-  tbody.innerHTML = "";
-  if(!lista.length){
-    const tr = document.createElement("tr");
-    tr.innerHTML = `<td colspan="7" class="muted">Nenhuma tarefa para o filtro atual.</td>`;
-    tbody.appendChild(tr);
-  }else{
-    lista.forEach(r=>{
-      const meta = [r.local, r.serie].filter(Boolean).join(" • ");
+    list.forEach(r=>{
       const tr = document.createElement("tr");
       tr.innerHTML = `
-        <td><b>${escapeHtml(r.equipamento)}</b><div class="muted">${escapeHtml(meta || "")}</div></td>
-        <td>${escapeHtml(r.tarefa)}<div class="muted">${escapeHtml(r.obs || "")}</div></td>
-        <td>${escapeHtml(String(r.periodo))}d</td>
-        <td>${escapeHtml(fmtBR(r.ultima))}</td>
+        <td><b>${escapeHtml(r.equipamento)}</b><div class="muted">${escapeHtml(r.local || "")}</div></td>
+        <td>${escapeHtml(r.tarefa)}</td>
         <td>${escapeHtml(fmtBR(r.proxima))}</td>
         <td><span class="badge ${r.status.cls}">${escapeHtml(r.status.label)}</span></td>
         <td>
           <div class="row">
-            <button class="ok" data-done="${r.eqpId}|${r.tkId}" type="button">Feita hoje</button>
-            <button class="ghost" data-edit="${r.eqpId}|${r.tkId}" type="button">Editar</button>
-            <button class="danger" data-del="${r.eqpId}|${r.tkId}" type="button">Excluir</button>
+            <button class="ok" data-dashdone="${r.eqpId}|${r.tkId}" type="button">Feita hoje</button>
+            <button class="ghost" data-dashedit="${r.eqpId}|${r.tkId}" type="button">Editar</button>
           </div>
         </td>
       `;
-      tbody.appendChild(tr);
+      tbodyDash.appendChild(tr);
     });
   }
 
-  // TABLE: dashboard (top 20)
-  renderDash(rows);
+  function renderTabelas(){
+    const rows = buildRows();
 
-  // Relatório preview
-  renderRelatorioPreview(rows);
-}
+    const t = todayISO();
+    const atr = rows.filter(r=> r.proxima < t).length;
+    const ate7 = rows.filter(r=> { const d = diffDays(r.proxima, t); return d>=0 && d<=7; }).length;
+    const ate30 = rows.filter(r=> { const d = diffDays(r.proxima, t); return d>=0 && d<=30; }).length;
 
-function renderDash(rows){
-  const t = todayISO();
-  const mode = dashFiltro.value;
-  let list = rows.slice();
+    if(kpiAtr) kpiAtr.textContent = atr;
+    if(kpi7) kpi7.textContent = ate7;
+    if(kpi30) kpi30.textContent = ate30;
+    if(kpiTot) kpiTot.textContent = rows.length;
+    if(kpiMeta) kpiMeta.textContent = `${store.equipamentos.length} máquinas cadastradas`;
 
-  if(mode==="atrasadas") list = list.filter(r=> r.proxima < t);
-  else if(mode==="sete") list = list.filter(r=> { const d=diffDays(r.proxima,t); return d>=0 && d<=7; });
-  else if(mode==="trinta") list = list.filter(r=> { const d=diffDays(r.proxima,t); return d>=0 && d<=30; });
+    // tabela tarefas
+    if(tbody){
+      const q = (busca?.value || "").trim().toLowerCase();
+      const fil = selFiltro?.value || "todos";
 
-  list = list.slice(0,20);
+      const lista = rows.filter(r=>{
+        const passBusca = !q || `${r.equipamento} ${r.tarefa} ${r.local} ${r.serie}`.toLowerCase().includes(q);
+        let passFiltro = true;
+        const d = diffDays(r.proxima, t);
+        if(fil==="atrasadas") passFiltro = r.proxima < t;
+        else if(fil==="sete") passFiltro = d>=0 && d<=7;
+        else if(fil==="trinta") passFiltro = d>=0 && d<=30;
+        return passBusca && passFiltro;
+      });
 
-  tbodyDash.innerHTML = "";
-  if(!list.length){
-    const tr = document.createElement("tr");
-    tr.innerHTML = `<td colspan="5" class="muted">Nenhuma tarefa para este filtro.</td>`;
-    tbodyDash.appendChild(tr);
-    return;
+      tbody.innerHTML = "";
+      if(!lista.length){
+        tbody.innerHTML = `<tr><td colspan="7" class="muted">Nenhuma tarefa para o filtro atual.</td></tr>`;
+      }else{
+        lista.forEach(r=>{
+          const meta = [r.local, r.serie].filter(Boolean).join(" • ");
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td><b>${escapeHtml(r.equipamento)}</b><div class="muted">${escapeHtml(meta || "")}</div></td>
+            <td>${escapeHtml(r.tarefa)}<div class="muted">${escapeHtml(r.obs || "")}</div></td>
+            <td>${escapeHtml(String(r.periodo))}d</td>
+            <td>${escapeHtml(fmtBR(r.ultima))}</td>
+            <td>${escapeHtml(fmtBR(r.proxima))}</td>
+            <td><span class="badge ${r.status.cls}">${escapeHtml(r.status.label)}</span></td>
+            <td>
+              <div class="row">
+                <button class="ok" data-done="${r.eqpId}|${r.tkId}" type="button">Feita hoje</button>
+                <button class="ghost" data-edit="${r.eqpId}|${r.tkId}" type="button">Editar</button>
+                <button class="danger" data-del="${r.eqpId}|${r.tkId}" type="button">Excluir</button>
+              </div>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+    }
+
+    renderDash(rows);
+    renderRelatorioPreview(rows);
   }
 
-  list.forEach(r=>{
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td><b>${escapeHtml(r.equipamento)}</b><div class="muted">${escapeHtml(r.local || "")}</div></td>
-      <td>${escapeHtml(r.tarefa)}</td>
-      <td>${escapeHtml(fmtBR(r.proxima))}</td>
-      <td><span class="badge ${r.status.cls}">${escapeHtml(r.status.label)}</span></td>
-      <td>
-        <div class="row">
-          <button class="ok" data-dashdone="${r.eqpId}|${r.tkId}" type="button">Feita hoje</button>
-          <button class="ghost" data-dashedit="${r.eqpId}|${r.tkId}" type="button">Editar</button>
+  // ====== RELATÓRIO ======
+  function filterForReport(rows){
+    const t = todayISO();
+    let list = rows ? rows.slice() : buildRows();
+
+    const tipo = repFiltro?.value || "atrasadas";
+    if(tipo==="atrasadas") list = list.filter(r=> r.proxima < t);
+    else if(tipo==="sete") list = list.filter(r=> { const d=diffDays(r.proxima,t); return d>=0 && d<=7; });
+    else if(tipo==="trinta") list = list.filter(r=> { const d=diffDays(r.proxima,t); return d>=0 && d<=30; });
+
+    const loc = (repLocal?.value || "").trim().toLowerCase();
+    if(loc) list = list.filter(r=> (r.local||"").toLowerCase().includes(loc));
+
+    const eqpId = repMaquina?.value || "";
+    if(eqpId) list = list.filter(r=> r.eqpId === eqpId);
+
+    list.sort((a,b)=> a.proxima.localeCompare(b.proxima));
+    return list;
+  }
+
+  function renderRelatorioPreview(rows){
+    if(!tbodyRep || !repCount) return;
+    const list = filterForReport(rows);
+    repCount.textContent = `${list.length} itens`;
+
+    tbodyRep.innerHTML = "";
+    if(!list.length){
+      tbodyRep.innerHTML = `<tr><td colspan="5" class="muted">Nenhum item para o filtro do relatório.</td></tr>`;
+      return;
+    }
+
+    list.slice(0,200).forEach(r=>{
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td><b>${escapeHtml(r.equipamento)}</b></td>
+        <td>${escapeHtml(r.local || "")}</td>
+        <td>${escapeHtml(r.tarefa)}</td>
+        <td>${escapeHtml(fmtBR(r.proxima))}</td>
+        <td><span class="badge ${r.status.cls}">${escapeHtml(r.status.label)}</span></td>
+      `;
+      tbodyRep.appendChild(tr);
+    });
+  }
+
+  function generateReportPrint(){
+    const rows = filterForReport();
+    const tipoTxt = repFiltro?.options?.[repFiltro.selectedIndex]?.textContent || "—";
+    const locTxt = (repLocal?.value || "").trim();
+    const eqpTxt = (repMaquina?.value)
+      ? (repMaquina.options?.[repMaquina.selectedIndex]?.textContent || "—")
+      : "Todas";
+    const now = new Date();
+
+    const css = `
+      body{font-family:Arial, sans-serif; margin:18px; color:#111;}
+      h1{margin:0; font-size:18px;}
+      .meta{margin-top:6px; color:#444; font-size:12px;}
+      table{width:100%; border-collapse:collapse; margin-top:14px; font-size:12px;}
+      th,td{border:1px solid #ddd; padding:8px; text-align:left; vertical-align:top;}
+      th{background:#f3f4f6;}
+      .badge{display:inline-block; padding:3px 8px; border-radius:999px; font-weight:700; font-size:11px; border:1px solid #ddd;}
+      .b-ok{background:#ecfdf5; color:#166534; border-color:#86efac;}
+      .b-warn{background:#fffbeb; color:#92400e; border-color:#fde68a;}
+      .b-err{background:#fef2f2; color:#991b1b; border-color:#fecaca;}
+      @media print{button{display:none}}
+    `;
+
+    const trs = rows.map(r=>`
+      <tr>
+        <td><b>${escapeHtml(r.equipamento)}</b><div style="color:#666; font-size:11px">${escapeHtml([r.local,r.serie].filter(Boolean).join(" • "))}</div></td>
+        <td>${escapeHtml(r.tarefa)}<div style="color:#666; font-size:11px">${escapeHtml(r.obs||"")}</div></td>
+        <td>${escapeHtml(String(r.periodo))}d</td>
+        <td>${escapeHtml(fmtBR(r.ultima))}</td>
+        <td>${escapeHtml(fmtBR(r.proxima))}</td>
+        <td><span class="badge ${r.status.cls}">${escapeHtml(r.status.label)}</span></td>
+      </tr>
+    `).join("");
+
+    const html = `
+      <!doctype html>
+      <html><head><meta charset="utf-8"><title>Relatório Preventivas</title><style>${css}</style></head>
+      <body>
+        <h1>Relatório de Preventivas — Grilazer</h1>
+        <div class="meta">
+          Gerado em: ${now.toLocaleString('pt-BR')}<br>
+          Tipo: <b>${escapeHtml(tipoTxt)}</b><br>
+          Local/Setor: <b>${escapeHtml(locTxt || "Todos")}</b><br>
+          Máquina: <b>${escapeHtml(eqpTxt)}</b><br>
+          Total: <b>${rows.length}</b>
         </div>
-      </td>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Máquina</th>
+              <th>Tarefa</th>
+              <th>Período</th>
+              <th>Última</th>
+              <th>Próxima</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>${trs || `<tr><td colspan="6">Nenhum item</td></tr>`}</tbody>
+        </table>
+
+        <script>window.print();</script>
+      </body></html>
     `;
-    tbodyDash.appendChild(tr);
-  });
-}
 
-/* =========================
-   RELATÓRIOS
-========================= */
-function filterForReport(rows){
-  const t = todayISO();
-  let list = rows ? rows.slice() : buildRows();
-
-  const tipo = repFiltro.value;
-  if(tipo==="atrasadas") list = list.filter(r=> r.proxima < t);
-  else if(tipo==="sete") list = list.filter(r=> { const d=diffDays(r.proxima,t); return d>=0 && d<=7; });
-  else if(tipo==="trinta") list = list.filter(r=> { const d=diffDays(r.proxima,t); return d>=0 && d<=30; });
-
-  const loc = (repLocal.value||"").trim().toLowerCase();
-  if(loc) list = list.filter(r=> (r.local||"").toLowerCase().includes(loc));
-
-  const eqpId = repMaquina.value || "";
-  if(eqpId){
-    list = list.filter(r=> r.eqpId === eqpId);
+    const w = window.open("", "_blank");
+    w.document.open();
+    w.document.write(html);
+    w.document.close();
   }
 
-  list.sort((a,b)=> a.proxima.localeCompare(b.proxima));
-  return list;
-}
+  function downloadCSV(){
+    const rows = filterForReport();
+    const header = ["Maquina","Local","Serie","Tarefa","PeriodoDias","Ultima","Proxima","Status","Obs"];
+    const lines = rows.map(r=>[
+      r.equipamento, r.local, r.serie, r.tarefa, r.periodo,
+      r.ultima, r.proxima, r.status.label, (r.obs||"")
+    ].map(v => `"${String(v??"").replace(/"/g,'""')}"`).join(","));
+    const csv = [header.join(","), ...lines].join("\n");
 
-function renderRelatorioPreview(rows){
-  const list = filterForReport(rows);
-  repCount.textContent = `${list.length} itens`;
-
-  tbodyRep.innerHTML = "";
-  if(!list.length){
-    const tr = document.createElement("tr");
-    tr.innerHTML = `<td colspan="5" class="muted">Nenhum item para o filtro do relatório.</td>`;
-    tbodyRep.appendChild(tr);
-    return;
+    const blob = new Blob([csv], {type:"text/csv;charset=utf-8"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `relatorio_preventivas_${todayISO()}.csv`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    toast("ok","CSV gerado","Download iniciado.");
   }
 
-  list.slice(0,200).forEach(r=>{
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td><b>${escapeHtml(r.equipamento)}</b></td>
-      <td>${escapeHtml(r.local || "")}</td>
-      <td>${escapeHtml(r.tarefa)}</td>
-      <td>${escapeHtml(fmtBR(r.proxima))}</td>
-      <td><span class="badge ${r.status.cls}">${escapeHtml(r.status.label)}</span></td>
-    `;
-    tbodyRep.appendChild(tr);
-  });
-}
-
-function generateReportPrint(){
-  const rows = filterForReport();
-  const tipoTxt = repFiltro.options[repFiltro.selectedIndex]?.textContent || "—";
-  const locTxt = (repLocal.value||"").trim();
-  const eqpTxt = repMaquina.value ? (repMaquina.options[repMaquina.selectedIndex]?.textContent||"—") : "Todas";
-  const now = new Date();
-
-  const css = `
-    body{font-family:Arial, sans-serif; margin:18px; color:#111;}
-    h1{margin:0; font-size:18px;}
-    .meta{margin-top:6px; color:#444; font-size:12px;}
-    table{width:100%; border-collapse:collapse; margin-top:14px; font-size:12px;}
-    th,td{border:1px solid #ddd; padding:8px; text-align:left; vertical-align:top;}
-    th{background:#f3f4f6;}
-    .badge{display:inline-block; padding:3px 8px; border-radius:999px; font-weight:700; font-size:11px; border:1px solid #ddd;}
-    .b-ok{background:#ecfdf5; color:#166534; border-color:#86efac;}
-    .b-warn{background:#fffbeb; color:#92400e; border-color:#fde68a;}
-    .b-err{background:#fef2f2; color:#991b1b; border-color:#fecaca;}
-    @media print{button{display:none}}
-  `;
-
-  const trs = rows.map(r=>`
-    <tr>
-      <td><b>${escapeHtml(r.equipamento)}</b><div style="color:#666; font-size:11px">${escapeHtml([r.local,r.serie].filter(Boolean).join(" • "))}</div></td>
-      <td>${escapeHtml(r.tarefa)}<div style="color:#666; font-size:11px">${escapeHtml(r.obs||"")}</div></td>
-      <td>${escapeHtml(String(r.periodo))}d</td>
-      <td>${escapeHtml(fmtBR(r.ultima))}</td>
-      <td>${escapeHtml(fmtBR(r.proxima))}</td>
-      <td><span class="badge ${r.status.cls}">${escapeHtml(r.status.label)}</span></td>
-    </tr>
-  `).join("");
-
-  const html = `
-    <!doctype html>
-    <html><head><meta charset="utf-8"><title>Relatório Preventivas</title><style>${css}</style></head>
-    <body>
-      <h1>Relatório de Preventivas — Grilazer</h1>
-      <div class="meta">
-        Gerado em: ${now.toLocaleString('pt-BR')}<br>
-        Tipo: <b>${escapeHtml(tipoTxt)}</b><br>
-        Local/Setor: <b>${escapeHtml(locTxt || "Todos")}</b><br>
-        Máquina: <b>${escapeHtml(eqpTxt)}</b><br>
-        Total: <b>${rows.length}</b>
-      </div>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Máquina</th>
-            <th>Tarefa</th>
-            <th>Período</th>
-            <th>Última</th>
-            <th>Próxima</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>${trs || `<tr><td colspan="6">Nenhum item</td></tr>`}</tbody>
-      </table>
-
-      <script>window.print();</script>
-    </body></html>
-  `;
-
-  const w = window.open("", "_blank");
-  w.document.open();
-  w.document.write(html);
-  w.document.close();
-}
-
-function downloadCSV(){
-  const rows = filterForReport();
-  const header = ["Maquina","Local","Serie","Tarefa","PeriodoDias","Ultima","Proxima","Status","Obs"];
-  const lines = rows.map(r=>[
-    r.equipamento, r.local, r.serie, r.tarefa, r.periodo,
-    r.ultima, r.proxima, r.status.label, (r.obs||"")
-  ].map(v => `"${String(v??"").replaceAll('"','""')}"`).join(","));
-  const csv = [header.join(","), ...lines].join("\n");
-
-  const blob = new Blob([csv], {type:"text/csv;charset=utf-8"});
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = `relatorio_preventivas_${todayISO()}.csv`;
-  a.click();
-  URL.revokeObjectURL(a.href);
-  toast("ok","CSV gerado","Download iniciado.");
-}
-
-/* =========================
-   EVENTOS TABELAS
-========================= */
-tbody.addEventListener("click", (ev)=>{
-  const el = ev.target;
-  if(!(el instanceof HTMLElement)) return;
-
-  if(el.hasAttribute("data-done")){
-    const [eqpId, tkId] = el.getAttribute("data-done").split("|");
-    markDoneToday(eqpId, tkId);
-  }else if(el.hasAttribute("data-edit")){
-    const [eqpId, tkId] = el.getAttribute("data-edit").split("|");
-    editTask(eqpId, tkId);
-  }else if(el.hasAttribute("data-del")){
-    const [eqpId, tkId] = el.getAttribute("data-del").split("|");
-    deleteTask(eqpId, tkId);
+  // ====== RENDER GERAL ======
+  function renderAll(){
+    renderMaquinasList();
+    renderEqpSelects();
+    renderTabelas();
   }
-});
 
-tbodyDash.addEventListener("click", (ev)=>{
-  const el = ev.target;
-  if(!(el instanceof HTMLElement)) return;
+  // ====== LISTENERS (SAFE) ======
+  if(btnNovoEqp) btnNovoEqp.addEventListener("click", clearEqpForm);
+  if(btnSalvarEqp) btnSalvarEqp.addEventListener("click", addOrUpdateEquipamento);
+  if(btnLimparEqp) btnLimparEqp.addEventListener("click", clearEqpForm);
+  if(buscaEqp) buscaEqp.addEventListener("input", renderMaquinasList);
 
-  if(el.hasAttribute("data-dashdone")){
-    const [eqpId, tkId] = el.getAttribute("data-dashdone").split("|");
-    markDoneToday(eqpId, tkId);
-  }else if(el.hasAttribute("data-dashedit")){
-    const [eqpId, tkId] = el.getAttribute("data-dashedit").split("|");
-    editTask(eqpId, tkId);
-  }
-});
-
-/* =========================
-   RENDER GERAL
-========================= */
-function renderAll(){
-  renderMaquinasList();
-  renderEqpSelects();
-  renderTabelas();
-}
-
-/* =========================
-   INIT APP
-========================= */
-function initAppOnce(user){
-  if(appInitialized) return;
-  appInitialized = true;
-
-  todaySpan.textContent = new Date().toLocaleDateString("pt-BR");
-  userInfoSide.textContent = "Logado como: " + user.email;
-
-  // online/offline indicator
-  function updateNet(){
-    netPill.textContent = navigator.onLine ? "Status: online" : "Status: offline";
-    netPill.style.borderColor = navigator.onLine ? "rgba(22,163,74,.25)" : "rgba(245,158,11,.35)";
-  }
-  window.addEventListener("online", ()=>{ updateNet(); toast("ok","Online","Conexão restabelecida."); saveRemote(); });
-  window.addEventListener("offline", ()=>{ updateNet(); toast("warn","Offline","Sem internet. Vou salvar localmente."); });
-  updateNet();
-
-  // load
-  loadLocal();
-  renderAll();
-  syncFromFirebaseOnce();
-
-  // nav
-  goPage("dashboard");
-
-  // maquinas
-  btnNovoEqp.addEventListener("click", ()=>{ clearEqpForm(); toast("ok","Novo","Preencha os dados e salve."); });
-  btnSalvarEqp.addEventListener("click", addOrUpdateEquipamento);
-  btnLimparEqp.addEventListener("click", clearEqpForm);
-  buscaEqp.addEventListener("input", renderMaquinasList);
-
-  // tarefas
-  selEqpTarefa.addEventListener("change", ()=>{
+  if(selEqpTarefa) selEqpTarefa.addEventListener("change", ()=>{
     selectedEqpId = selEqpTarefa.value || null;
     const eqp = store.equipamentos.find(e=> e.id===selectedEqpId);
-    hintEqpTarefa.textContent = eqp ? buildEqpHint(eqp) : "";
-    // trocar máquina cancela edição
+    if(hintEqpTarefa) hintEqpTarefa.textContent = eqp ? buildEqpHint(eqp) : "";
     if(editingTask) clearTaskForm();
   });
-  btnSalvarTarefa.addEventListener("click", saveTask);
-  btnLimparTarefa.addEventListener("click", clearTaskForm);
-  busca.addEventListener("input", renderTabelas);
-  selFiltro.addEventListener("change", renderTabelas);
 
-  // dashboard
-  dashFiltro.addEventListener("change", renderTabelas);
-  btnGoRelatorio.addEventListener("click", ()=>{ goPage("relatorios"); });
+  if(btnSalvarTarefa) btnSalvarTarefa.addEventListener("click", saveTask);
+  if(btnLimparTarefa) btnLimparTarefa.addEventListener("click", clearTaskForm);
+  if(busca) busca.addEventListener("input", renderTabelas);
+  if(selFiltro) selFiltro.addEventListener("change", renderTabelas);
 
-  // relatorios
-  repFiltro.addEventListener("change", ()=> renderRelatorioPreview());
-  repLocal.addEventListener("input", ()=> renderRelatorioPreview());
-  repMaquina.addEventListener("change", ()=> renderRelatorioPreview());
-  btnGerarRelatorio.addEventListener("click", generateReportPrint);
-  btnBaixarCSV.addEventListener("click", downloadCSV);
+  if(dashFiltro) dashFiltro.addEventListener("change", renderTabelas);
+  if(btnGoRelatorio) btnGoRelatorio.addEventListener("click", ()=> goPage("relatorios"));
 
-  // misc
-  btnPrintGlobal.addEventListener("click", ()=> window.print());
-}
+  if(repFiltro) repFiltro.addEventListener("change", ()=> renderRelatorioPreview());
+  if(repLocal) repLocal.addEventListener("input", ()=> renderRelatorioPreview());
+  if(repMaquina) repMaquina.addEventListener("change", ()=> renderRelatorioPreview());
+  if(btnGerarRelatorio) btnGerarRelatorio.addEventListener("click", generateReportPrint);
+  if(btnBaixarCSV) btnBaixarCSV.addEventListener("click", downloadCSV);
 
-/* =========================
-   LOGIN/AUTH
-========================= */
-function setLoginLoading(isLoading){
-  btnLogin.disabled = isLoading;
-  btnLogin.textContent = isLoading ? "Entrando..." : "Entrar";
-}
+  if(btnPrintGlobal) btnPrintGlobal.addEventListener("click", ()=> window.print());
+  if(btnLogout) btnLogout.addEventListener("click", ()=> auth.signOut());
 
-function showLogin(){
-  loginScreen.style.display = "flex";
-  appShell.style.display = "none";
-  loginError.textContent = "";
-  loginSenha.value = "";
-}
-
-function showApp(){
-  loginScreen.style.display = "none";
-  appShell.style.display = "block";
-}
-
-auth.onAuthStateChanged(user=>{
-  if(user && allowedEmails.includes(user.email)){
-    showApp();
-    initAppOnce(user);
-  }else{
-    if(user && !allowedEmails.includes(user.email)){
-      auth.signOut();
+  // TABELAS (delegação)
+  if(tbody) tbody.addEventListener("click", (ev)=>{
+    const el = ev.target;
+    if(!(el instanceof HTMLElement)) return;
+    if(el.hasAttribute("data-done")){
+      const [eqpId, tkId] = el.getAttribute("data-done").split("|");
+      markDoneToday(eqpId, tkId);
+    }else if(el.hasAttribute("data-edit")){
+      const [eqpId, tkId] = el.getAttribute("data-edit").split("|");
+      editTask(eqpId, tkId);
+    }else if(el.hasAttribute("data-del")){
+      const [eqpId, tkId] = el.getAttribute("data-del").split("|");
+      deleteTask(eqpId, tkId);
     }
-    showLogin();
-  }
-});
+  });
 
-btnLogin.addEventListener("click", ()=>{
-  const email = (loginEmail.value || "").trim();
-  const senha = loginSenha.value || "";
-  if(!email || !senha){
-    loginError.textContent = "Preencha e-mail e senha.";
-    return;
+  if(tbodyDash) tbodyDash.addEventListener("click", (ev)=>{
+    const el = ev.target;
+    if(!(el instanceof HTMLElement)) return;
+    if(el.hasAttribute("data-dashdone")){
+      const [eqpId, tkId] = el.getAttribute("data-dashdone").split("|");
+      markDoneToday(eqpId, tkId);
+    }else if(el.hasAttribute("data-dashedit")){
+      const [eqpId, tkId] = el.getAttribute("data-dashedit").split("|");
+      editTask(eqpId, tkId);
+    }
+  });
+
+  // ====== LOGIN FLOW ======
+  function setLoginLoading(isLoading){
+    if(!btnLogin) return;
+    btnLogin.disabled = isLoading;
+    btnLogin.textContent = isLoading ? "Entrando..." : "Entrar";
   }
-  setLoginLoading(true);
-  loginError.textContent = "";
-  auth.signInWithEmailAndPassword(email, senha)
-    .then(cred=>{
-      const u = cred.user;
-      if(!allowedEmails.includes(u.email)){
-        auth.signOut();
-        loginError.textContent = "Seu usuário não tem permissão para acessar este painel.";
+
+  function showLogin(){
+    if(loginScreen) loginScreen.style.display = "flex";
+    if(appShell) appShell.style.display = "none";
+    if(loginError) loginError.textContent = "";
+    if(loginSenha) loginSenha.value = "";
+  }
+
+  function showApp(user){
+    if(loginScreen) loginScreen.style.display = "none";
+    if(appShell) appShell.style.display = "block";
+    if(userInfoSide) userInfoSide.textContent = "Logado como: " + (user?.email || "—");
+  }
+
+  function updateNet(){
+    if(!netPill) return;
+    const on = navigator.onLine;
+    netPill.textContent = on ? "Status: online" : "Status: offline";
+    netPill.style.borderColor = on ? "rgba(22,163,74,.25)" : "rgba(245,158,11,.35)";
+  }
+  window.addEventListener("online", ()=>{ updateNet(); toast("ok","Online","Conexão voltou."); saveRemote(); });
+  window.addEventListener("offline", ()=>{ updateNet(); toast("warn","Offline","Sem internet. Salvando local."); });
+  updateNet();
+
+  if(todaySpan) todaySpan.textContent = new Date().toLocaleDateString("pt-BR");
+
+  auth.onAuthStateChanged(user=>{
+    if(user && allowedEmails.includes(user.email)){
+      showApp(user);
+      if(!appInitialized){
+        appInitialized = true;
+        loadLocal();
+        renderAll();
+        syncFromFirebaseOnce();
+        goPage("dashboard");
       }
-    })
-    .catch(err=>{
-      console.error(err);
-      loginError.textContent = "Login inválido. Verifique e-mail e senha.";
-    })
-    .finally(()=> setLoginLoading(false));
-});
+    }else{
+      if(user && !allowedEmails.includes(user.email)){
+        auth.signOut();
+      }
+      showLogin();
+    }
+  });
 
-btnLogout.addEventListener("click", ()=> auth.signOut());
+  if(btnLogin) btnLogin.addEventListener("click", ()=>{
+    const email = (loginEmail?.value || "").trim();
+    const senha = (loginSenha?.value || "");
+    if(!email || !senha){
+      if(loginError) loginError.textContent = "Preencha e-mail e senha.";
+      return;
+    }
+    setLoginLoading(true);
+    if(loginError) loginError.textContent = "";
 
-// start
-showLogin();
+    auth.signInWithEmailAndPassword(email, senha)
+      .then(cred=>{
+        const u = cred.user;
+        if(u && !allowedEmails.includes(u.email)){
+          auth.signOut();
+          if(loginError) loginError.textContent = "Seu usuário não tem permissão para acessar este painel.";
+        }
+      })
+      .catch(err=>{
+        console.error(err);
+        if(loginError) loginError.textContent = "Login inválido. Verifique e-mail e senha.";
+      })
+      .finally(()=> setLoginLoading(false));
+  });
+
+  // start
+  showLogin();
+})();
 </script>
 
 </body>
