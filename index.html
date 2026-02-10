@@ -296,6 +296,20 @@
       color: var(--muted);
     }
 
+    /* Aviso modo edição */
+    .edit-banner{
+      display:none;
+      margin:10px 0 0 0;
+      border:1px solid rgba(245,158,11,.35);
+      background: rgba(245,158,11,.12);
+      color:#92400e;
+      border-radius:14px;
+      padding:10px 10px;
+      font-size:12px;
+      font-weight:900;
+    }
+    .edit-banner strong{font-weight:1000}
+
     .kpi{
       display:grid;
       gap:10px;
@@ -374,6 +388,7 @@
       .controls{display:none !important}
       .card,.topbar{box-shadow:none !important}
       .table{background:#fff}
+      .tabs,.filters,.edit-banner{display:none !important}
     }
   </style>
 
@@ -401,7 +416,7 @@
         <input type="password" id="loginSenha" autocomplete="current-password" placeholder="••••••••">
       </div>
 
-      <button class="btn" id="btnLogin">Entrar</button>
+      <button class="btn" id="btnLogin" type="button">Entrar</button>
       <div class="login-error" id="loginError"></div>
 
       <div class="login-foot">
@@ -424,6 +439,7 @@
 
       <div class="controls">
         <button class="ghost" id="btnNovoEqp" type="button">Novo</button>
+        <button class="ghost" id="btnRelatorio" type="button">Relatório</button>
         <button class="ghost" type="button" onclick="window.print()">Imprimir</button>
         <button class="ghost" id="btnLogout" type="button">Sair</button>
       </div>
@@ -472,6 +488,10 @@
           <h3>Cadastro de Tarefa</h3>
           <div class="muted">Selecione a máquina e cadastre a tarefa</div>
 
+          <div class="edit-banner" id="editBanner">
+            ✏️ <strong>Modo edição:</strong> você está editando uma tarefa. Clique em <b>Salvar alterações</b> ou <b>Cancelar</b>.
+          </div>
+
           <label for="selEqpTarefa">Máquina</label>
           <select id="selEqpTarefa"></select>
           <div class="muted" id="hintEqpTarefa" style="margin-top:6px"></div>
@@ -501,6 +521,7 @@
 
           <div class="row" style="margin-top:10px">
             <button class="primary" id="btnAddTarefa" type="button">Adicionar</button>
+            <button class="ghost" id="btnCancelarEdicao" type="button" style="display:none">Cancelar</button>
             <button class="ghost" id="btnLimparTarefa" type="button">Limpar</button>
           </div>
 
@@ -514,7 +535,13 @@
       <div class="card">
         <div class="filters">
           <input id="busca" placeholder="Buscar por máquina/tarefa…" style="flex:1;min-width:220px">
+
+          <select id="filtroEqp" title="Filtrar por máquina" style="min-width:180px">
+            <option value="__all__">Todas as máquinas</option>
+          </select>
+
           <span class="pill">Hoje: <span id="today"></span></span>
+
           <select id="selFiltro">
             <option value="todos">Todos</option>
             <option value="atrasadas">Atrasadas</option>
@@ -608,6 +635,11 @@
     userInfoTop.textContent   = "Logado como: " + user.email;
   }
 
+  // Enter para logar
+  loginSenha.addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter') btnLogin.click();
+  });
+
   // ===== APP =====
   const todayISO = ()=> new Date().toISOString().slice(0,10);
   const addDays = (iso, n)=>{
@@ -652,6 +684,8 @@
 
   const selEqpTarefa = document.getElementById('selEqpTarefa');
   const hintEqpTarefa = document.getElementById('hintEqpTarefa');
+  const editBanner = document.getElementById('editBanner');
+  const btnCancelarEdicao = document.getElementById('btnCancelarEdicao');
 
   const tkTitulo = document.getElementById('tkTitulo');
   const tkPeriodo = document.getElementById('tkPeriodo');
@@ -659,6 +693,7 @@
   const tkObs = document.getElementById('tkObs');
 
   const busca = document.getElementById('busca');
+  const filtroEqp = document.getElementById('filtroEqp');
   const selFiltro = document.getElementById('selFiltro');
   const todaySpan = document.getElementById('today');
 
@@ -674,20 +709,26 @@
   const btnLimparTarefa = document.getElementById('btnLimparTarefa');
   const btnNovoEqp = document.getElementById('btnNovoEqp');
 
+  const btnRelatorio = document.getElementById('btnRelatorio');
+
   function setSyncStatus(text){
     syncStatus.textContent = "Sincronização: " + text;
   }
 
-  function setTaskMode(isEdit){
+  function setEditUI(isEdit){
     if(!originalBtnAddText) originalBtnAddText = btnAddTarefa.textContent || "Adicionar";
     if(isEdit){
       btnAddTarefa.textContent = "Salvar alterações";
       btnAddTarefa.classList.add("warn");
       btnAddTarefa.classList.remove("primary");
+      if(editBanner) editBanner.style.display = "block";
+      if(btnCancelarEdicao) btnCancelarEdicao.style.display = "inline-block";
     }else{
       btnAddTarefa.textContent = originalBtnAddText || "Adicionar";
       btnAddTarefa.classList.add("primary");
       btnAddTarefa.classList.remove("warn");
+      if(editBanner) editBanner.style.display = "none";
+      if(btnCancelarEdicao) btnCancelarEdicao.style.display = "none";
       editingTask = null;
     }
   }
@@ -732,6 +773,7 @@
       .finally(()=>{
         renderEqpList();
         renderEqpSelect();
+        renderFiltroEqp();
         renderTabela();
         setSyncStatus("ok");
       });
@@ -745,6 +787,7 @@
     infoEqpSel.textContent = 'Nenhuma máquina selecionada.';
     renderEqpList();
     renderEqpSelect();
+    renderFiltroEqp();
     renderTabela();
   }
 
@@ -753,7 +796,7 @@
     tkPeriodo.value = '30';
     tkUltima.value  = '';
     tkObs.value     = '';
-    setTaskMode(false); // volta para "Adicionar"
+    setEditUI(false);
   }
 
   function setSelectedEqp(eqp){
@@ -806,13 +849,14 @@
           fullSave();
           renderEqpList();
           renderEqpSelect();
+          renderFiltroEqp();
           renderTabela();
         }
       });
 
       div.appendChild(left);
       div.appendChild(btnDel);
-      div.addEventListener('click', ()=> {
+      div.addEventListener('click', ()=>{
         setSelectedEqp(eqp);
         openTab('maquinas');
       });
@@ -846,7 +890,6 @@
       selEqpTarefa.appendChild(opt);
     });
 
-    // manter seleção se possível
     if(selectedEqpId && store.equipamentos.some(e=> e.id===selectedEqpId)){
       selEqpTarefa.value = selectedEqpId;
       const eqp = store.equipamentos.find(e=> e.id===selectedEqpId);
@@ -856,6 +899,30 @@
     }else{
       selEqpTarefa.value = '';
       hintEqpTarefa.textContent = '';
+    }
+  }
+
+  // Filtro por máquina na tabela (direita)
+  function renderFiltroEqp(){
+    const current = filtroEqp.value || "__all__";
+    filtroEqp.innerHTML = '';
+    const optAll = document.createElement('option');
+    optAll.value = "__all__";
+    optAll.textContent = "Todas as máquinas";
+    filtroEqp.appendChild(optAll);
+
+    store.equipamentos.forEach(e=>{
+      const opt = document.createElement('option');
+      opt.value = e.id;
+      opt.textContent = e.nome;
+      filtroEqp.appendChild(opt);
+    });
+
+    // tenta manter seleção
+    if([...filtroEqp.options].some(o=>o.value===current)){
+      filtroEqp.value = current;
+    }else{
+      filtroEqp.value = "__all__";
     }
   }
 
@@ -885,6 +952,7 @@
     fullSave();
     renderEqpList();
     renderEqpSelect();
+    renderFiltroEqp();
     setSelectedEqp(store.equipamentos.find(e=> e.id===selectedEqpId));
   }
 
@@ -917,7 +985,7 @@
       const tk = (eqp.tarefas||[]).find(t=> t.id === editingTask.tkId);
       if(!tk){
         alert('Erro: tarefa não encontrada.');
-        setTaskMode(false);
+        setEditUI(false);
         return;
       }
       tk.titulo = titulo;
@@ -985,8 +1053,14 @@
 
     const q = (busca.value || '').trim().toLowerCase();
     const fil = selFiltro.value;
+    const eqpFilter = filtroEqp.value || "__all__";
 
     let lista = rows;
+
+    // filtro por máquina (direita)
+    if(eqpFilter !== "__all__"){
+      lista = lista.filter(r=> r.eqpId === eqpFilter);
+    }
 
     lista = lista.filter(r=>{
       const passBusca = !q || `${r.equipamento} ${r.tarefa} ${r.local} ${r.serie}`.toLowerCase().includes(q);
@@ -1048,7 +1122,6 @@
       const eqp = store.equipamentos.find(e=> e.id===eqpId);
       const tk = eqp?.tarefas.find(x=> x.id===tkId);
       if(eqp && tk){
-        // abre aba tarefas e preenche
         openTab('tarefas');
 
         selectedEqpId = eqp.id;
@@ -1063,9 +1136,8 @@
         tkUltima.value  = tk.ultimaISO || '';
         tkObs.value     = tk.obs || '';
 
-        // ✅ ativa modo edição
         editingTask = { eqpId, tkId };
-        setTaskMode(true);
+        setEditUI(true);
 
         window.scrollTo({top:0,behavior:'smooth'});
       }
@@ -1077,13 +1149,163 @@
         eqp.tarefas = (eqp.tarefas||[]).filter(x=> x.id!==tkId);
         fullSave();
         renderTabela();
-        // se estava editando essa tarefa, cancela modo edição
         if(editingTask && editingTask.eqpId===eqpId && editingTask.tkId===tkId){
           clearTaskForm();
         }
       }
     }
   });
+
+  // ===== RELATÓRIO (Imprimir + CSV) =====
+  function buildRows(){
+    const rows = [];
+    store.equipamentos.forEach(eqp=>{
+      (eqp.tarefas||[]).forEach(tk=>{
+        const nextISO = computeNext(tk.ultimaISO, tk.periodo);
+        rows.push({
+          eqpId:eqp.id,
+          tkId:tk.id,
+          equipamento:eqp.nome,
+          local:eqp.local||'',
+          serie:eqp.serie||'',
+          tarefa:tk.titulo,
+          periodo:tk.periodo,
+          ultima:tk.ultimaISO || '',
+          proxima:nextISO,
+          status:statusFor(nextISO).label,
+          obs:tk.obs||''
+        });
+      });
+    });
+    rows.sort((a,b)=> a.proxima.localeCompare(b.proxima));
+    return rows;
+  }
+
+  function rowsFilteredForUI(){
+    const t = todayISO();
+    let rows = buildRows();
+
+    const q = (busca.value || '').trim().toLowerCase();
+    const fil = selFiltro.value;
+    const eqpFilter = filtroEqp.value || "__all__";
+
+    if(eqpFilter !== "__all__"){
+      rows = rows.filter(r=> r.eqpId === eqpFilter);
+    }
+
+    rows = rows.filter(r=>{
+      const passBusca = !q || `${r.equipamento} ${r.tarefa} ${r.local} ${r.serie}`.toLowerCase().includes(q);
+      let passFiltro = true;
+      const d = diffDays(r.proxima, t);
+      if(fil==='atrasadas') passFiltro = r.proxima < t;
+      else if(fil==='sete') passFiltro = d>=0 && d<=7;
+      else if(fil==='trinta') passFiltro = d>=0 && d<=30;
+      return passBusca && passFiltro;
+    });
+
+    return rows;
+  }
+
+  function downloadCSV(rows){
+    const header = ["Maquina","Local","Serie","Tarefa","PeriodoDias","Ultima","Proxima","Status","Obs"];
+    const lines = rows.map(r=>[
+      r.equipamento, r.local, r.serie, r.tarefa, r.periodo,
+      r.ultima, r.proxima, r.status, r.obs
+    ].map(v => `"${String(v??"").replace(/"/g,'""')}"`).join(","));
+
+    const csv = [header.join(","), ...lines].join("\n");
+    const blob = new Blob([csv], {type:"text/csv;charset=utf-8"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `relatorio_preventivas_${todayISO()}.csv`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  function printReport(rows){
+    const now = new Date().toLocaleString('pt-BR');
+    const css = `
+      body{font-family:Arial, sans-serif; margin:18px; color:#111;}
+      h1{margin:0; font-size:18px;}
+      .meta{margin-top:6px; color:#444; font-size:12px; line-height:1.35}
+      table{width:100%; border-collapse:collapse; margin-top:14px; font-size:12px;}
+      th,td{border:1px solid #ddd; padding:8px; text-align:left; vertical-align:top;}
+      th{background:#f3f4f6;}
+      @media print{button{display:none}}
+    `;
+
+    const trs = rows.map(r=>`
+      <tr>
+        <td><b>${escapeHtml(r.equipamento)}</b><div style="color:#666; font-size:11px">${escapeHtml([r.local,r.serie].filter(Boolean).join(" • "))}</div></td>
+        <td>${escapeHtml(r.tarefa)}<div style="color:#666; font-size:11px">${escapeHtml(r.obs||"")}</div></td>
+        <td>${escapeHtml(String(r.periodo))}d</td>
+        <td>${escapeHtml(fmtBR(r.ultima))}</td>
+        <td>${escapeHtml(fmtBR(r.proxima))}</td>
+        <td>${escapeHtml(r.status)}</td>
+      </tr>
+    `).join("");
+
+    const html = `
+      <!doctype html>
+      <html><head><meta charset="utf-8"><title>Relatório Preventivas</title><style>${css}</style></head>
+      <body>
+        <h1>Relatório de Preventivas — Grilazer</h1>
+        <div class="meta">
+          Gerado em: <b>${now}</b><br>
+          Total de itens: <b>${rows.length}</b>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Máquina</th>
+              <th>Tarefa</th>
+              <th>Período</th>
+              <th>Última</th>
+              <th>Próxima</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>${trs || `<tr><td colspan="6">Nenhum item</td></tr>`}</tbody>
+        </table>
+        <script>window.print();</script>
+      </body></html>
+    `;
+
+    const w = window.open("", "_blank");
+    w.document.open();
+    w.document.write(html);
+    w.document.close();
+  }
+
+  function openReportDialog(){
+    const rows = rowsFilteredForUI();
+    if(!rows.length){
+      alert("Nenhum item no filtro atual para gerar relatório.");
+      return;
+    }
+
+    const pick = prompt(
+      "Relatório:\n1 = Imprimir\n2 = Baixar CSV\n\nDigite 1 ou 2:",
+      "1"
+    );
+
+    if(pick === "1"){
+      printReport(rows);
+    }else if(pick === "2"){
+      downloadCSV(rows);
+    }else{
+      // nada
+    }
+  }
+
+  function escapeHtml(str){
+    return String(str ?? "")
+      .replace(/&/g,"&amp;")
+      .replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;")
+      .replace(/'/g,"&#039;");
+  }
 
   function initAppOnce(){
     if(appInitialized) return;
@@ -1094,6 +1316,7 @@
     loadLocal();
     renderEqpList();
     renderEqpSelect();
+    renderFiltroEqp();
     renderTabela();
     syncFromFirebaseOnce();
 
@@ -1109,26 +1332,39 @@
       hintEqpTarefa.textContent = eqp
         ? ((eqp.local ? ("Local: " + eqp.local + " • ") : "") + (eqp.serie ? ("Patrimônio/Série: " + eqp.serie) : ""))
         : '';
-      setTaskMode(false);
+      setEditUI(false);
     });
+
+    // filtro máquina direita
+    filtroEqp.addEventListener('change', renderTabela);
 
     // botões
     btnSalvarEqp.addEventListener('click', addOrUpdateEquipamento);
     btnLimparEqp.addEventListener('click', clearEqpForm);
     btnAddTarefa.addEventListener('click', addTarefa);
     btnLimparTarefa.addEventListener('click', clearTaskForm);
+
+    btnCancelarEdicao.addEventListener('click', ()=>{
+      if(confirm("Cancelar edição? As alterações não salvas serão perdidas.")){
+        clearTaskForm();
+      }
+    });
+
     btnNovoEqp.addEventListener('click', ()=>{
       clearEqpForm();
       clearTaskForm();
       openTab('maquinas');
     });
 
+    // relatório
+    btnRelatorio.addEventListener('click', openReportDialog);
+
     // filtros
     busca.addEventListener('input', renderTabela);
     selFiltro.addEventListener('change', renderTabela);
 
-    // garante estado inicial do botão
-    setTaskMode(false);
+    // garante estado inicial
+    setEditUI(false);
   }
 
   // ===== AUTH =====
@@ -1147,12 +1383,15 @@
   btnLogin.addEventListener('click', ()=>{
     const email = loginEmail.value.trim();
     const senha = loginSenha.value;
+
     if(!email || !senha){
       loginError.textContent = "Preencha e-mail e senha.";
       return;
     }
+
     setLoginLoading(true);
     loginError.textContent = "";
+
     auth.signInWithEmailAndPassword(email, senha)
       .then(cred=>{
         const user = cred.user;
@@ -1163,7 +1402,8 @@
       })
       .catch(err=>{
         console.error(err);
-        loginError.textContent = "Login inválido. Verifique e-mail e senha.";
+        // Mostra o erro real (ajuda muito quando é domínio não autorizado etc.)
+        loginError.textContent = `Erro: ${err.code || ''} — ${err.message || ''}`;
       })
       .finally(()=> setLoginLoading(false));
   });
