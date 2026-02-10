@@ -1,20 +1,15 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Preventivas — Grilazer (ERP)</title>
-
-  <!-- Firebase compat (app + db + auth) -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Preventivas de Máquinas — Grilazer (Admin)</title>
 
   <style>
     :root{
-      --bg:#f6f7fb;
+      --bg:#f3f5f8;
       --panel:#ffffff;
-      --panel2:#fbfcff;
+      --panel2:#fbfcfe;
       --text:#0f172a;
       --muted:#64748b;
       --border:#e5e7eb;
@@ -27,12 +22,8 @@
       --warn:#f59e0b;
       --err:#ef4444;
 
-      --shadow: 0 14px 35px rgba(15,23,42,.08);
-      --shadow2: 0 10px 25px rgba(15,23,42,.06);
-      --radius: 16px;
-      --radius2: 12px;
-
-      --sidebarW: 260px;
+      --shadow: 0 14px 35px rgba(15,23,42,.10);
+      --shadow2: 0 10px 25px rgba(15,23,42,.08);
     }
 
     *{box-sizing:border-box}
@@ -41,24 +32,25 @@
       margin:0;
       font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Arial, sans-serif;
       color:var(--text);
-      background: linear-gradient(180deg, #fafbff, var(--bg));
+      background:
+        radial-gradient(1200px 600px at 15% -10%, rgba(37,99,235,.12), transparent 60%),
+        radial-gradient(900px 500px at 90% 10%, rgba(22,163,74,.08), transparent 55%),
+        linear-gradient(180deg, #f7f8fb, var(--bg));
+      min-height:100dvh;
+      padding:18px;
     }
 
     /* LOGIN */
     #login-screen{
-      min-height:100dvh;
+      width:100%;
+      min-height:calc(100dvh - 36px);
       display:flex;
       align-items:center;
       justify-content:center;
-      padding:18px;
-      background:
-        radial-gradient(1100px 600px at 15% -10%, rgba(37,99,235,.10), transparent 55%),
-        radial-gradient(900px 500px at 90% 10%, rgba(22,163,74,.07), transparent 55%),
-        linear-gradient(180deg, #fafbff, var(--bg));
     }
     .login-card{
       width:100%;
-      max-width:440px;
+      max-width:420px;
       padding:18px;
       border-radius:18px;
       border:1px solid var(--border);
@@ -68,16 +60,17 @@
       flex-direction:column;
       gap:10px;
     }
-    .login-card h1{margin:0;font-size:18px;font-weight:950}
+    .login-card h1{margin:0;font-size:18px;font-weight:900}
     .login-card p{margin:0;color:var(--muted);font-size:13px;line-height:1.35}
     .field{display:flex;flex-direction:column;gap:6px;margin-top:6px}
-    .field label{font-size:12px;color:var(--muted);font-weight:800}
+    .field label{font-size:12px;color:var(--muted);font-weight:700}
     .field input{
       width:100%;
       padding:10px 12px;
       border-radius:12px;
       border:1px solid var(--border);
       background:#fff;
+      color:var(--text);
       outline:none;
       font-size:14px;
     }
@@ -93,210 +86,116 @@
       border:1px solid rgba(37,99,235,.25);
       background: linear-gradient(135deg, var(--primary), var(--primary2));
       color:#fff;
-      font-weight:950;
+      font-weight:900;
       cursor:pointer;
-      box-shadow: 0 10px 20px rgba(37,99,235,.16);
+      box-shadow: 0 10px 20px rgba(37,99,235,.18);
     }
     .btn:disabled{opacity:.65;cursor:wait}
     .login-error{margin-top:4px;font-size:12px;color:var(--err);min-height:14px}
     .login-foot{font-size:11px;color:var(--muted);margin-top:2px}
-    .devbox{
-      margin-top:8px;
-      border:1px dashed rgba(239,68,68,.35);
-      background:#fff;
-      border-radius:14px;
-      padding:10px;
-      display:none;
-    }
-    .devbox b{display:block;font-size:12px}
-    .devbox pre{
-      margin:6px 0 0 0;
-      font-size:11px;
-      white-space:pre-wrap;
-      color:#7f1d1d;
-    }
 
-    /* APP SHELL */
-    #app-shell{display:none; min-height:100dvh;}
-    .shell{
-      display:grid;
-      grid-template-columns: var(--sidebarW) 1fr;
-      min-height:100dvh;
-    }
+    /* APP */
+    .wrap{width:100%;max-width:1200px;margin:0 auto}
 
-    /* Sidebar */
-    .sidebar{
-      background: linear-gradient(180deg, #fff, #fbfcff);
-      border-right:1px solid var(--border);
-      padding:14px;
-      position:sticky;
-      top:0;
-      height:100dvh;
-      overflow:auto;
-    }
-    .sb-brand{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      padding:10px 10px;
-      border-radius: var(--radius);
-      border:1px solid var(--border);
-      background:#fff;
-      box-shadow: 0 1px 0 rgba(15,23,42,.04);
-    }
-    .sb-logo{
-      width:40px;height:40px;border-radius:14px;
-      display:grid;place-items:center;
-      background: rgba(37,99,235,.10);
-      border:1px solid rgba(37,99,235,.20);
-      color:#0b2a7a;
-      font-weight:1000;
-      letter-spacing:.2px;
-    }
-    .sb-title{line-height:1.1}
-    .sb-title b{display:block;font-size:13px;font-weight:1000}
-    .sb-title small{display:block;font-size:11px;color:var(--muted);margin-top:2px}
-
-    .sb-nav{
-      margin-top:12px;
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-    }
-    .nav-item{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      padding:10px 10px;
-      border-radius: 14px;
-      border:1px solid transparent;
-      background: transparent;
-      cursor:pointer;
-      font-weight:950;
-      color: rgba(15,23,42,.86);
-      user-select:none;
-    }
-    .nav-item:hover{background:#f8fafc; border-color: var(--border)}
-    .nav-item.active{
-      background: rgba(37,99,235,.08);
-      border-color: rgba(37,99,235,.25);
-      color:#0b2a7a;
-    }
-    .nav-ico{
-      width:28px;height:28px;border-radius:10px;
-      display:grid;place-items:center;
-      border:1px solid var(--border);
-      background:#fff;
-      font-size:14px;
-    }
-    .sb-foot{
-      margin-top:14px;
-      border-top:1px solid var(--border2);
-      padding-top:12px;
-    }
-    .sb-foot .muted{font-size:11px;color:var(--muted);line-height:1.35}
-    .sb-foot .row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-
-    /* Topbar */
-    .main{
-      padding:16px;
-      background: transparent;
-    }
     .topbar{
       display:flex;
       justify-content:space-between;
-      align-items:center;
+      align-items:flex-start;
       gap:12px;
-      padding:12px 12px;
-      border-radius: var(--radius);
+      padding:14px 14px;
+      border-radius:18px;
       border:1px solid var(--border);
       background: linear-gradient(180deg, #fff, #fbfcff);
       box-shadow: var(--shadow2);
-      position:sticky;
-      top:0;
-      z-index:5;
+      margin-bottom:14px;
     }
-    .topbar-left{display:flex;flex-direction:column}
-    .topbar-left b{font-size:14px;font-weight:1000}
-    .topbar-left small{font-size:11px;color:var(--muted);margin-top:2px}
-    .topbar-right{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-    .pill{
-      display:inline-flex;align-items:center;gap:6px;
-      padding:8px 10px;border-radius:999px;
+    .brand{display:flex;gap:10px;align-items:center;min-width:260px}
+    .logo{
+      width:44px;height:44px;border-radius:14px;
       border:1px solid var(--border);
-      background:#fff;
-      color: var(--muted);
-      font-weight:900;
-      font-size:11px;
+      background: linear-gradient(135deg, rgba(37,99,235,.12), rgba(37,99,235,.03));
+      display:grid;place-items:center;
+      font-weight:1000;
+      letter-spacing:.2px;
+      color:#0b2a7a;
+    }
+    .brand h1{margin:0;font-size:16px;font-weight:950;line-height:1.1}
+    #userInfoTop{font-size:11px;color:var(--muted);margin-top:4px}
+
+    .controls{
+      display:flex;flex-wrap:wrap;justify-content:flex-end;
+      gap:8px;align-items:center;
     }
 
     button{
       appearance:none;
       border:1px solid var(--border);
-      border-radius: 12px;
+      border-radius:12px;
       padding:9px 11px;
-      font-weight:950;
+      font-weight:900;
       cursor:pointer;
-      background:#fff;
-      color: var(--text);
-      transition: transform .06s ease, box-shadow .12s ease, border-color .12s ease;
+      color:var(--text);
+      background: #fff;
+      transition: transform .08s ease, box-shadow .12s ease, border-color .12s ease;
+      box-shadow: 0 1px 0 rgba(15,23,42,.04);
     }
-    button:hover{border-color:#cbd5e1;box-shadow: 0 10px 18px rgba(15,23,42,.08)}
+    button:hover{border-color:#cbd5e1;box-shadow: 0 8px 18px rgba(15,23,42,.08)}
     button:active{transform: translateY(1px)}
+    .ghost{background:#fff}
     .primary{
       color:#fff;
       border-color: rgba(37,99,235,.25);
       background: linear-gradient(135deg, var(--primary), var(--primary2));
-      box-shadow: 0 10px 18px rgba(37,99,235,.16);
-    }
-    .danger{
-      color:#fff;
-      border-color: rgba(239,68,68,.25);
-      background: linear-gradient(135deg, #f87171, #ef4444);
+      box-shadow: 0 10px 20px rgba(37,99,235,.18);
     }
     .ok{
-      color:#fff;
-      border-color: rgba(22,163,74,.25);
+      color:#fff;border-color: rgba(22,163,74,.25);
       background: linear-gradient(135deg, #22c55e, #16a34a);
     }
     .warn{
-      color:#fff;
-      border-color: rgba(245,158,11,.25);
+      color:#fff;border-color: rgba(245,158,11,.25);
       background: linear-gradient(135deg, #fbbf24, #f59e0b);
     }
-
-    .content{margin-top:14px;display:grid;gap:14px}
-    .card{
-      border:1px solid var(--border);
-      background: linear-gradient(180deg, var(--panel), var(--panel2));
-      border-radius: var(--radius);
-      box-shadow: var(--shadow2);
-      padding:14px;
+    .err{
+      color:#fff;border-color: rgba(239,68,68,.25);
+      background: linear-gradient(135deg, #f87171, #ef4444);
     }
-    .card h2{margin:0;font-size:14px;font-weight:1000}
-    .muted{color:var(--muted);font-size:12px;line-height:1.35}
-    .sep{height:1px;background: var(--border2);margin:12px 0}
 
-    .grid-2{
+    .grid{
       display:grid;
-      grid-template-columns: 420px 1fr;
       gap:14px;
+      grid-template-columns: 380px 1fr;
       align-items:start;
     }
 
+    .card{
+      border:1px solid var(--border);
+      background: linear-gradient(180deg, var(--panel), var(--panel2));
+      border-radius: 18px;
+      box-shadow: var(--shadow2);
+      padding:14px;
+    }
+
+    h3,h4{margin:0}
+    h3{font-size:14px;font-weight:950}
+    h4{font-size:13px;font-weight:900;color:var(--text);opacity:.95}
+    .muted{color:var(--muted);font-size:12px;line-height:1.35}
+    .sep{height:1px;background: var(--border2);margin:12px 0}
+
     label{
       display:block;
-      font-weight:900;
+      font-weight:800;
       margin:10px 0 6px;
-      font-size:12px;
       color: rgba(15,23,42,.85);
+      font-size:12px;
     }
     input,select,textarea{
       width:100%;
       padding:10px 12px;
       border:1px solid var(--border);
-      border-radius: 12px;
+      border-radius:12px;
       background:#fff;
+      color: var(--text);
       outline:none;
       font-size:14px;
     }
@@ -306,193 +205,191 @@
       box-shadow: 0 0 0 3px rgba(37,99,235,.12);
     }
 
-    .filters{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
     .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-    .right-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;align-items:center}
+    #syncStatus{font-size:11px;color:var(--muted);margin-top:6px}
 
-    /* Lists */
-    .list{margin-top:10px;max-height:320px;overflow:auto;padding-right:2px}
-    .item{
+    /* TABS */
+    .tabs{
+      display:flex;
+      gap:8px;
+      border-bottom:1px solid var(--border2);
+      padding-bottom:10px;
+      margin-bottom:10px;
+    }
+    .tab{
+      border:1px solid var(--border);
+      background:#fff;
+      color:var(--text);
+      border-radius:999px;
+      padding:8px 12px;
+      font-weight:950;
+      font-size:12px;
+      box-shadow: 0 1px 0 rgba(15,23,42,.04);
+    }
+    .tab.active{
+      border-color: rgba(37,99,235,.35);
+      background: rgba(37,99,235,.08);
+      color:#0b2a7a;
+    }
+    .pane{display:none}
+    .pane.active{display:block}
+
+    /* Lista máquinas */
+    #listaEqp{
+      margin-top:8px;
+      max-height:280px;
+      overflow:auto;
+      padding-right:2px;
+    }
+    #listaEqp::-webkit-scrollbar{width:8px}
+    #listaEqp::-webkit-scrollbar-thumb{background: rgba(15,23,42,.12);border-radius:999px}
+
+    .chip-eqp{
+      border-radius:14px;
+      border:1px solid var(--border);
+      padding:10px 10px;
+      margin:8px 0;
       display:flex;
       justify-content:space-between;
-      gap:10px;
-      padding:10px 10px;
-      border-radius: 14px;
-      border:1px solid var(--border);
-      background:#fff;
+      align-items:flex-start;
+      font-size:12px;
       cursor:pointer;
-      margin-top:8px;
+      background: #fff;
+      transition: background .12s ease, border-color .12s ease, transform .08s ease;
+      gap:10px;
     }
-    .item:hover{background:#f8fafc;border-color:#cbd5e1}
-    .item.active{background: rgba(37,99,235,.08); border-color: rgba(37,99,235,.25)}
-    .item b{display:block;font-weight:1000}
-    .item small{display:block;margin-top:2px;color:var(--muted);font-size:11px;line-height:1.3}
-    .item .actions{display:flex;gap:8px;align-items:flex-start}
-    .icon-btn{
-      width:36px;height:36px;
-      border-radius: 12px;
-      display:grid;place-items:center;
-      padding:0;
-      font-size:14px;
+    .chip-eqp:hover{background: #f8fafc; border-color:#cbd5e1}
+    .chip-eqp:active{transform: translateY(1px)}
+    .chip-eqp .title{font-weight:950}
+    .chip-eqp .sub{color:var(--muted);margin-top:2px}
+    .chip-eqp.active{
+      background: rgba(37,99,235,.08);
+      border-color: rgba(37,99,235,.35);
+    }
+    .chip-eqp button{
+      padding:7px 10px;
+      font-size:11px;
+      border-radius:12px;
+      white-space:nowrap;
+      box-shadow:none;
+    }
+    .chip-eqp button:hover{box-shadow:none}
+
+    /* Direita */
+    .filters{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-bottom:10px
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:8px 10px;
+      border-radius:999px;
+      background: #fff;
+      border:1px solid var(--border);
+      font-weight:900;
+      font-size:11px;
+      color: var(--muted);
     }
 
-    /* KPIs */
-    .kpis{
+    .kpi{
       display:grid;
       gap:10px;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      margin-top:10px;
+      grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+      margin:10px 0 6px;
     }
-    .kpi{
-      border:1px solid var(--border);
-      border-radius: var(--radius);
-      background:#fff;
+    .kpi .card{
       padding:12px;
-      box-shadow: 0 10px 18px rgba(15,23,42,.05);
+      border-radius:16px;
+      box-shadow: 0 10px 20px rgba(15,23,42,.06);
     }
-    .kpi .label{color:var(--muted);font-size:12px;font-weight:900}
-    .kpi .value{font-size:22px;font-weight:1100;margin-top:6px}
-    .kpi .hint{color:var(--muted);font-size:11px;margin-top:4px}
+    .kpi .big{
+      font-size:22px;
+      font-weight:1000;
+      margin-top:4px;
+      letter-spacing:.2px;
+    }
 
-    /* Table */
-    .table-wrap{
-      border:1px solid var(--border);
-      border-radius: var(--radius);
+    .table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
       overflow:hidden;
+      border-radius:16px;
+      margin-top:8px;
+      border:1px solid var(--border);
       background:#fff;
     }
-    table{width:100%;border-collapse:separate;border-spacing:0;font-size:13px}
-    thead th{
-      position:sticky; top:0; z-index:2;
-      background:#f8fafc;
+    .table th,.table td{
+      padding:10px 10px;
+      font-size:13px;
+      text-align:left;
+      vertical-align:top;
+      border-bottom:1px solid var(--border2);
+    }
+    .table th{
+      background: #f8fafc;
       color: rgba(15,23,42,.75);
       font-size:12px;
-      text-align:left;
-      padding:10px 10px;
-      border-bottom:1px solid var(--border2);
-      white-space:nowrap;
+      letter-spacing:.2px;
+      position:sticky;
+      top:0;
+      z-index:1;
     }
-    tbody td{
-      padding:10px 10px;
-      border-bottom:1px solid var(--border2);
-      vertical-align:top;
-    }
-    tbody tr:nth-child(even){background:#fcfdff}
-    tbody tr:hover{background:#f8fafc}
+    .table tr:last-child td{border-bottom:none}
+
     .badge{
       display:inline-block;
       padding:5px 10px;
       border-radius:999px;
       font-weight:1000;
       font-size:11px;
+      letter-spacing:.2px;
       border:1px solid var(--border);
       background:#fff;
-      white-space:nowrap;
     }
-    .b-ok{background:#ecfdf5;color:#166534;border-color:#86efac}
-    .b-warn{background:#fffbeb;color:#92400e;border-color:#fde68a}
-    .b-err{background:#fef2f2;color:#991b1b;border-color:#fecaca}
+    .b-ok{background: #ecfdf5; color:#166534; border-color:#86efac}
+    .b-warn{background:#fffbeb; color:#92400e; border-color:#fde68a}
+    .b-err{background:#fef2f2; color:#991b1b; border-color:#fecaca}
 
-    /* Pages */
-    .page{display:none}
-    .page.active{display:block}
-
-    /* Toast */
-    .toast-wrap{
-      position:fixed;
-      right:14px;
-      bottom:14px;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      z-index:9999;
-    }
-    .toast{
-      min-width: 260px;
-      max-width: 360px;
-      border:1px solid var(--border);
-      border-radius: 14px;
-      background:#fff;
-      box-shadow: var(--shadow);
-      padding:10px 12px;
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-    }
-    .toast .dot{width:10px;height:10px;border-radius:999px;margin-top:4px;background: var(--primary)}
-    .toast.ok .dot{background: var(--ok)}
-    .toast.warn .dot{background: var(--warn)}
-    .toast.err .dot{background: var(--err)}
-    .toast b{display:block;font-size:12px;font-weight:1000}
-    .toast p{margin:2px 0 0 0;font-size:12px;color:var(--muted);line-height:1.3}
-
-    /* Modal confirm */
-    .modal{
-      position:fixed; inset:0;
-      background: rgba(2,6,23,.55);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding:14px;
-      z-index:9998;
-    }
-    .modal.show{display:flex}
-    .modal-card{
-      width:min(560px, 100%);
-      background:#fff;
-      border:1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-    .modal-head{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      padding:12px 12px;
-      border-bottom:1px solid var(--border2);
-      background: linear-gradient(180deg, #fff, #fbfcff);
-    }
-    .modal-title{font-weight:1000;font-size:13px}
-    .modal-body{padding:12px}
-    .modal-foot{
-      display:flex;
-      gap:8px;
-      padding:12px;
-      border-top:1px solid var(--border2);
-      justify-content:flex-end;
-      background:#fff;
+    .foot{
+      margin-top:12px;
+      color:rgba(100,116,139,.9);
+      text-align:center;
+      font-size:12px;
     }
 
-    @media (max-width: 1020px){
-      .shell{grid-template-columns: 1fr}
-      .sidebar{
-        position:relative;
-        height:auto;
-        border-right:none;
-        border-bottom:1px solid var(--border);
-      }
-      .grid-2{grid-template-columns: 1fr}
-      .topbar{position:relative}
+    @media (max-width: 980px){
+      body{padding:12px}
+      .grid{grid-template-columns:1fr}
+      .controls{justify-content:flex-start}
     }
     @media print{
-      body{background:#fff}
-      .sidebar, .topbar, .toast-wrap, .modal{display:none !important}
-      .main{padding:0}
-      .card{box-shadow:none}
-      .table-wrap{border:1px solid #ddd}
-      thead th{position:static}
+      body{background:#fff;color:#000;padding:0}
+      #login-screen{display:none !important}
+      .controls{display:none !important}
+      .card,.topbar{box-shadow:none !important}
+      .table{background:#fff}
     }
   </style>
+
+  <!-- Firebase compat -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
 </head>
 
 <body>
+
   <!-- LOGIN -->
   <section id="login-screen">
     <div class="login-card">
-      <h1>Preventivas — Grilazer</h1>
-      <p>Faça login com seu e-mail autorizado para acessar o painel.</p>
+      <h1>Preventivas — Admin</h1>
+      <p>Acesso restrito. Faça login com seu e-mail corporativo autorizado.</p>
 
       <div class="field">
         <label for="loginEmail">E-mail</label>
@@ -504,341 +401,169 @@
         <input type="password" id="loginSenha" autocomplete="current-password" placeholder="••••••••">
       </div>
 
-      <button class="btn" id="btnLogin" type="button">Entrar</button>
+      <button class="btn" id="btnLogin">Entrar</button>
       <div class="login-error" id="loginError"></div>
 
-      <div class="devbox" id="devbox">
-        <b>Erro interno detectado:</b>
-        <pre id="devboxText"></pre>
+      <div class="login-foot">
+        Usuários válidos são gerenciados no Firebase Authentication (E-mail/Senha).
       </div>
-
-      <div class="login-foot">Usuários gerenciados no Firebase Authentication (E-mail/Senha).</div>
     </div>
   </section>
 
   <!-- APP -->
-  <div id="app-shell">
-    <div class="shell">
-      <aside class="sidebar">
-        <div class="sb-brand">
-          <div class="sb-logo">GR</div>
-          <div class="sb-title">
-            <b>Preventivas</b>
-            <small>Grilazer — ERP</small>
-          </div>
+  <div class="wrap" id="app-wrap" style="display:none">
+
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">GR</div>
+        <div>
+          <h1>Preventivas de Máquinas — Grilazer</h1>
+          <div id="userInfoTop"></div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="ghost" id="btnNovoEqp" type="button">Novo</button>
+        <button class="ghost" type="button" onclick="window.print()">Imprimir</button>
+        <button class="ghost" id="btnLogout" type="button">Sair</button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- ESQUERDA (ABAS) -->
+      <div class="card">
+        <div class="tabs">
+          <button class="tab active" id="tabMaquinas" type="button">Máquinas</button>
+          <button class="tab" id="tabTarefas" type="button">Tarefas</button>
         </div>
 
-        <nav class="sb-nav">
-          <div class="nav-item active" data-nav="dashboard"><div class="nav-ico">📊</div>Dashboard</div>
-          <div class="nav-item" data-nav="maquinas"><div class="nav-ico">🏭</div>Máquinas</div>
-          <div class="nav-item" data-nav="tarefas"><div class="nav-ico">🧰</div>Tarefas</div>
-          <div class="nav-item" data-nav="relatorios"><div class="nav-ico">🧾</div>Relatórios</div>
-        </nav>
+        <!-- PANE MÁQUINAS -->
+        <div class="pane active" id="paneMaquinas">
+          <h3>Cadastro de Máquina</h3>
+          <div class="muted" id="infoEqpSel">Nenhuma máquina selecionada.</div>
+          <div id="syncStatus">Sincronização: carregando…</div>
 
-        <div class="sb-foot">
-          <div class="muted" id="userInfoSide">—</div>
-          <div class="muted" id="syncStatus">Sincronização: carregando…</div>
+          <label for="eqNome">Nome da máquina</label>
+          <input id="eqNome" placeholder="Ex.: Prensa Hidráulica 30T">
+
+          <label for="eqLocal">Localização</label>
+          <input id="eqLocal" placeholder="Ex.: Metalúrgica, Setor A">
+
+          <label for="eqSerie">Nº de Série / Patrimônio</label>
+          <input id="eqSerie" placeholder="Ex.: SER-000123 / PAT-045">
+
+          <div class="row" style="margin-top:10px">
+            <button class="primary" id="btnSalvarEqp" type="button">Salvar</button>
+            <button class="ghost" id="btnLimparEqp" type="button">Limpar</button>
+          </div>
+
+          <div class="sep"></div>
+
+          <div class="row" style="justify-content:space-between;align-items:baseline">
+            <h4>Máquinas cadastradas</h4>
+            <span class="muted">Clique para selecionar</span>
+          </div>
+
+          <div id="listaEqp"></div>
+        </div>
+
+        <!-- PANE TAREFAS -->
+        <div class="pane" id="paneTarefas">
+          <h3>Cadastro de Tarefa</h3>
+          <div class="muted">Selecione a máquina e cadastre a tarefa</div>
+
+          <label for="selEqpTarefa">Máquina</label>
+          <select id="selEqpTarefa"></select>
+          <div class="muted" id="hintEqpTarefa" style="margin-top:6px"></div>
+
+          <label for="tkTitulo">Título da tarefa</label>
+          <input id="tkTitulo" placeholder="Ex.: Lubrificar guias e mancais">
+
           <div class="row">
-            <button class="ghost" id="btnPrintGlobal" type="button">Imprimir</button>
-            <button class="ghost" id="btnLogout" type="button">Sair</button>
+            <div style="flex:1;min-width:140px">
+              <label for="tkPeriodo">Periodicidade</label>
+              <select id="tkPeriodo">
+                <option value="30">30 dias</option>
+                <option value="90">90 dias</option>
+                <option value="180">180 dias</option>
+                <option value="360">360 dias</option>
+              </select>
+            </div>
+
+            <div style="flex:1;min-width:140px">
+              <label for="tkUltima">Última execução</label>
+              <input id="tkUltima" type="date">
+            </div>
+          </div>
+
+          <label for="tkObs">Observações</label>
+          <textarea id="tkObs" placeholder="Materiais, torque, check-list, segurança, etc."></textarea>
+
+          <div class="row" style="margin-top:10px">
+            <button class="primary" id="btnAddTarefa" type="button">Adicionar</button>
+            <button class="ghost" id="btnLimparTarefa" type="button">Limpar</button>
+          </div>
+
+          <div class="muted" style="margin-top:6px">
+            Dica: se nunca foi feita, deixe a última execução em branco — a próxima será calculada a partir de hoje.
           </div>
         </div>
-      </aside>
-
-      <main class="main">
-        <div class="topbar">
-          <div class="topbar-left">
-            <b id="pageTitle">Dashboard</b>
-            <small id="pageSubtitle">Visão geral das preventivas</small>
-          </div>
-          <div class="topbar-right">
-            <span class="pill">Hoje: <span id="today"></span></span>
-            <span class="pill" id="netPill">Status: —</span>
-          </div>
-        </div>
-
-        <div class="content">
-
-          <!-- DASHBOARD -->
-          <section class="page active" id="page-dashboard">
-            <div class="card">
-              <div class="row" style="justify-content:space-between;align-items:baseline">
-                <h2>Indicadores</h2>
-                <div class="muted">Acompanhe atrasos e próximos vencimentos</div>
-              </div>
-
-              <div class="kpis">
-                <div class="kpi"><div class="label">Atrasadas</div><div class="value" id="kpiAtr">0</div><div class="hint">Priorize vencidas</div></div>
-                <div class="kpi"><div class="label">Até 7 dias</div><div class="value" id="kpi7">0</div><div class="hint">Planejamento semanal</div></div>
-                <div class="kpi"><div class="label">Até 30 dias</div><div class="value" id="kpi30">0</div><div class="hint">Planejamento mensal</div></div>
-                <div class="kpi"><div class="label">Total de tarefas</div><div class="value" id="kpiTot">0</div><div class="hint" id="kpiMeta">—</div></div>
-              </div>
-            </div>
-
-            <div class="card">
-              <div class="row" style="justify-content:space-between; align-items:center">
-                <div>
-                  <h2>Tarefas mais urgentes</h2>
-                  <div class="muted">Top 20 por data de vencimento</div>
-                </div>
-                <div class="right-actions">
-                  <select id="dashFiltro">
-                    <option value="todas">Todas</option>
-                    <option value="atrasadas">Atrasadas</option>
-                    <option value="sete">Próx. 7 dias</option>
-                    <option value="trinta">Próx. 30 dias</option>
-                  </select>
-                  <button class="primary" id="btnGoRelatorio" type="button">Gerar relatório</button>
-                </div>
-              </div>
-
-              <div class="sep"></div>
-
-              <div class="table-wrap" style="max-height:420px; overflow:auto">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Máquina</th>
-                      <th>Tarefa</th>
-                      <th>Próxima</th>
-                      <th>Status</th>
-                      <th style="width:220px">Ações</th>
-                    </tr>
-                  </thead>
-                  <tbody id="tbodyDash"></tbody>
-                </table>
-              </div>
-            </div>
-          </section>
-
-          <!-- MÁQUINAS -->
-          <section class="page" id="page-maquinas">
-            <div class="grid-2">
-              <div class="card">
-                <div class="row" style="justify-content:space-between; align-items:baseline">
-                  <h2>Cadastro de Máquina</h2>
-                  <button class="ghost" id="btnNovoEqp" type="button">Novo</button>
-                </div>
-                <div class="muted" id="infoEqpSel">Nenhuma máquina selecionada.</div>
-
-                <label for="eqNome">Nome da máquina</label>
-                <input id="eqNome" placeholder="Ex.: Prensa Hidráulica 30T">
-
-                <label for="eqLocal">Local / Setor</label>
-                <input id="eqLocal" placeholder="Ex.: Metalúrgica, Setor A">
-
-                <label for="eqSerie">Nº de Série / Patrimônio</label>
-                <input id="eqSerie" placeholder="Ex.: SER-000123 / PAT-045">
-
-                <div class="row" style="margin-top:10px">
-                  <button class="primary" id="btnSalvarEqp" type="button">Salvar</button>
-                  <button class="ghost" id="btnLimparEqp" type="button">Limpar</button>
-                </div>
-
-                <div class="sep"></div>
-                <div class="muted">Padronize “Local/Setor” para facilitar filtros e relatórios.</div>
-              </div>
-
-              <div class="card">
-                <div class="row" style="justify-content:space-between; align-items:baseline">
-                  <h2>Máquinas cadastradas</h2>
-                  <div class="muted" id="countEqp">0</div>
-                </div>
-                <div class="filters" style="margin-top:10px">
-                  <input id="buscaEqp" placeholder="Buscar máquina…" style="flex:1; min-width:220px">
-                </div>
-
-                <div class="list" id="listaEqp"></div>
-                <div class="muted" id="emptyEqp" style="display:none; margin-top:10px">
-                  Nenhuma máquina cadastrada. Cadastre a primeira à esquerda.
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- TAREFAS -->
-          <section class="page" id="page-tarefas">
-            <div class="grid-2">
-              <div class="card">
-                <div class="row" style="justify-content:space-between; align-items:baseline">
-                  <h2>Cadastro de Tarefa</h2>
-                  <button class="ghost" id="btnLimparTarefa" type="button">Limpar</button>
-                </div>
-                <div class="muted">Selecione a máquina e cadastre. Para editar, use “Editar” na tabela.</div>
-
-                <label for="selEqpTarefa">Máquina</label>
-                <select id="selEqpTarefa"></select>
-                <div class="muted" id="hintEqpTarefa" style="margin-top:6px"></div>
-
-                <label for="tkTitulo">Título</label>
-                <input id="tkTitulo" placeholder="Ex.: Lubrificar guias e mancais">
-
-                <div class="row">
-                  <div style="flex:1; min-width:160px">
-                    <label for="tkPeriodo">Periodicidade</label>
-                    <select id="tkPeriodo">
-                      <option value="30">30 dias</option>
-                      <option value="90">90 dias</option>
-                      <option value="180">180 dias</option>
-                      <option value="360">360 dias</option>
-                    </select>
-                  </div>
-                  <div style="flex:1; min-width:160px">
-                    <label for="tkUltima">Última execução</label>
-                    <input id="tkUltima" type="date">
-                  </div>
-                </div>
-
-                <label for="tkObs">Observações</label>
-                <textarea id="tkObs" placeholder="Materiais, check-list, segurança, etc."></textarea>
-
-                <div class="row" style="margin-top:10px">
-                  <button class="primary" id="btnSalvarTarefa" type="button">Adicionar</button>
-                </div>
-
-                <div class="sep"></div>
-                <div class="muted">“Feita hoje” atualiza automaticamente a data da última execução.</div>
-              </div>
-
-              <div class="card">
-                <div class="row" style="justify-content:space-between; align-items:baseline">
-                  <h2>Lista de tarefas</h2>
-                  <div class="muted">Filtre e mantenha a rotina</div>
-                </div>
-
-                <div class="filters" style="margin-top:10px">
-                  <input id="busca" placeholder="Buscar por máquina/tarefa…" style="flex:1; min-width:240px">
-                  <select id="selFiltro">
-                    <option value="todos">Todos</option>
-                    <option value="atrasadas">Atrasadas</option>
-                    <option value="sete">Próx. 7 dias</option>
-                    <option value="trinta">Próx. 30 dias</option>
-                  </select>
-                </div>
-
-                <div class="sep"></div>
-
-                <div class="table-wrap" style="max-height:520px; overflow:auto">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Máquina</th>
-                        <th>Tarefa</th>
-                        <th>Período</th>
-                        <th>Última</th>
-                        <th>Próxima</th>
-                        <th>Status</th>
-                        <th style="width:260px">Ações</th>
-                      </tr>
-                    </thead>
-                    <tbody id="tbody"></tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- RELATÓRIOS -->
-          <section class="page" id="page-relatorios">
-            <div class="card">
-              <div class="row" style="justify-content:space-between; align-items:baseline">
-                <h2>Relatórios</h2>
-                <div class="muted">Impressão + CSV</div>
-              </div>
-
-              <div class="sep"></div>
-
-              <div class="grid-2" style="grid-template-columns: 420px 1fr">
-                <div>
-                  <label for="repFiltro">Tipo</label>
-                  <select id="repFiltro">
-                    <option value="atrasadas">Somente atrasadas</option>
-                    <option value="sete">Próximas 7 dias</option>
-                    <option value="trinta">Próximas 30 dias</option>
-                    <option value="todos">Todas</option>
-                  </select>
-
-                  <label for="repLocal">Filtrar por Local/Setor (opcional)</label>
-                  <input id="repLocal" placeholder="Ex.: Pintura">
-
-                  <label for="repMaquina">Filtrar por Máquina (opcional)</label>
-                  <select id="repMaquina"></select>
-
-                  <div class="row" style="margin-top:12px">
-                    <button class="primary" id="btnGerarRelatorio" type="button">Gerar (Imprimir)</button>
-                    <button class="ghost" id="btnBaixarCSV" type="button">Baixar CSV</button>
-                  </div>
-
-                  <div class="sep"></div>
-                  <div class="muted">Relatório usa a “Próxima execução” calculada.</div>
-                </div>
-
-                <div>
-                  <div class="row" style="justify-content:space-between; align-items:baseline">
-                    <h2>Prévia</h2>
-                    <div class="muted" id="repCount">0 itens</div>
-                  </div>
-
-                  <div class="sep"></div>
-
-                  <div class="table-wrap" style="max-height:520px; overflow:auto">
-                    <table>
-                      <thead>
-                        <tr>
-                          <th>Máquina</th>
-                          <th>Local</th>
-                          <th>Tarefa</th>
-                          <th>Próxima</th>
-                          <th>Status</th>
-                        </tr>
-                      </thead>
-                      <tbody id="tbodyRep"></tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-        </div>
-      </main>
-    </div>
-  </div>
-
-  <!-- Toast -->
-  <div class="toast-wrap" id="toastWrap"></div>
-
-  <!-- Confirm Modal -->
-  <div class="modal" id="confirmModal">
-    <div class="modal-card">
-      <div class="modal-head">
-        <div class="modal-title" id="confirmTitle">Confirmar</div>
-        <button class="ghost" id="confirmClose" type="button">Fechar</button>
       </div>
-      <div class="modal-body">
-        <div class="muted" id="confirmText">—</div>
-      </div>
-      <div class="modal-foot">
-        <button class="ghost" id="confirmCancel" type="button">Cancelar</button>
-        <button class="danger" id="confirmOk" type="button">Confirmar</button>
+
+      <!-- DIREITA (VISÃO GERAL) -->
+      <div class="card">
+        <div class="filters">
+          <input id="busca" placeholder="Buscar por máquina/tarefa…" style="flex:1;min-width:220px">
+          <span class="pill">Hoje: <span id="today"></span></span>
+          <select id="selFiltro">
+            <option value="todos">Todos</option>
+            <option value="atrasadas">Atrasadas</option>
+            <option value="sete">Próx. 7 dias</option>
+            <option value="trinta">Próx. 30 dias</option>
+          </select>
+        </div>
+
+        <div class="kpi">
+          <div class="card">
+            <div class="muted">Atrasadas</div>
+            <div class="big" id="kpiAtr">0</div>
+          </div>
+          <div class="card">
+            <div class="muted">Até 7 dias</div>
+            <div class="big" id="kpi7">0</div>
+          </div>
+          <div class="card">
+            <div class="muted">Até 30 dias</div>
+            <div class="big" id="kpi30">0</div>
+          </div>
+          <div class="card">
+            <div class="muted">Total tarefas</div>
+            <div class="big" id="kpiTot">0</div>
+          </div>
+        </div>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Máquina</th>
+              <th>Tarefa</th>
+              <th>Período</th>
+              <th>Última</th>
+              <th>Próxima</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
       </div>
     </div>
+
+    <div class="foot">Grilazer — Preventivas</div>
   </div>
 
 <script>
-(function(){
-  // ====== MINI DEBUG PARA VOCÊ VER O ERRO NA TELA ======
-  const devbox = document.getElementById("devbox");
-  const devboxText = document.getElementById("devboxText");
-  function showDevError(err){
-    if(!devbox || !devboxText) return;
-    devbox.style.display = "block";
-    devboxText.textContent = String(err && (err.stack || err.message) ? (err.stack || err.message) : err);
-  }
-  window.addEventListener("error", (e)=> showDevError(e.error || e.message));
-  window.addEventListener("unhandledrejection", (e)=> showDevError(e.reason || "Promise rejeitada"));
-
-  // ====== FIREBASE CONFIG ======
+  // 🔗 CONFIG FIREBASE – preventivas-27185
   const firebaseConfig = {
     apiKey: "AIzaSyDNrOyDmI5NOkVuG3yh8HkDrn4dqYXOrW0",
     authDomain: "preventivas-27185.firebaseapp.com",
@@ -850,200 +575,144 @@
     measurementId: "G-8D16CFDLZV"
   };
 
-  // Se o firebase não carregou, já mostra
-  if(!window.firebase){
-    showDevError("Firebase não carregou. Verifique a internet / bloqueio de scripts.");
-    return;
-  }
-
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
   const auth = firebase.auth();
   const DB_PATH = "preventivas_grilazer";
+
   const allowedEmails = ["engenhariagrilazer@gmail.com"];
 
-  // ====== PEGAR ELEMENTOS (SAFE) ======
-  const $ = (id)=> document.getElementById(id);
+  // ===== LOGIN =====
+  const loginScreen   = document.getElementById('login-screen');
+  const appWrap       = document.getElementById('app-wrap');
+  const loginEmail    = document.getElementById('loginEmail');
+  const loginSenha    = document.getElementById('loginSenha');
+  const btnLogin      = document.getElementById('btnLogin');
+  const loginError    = document.getElementById('loginError');
+  const btnLogout     = document.getElementById('btnLogout');
+  const userInfoTop   = document.getElementById('userInfoTop');
 
-  const loginScreen = $("login-screen");
-  const appShell = $("app-shell");
-  const loginEmail = $("loginEmail");
-  const loginSenha = $("loginSenha");
-  const btnLogin = $("btnLogin");
-  const loginError = $("loginError");
-  const btnLogout = $("btnLogout");
-  const btnPrintGlobal = $("btnPrintGlobal");
+  function setLoginLoading(isLoading){
+    btnLogin.disabled = isLoading;
+    btnLogin.textContent = isLoading ? "Entrando..." : "Entrar";
+  }
+  function showLogin(){
+    loginScreen.style.display = "flex";
+    appWrap.style.display     = "none";
+    loginError.textContent    = "";
+    loginSenha.value          = "";
+  }
+  function showApp(user){
+    loginScreen.style.display = "none";
+    appWrap.style.display     = "block";
+    userInfoTop.textContent   = "Logado como: " + user.email;
+  }
 
-  const userInfoSide = $("userInfoSide");
-  const syncStatus = $("syncStatus");
-  const todaySpan = $("today");
-  const netPill = $("netPill");
-
-  const navItems = Array.from(document.querySelectorAll(".nav-item"));
-  const pages = {
-    dashboard: $("page-dashboard"),
-    maquinas: $("page-maquinas"),
-    tarefas: $("page-tarefas"),
-    relatorios: $("page-relatorios")
-  };
-  const pageTitle = $("pageTitle");
-  const pageSubtitle = $("pageSubtitle");
-
-  const kpiAtr = $("kpiAtr");
-  const kpi7 = $("kpi7");
-  const kpi30 = $("kpi30");
-  const kpiTot = $("kpiTot");
-  const kpiMeta = $("kpiMeta");
-  const dashFiltro = $("dashFiltro");
-  const tbodyDash = $("tbodyDash");
-  const btnGoRelatorio = $("btnGoRelatorio");
-
-  const eqNome = $("eqNome");
-  const eqLocal = $("eqLocal");
-  const eqSerie = $("eqSerie");
-  const infoEqpSel = $("infoEqpSel");
-  const listaEqp = $("listaEqp");
-  const emptyEqp = $("emptyEqp");
-  const countEqp = $("countEqp");
-  const buscaEqp = $("buscaEqp");
-  const btnNovoEqp = $("btnNovoEqp");
-  const btnSalvarEqp = $("btnSalvarEqp");
-  const btnLimparEqp = $("btnLimparEqp");
-
-  const selEqpTarefa = $("selEqpTarefa");
-  const hintEqpTarefa = $("hintEqpTarefa");
-  const tkTitulo = $("tkTitulo");
-  const tkPeriodo = $("tkPeriodo");
-  const tkUltima = $("tkUltima");
-  const tkObs = $("tkObs");
-  const btnSalvarTarefa = $("btnSalvarTarefa");
-  const btnLimparTarefa = $("btnLimparTarefa");
-  const busca = $("busca");
-  const selFiltro = $("selFiltro");
-  const tbody = $("tbody");
-
-  const repFiltro = $("repFiltro");
-  const repLocal = $("repLocal");
-  const repMaquina = $("repMaquina");
-  const btnGerarRelatorio = $("btnGerarRelatorio");
-  const btnBaixarCSV = $("btnBaixarCSV");
-  const repCount = $("repCount");
-  const tbodyRep = $("tbodyRep");
-
-  const toastWrap = $("toastWrap");
-
-  const confirmModal = $("confirmModal");
-  const confirmTitle = $("confirmTitle");
-  const confirmText = $("confirmText");
-  const confirmClose = $("confirmClose");
-  const confirmCancel = $("confirmCancel");
-  const confirmOk = $("confirmOk");
-  let __confirmResolve = null;
-
-  // ====== HELPERS ======
+  // ===== APP =====
   const todayISO = ()=> new Date().toISOString().slice(0,10);
   const addDays = (iso, n)=>{
-    const d = iso ? new Date(iso) : new Date();
+    const d = iso? new Date(iso) : new Date();
     d.setHours(12,0,0,0);
-    d.setDate(d.getDate() + n);
-    return new Date(d.getTime() - d.getTimezoneOffset()*60000).toISOString().slice(0,10);
+    d.setDate(d.getDate()+n);
+    return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10);
   };
-  const diffDays = (a,b)=> Math.floor((new Date(a) - new Date(b)) / (1000*60*60*24));
-  const fmtBR = (iso)=> iso ? new Date(iso+'T00:00:00').toLocaleDateString('pt-BR') : '—';
+  const diffDays = (a,b)=> Math.floor((new Date(a)-new Date(b))/(1000*60*60*24));
+  const fmtBR = (iso)=> iso? new Date(iso+'T00:00:00').toLocaleDateString('pt-BR') : '—';
   const uid = ()=> 'id-'+Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(4);
 
-  function escapeHtml(str){
-    return String(str ?? "")
-      .replace(/&/g,"&amp;")
-      .replace(/</g,"&lt;")
-      .replace(/>/g,"&gt;")
-      .replace(/"/g,"&quot;")
-      .replace(/'/g,"&#039;");
-  }
-
-  function toast(type, title, msg, ms=2600){
-    if(!toastWrap) return;
-    const el = document.createElement("div");
-    el.className = "toast " + (type || "");
-    el.innerHTML = `
-      <div class="dot"></div>
-      <div>
-        <b>${escapeHtml(title || "Aviso")}</b>
-        <p>${escapeHtml(msg || "")}</p>
-      </div>
-    `;
-    toastWrap.appendChild(el);
-    setTimeout(()=>{ el.style.opacity="0"; el.style.transform="translateY(4px)"; }, Math.max(200, ms-350));
-    setTimeout(()=>{ el.remove(); }, ms);
-  }
-
-  function setSyncStatus(text){
-    if(syncStatus) syncStatus.textContent = "Sincronização: " + text;
-  }
-
-  function computeNext(ultimaISO, periodo){
-    const base = ultimaISO || todayISO();
-    return addDays(base, periodo);
-  }
-  function statusFor(nextISO){
-    const t = todayISO();
-    if(nextISO < t) return {label:'ATRASADA', cls:'b-err'};
-    const d = diffDays(nextISO, t);
-    if(d === 0) return {label:'VENCE HOJE', cls:'b-warn'};
-    if(d <= 7) return {label:'EM BREVE', cls:'b-warn'};
-    return {label:'OK', cls:'b-ok'};
-  }
-
-  // ====== CONFIRM MODAL ======
-  function confirmBox(title, text){
-    if(!confirmModal || !confirmTitle || !confirmText) return Promise.resolve(window.confirm(text || "Confirmar?"));
-    confirmTitle.textContent = title || "Confirmar";
-    confirmText.textContent = text || "Tem certeza?";
-    confirmModal.classList.add("show");
-    return new Promise(resolve=>{ __confirmResolve = resolve; });
-  }
-  function closeConfirm(result){
-    if(confirmModal) confirmModal.classList.remove("show");
-    if(__confirmResolve){
-      __confirmResolve(!!result);
-      __confirmResolve = null;
-    }
-  }
-  if(confirmClose) confirmClose.addEventListener("click", ()=> closeConfirm(false));
-  if(confirmCancel) confirmCancel.addEventListener("click", ()=> closeConfirm(false));
-  if(confirmOk) confirmOk.addEventListener("click", ()=> closeConfirm(true));
-  if(confirmModal) confirmModal.addEventListener("click", (e)=>{ if(e.target === confirmModal) closeConfirm(false); });
-
-  // ====== STORE ======
   let store = { equipamentos: [] };
   let selectedEqpId = null;
   let appInitialized = false;
-  let editingTask = null; // {eqpId, tkId}
+
+  // ====== MODO EDIÇÃO DE TAREFA ======
+  let editingTask = null; // { eqpId, tkId }
+  let originalBtnAddText = null;
+
+  // Tabs
+  const tabMaquinas = document.getElementById('tabMaquinas');
+  const tabTarefas  = document.getElementById('tabTarefas');
+  const paneMaquinas = document.getElementById('paneMaquinas');
+  const paneTarefas  = document.getElementById('paneTarefas');
+
+  function openTab(which){
+    const isM = which === 'maquinas';
+    tabMaquinas.classList.toggle('active', isM);
+    tabTarefas.classList.toggle('active', !isM);
+    paneMaquinas.classList.toggle('active', isM);
+    paneTarefas.classList.toggle('active', !isM);
+  }
+
+  // Elements
+  const eqNome = document.getElementById('eqNome');
+  const eqLocal = document.getElementById('eqLocal');
+  const eqSerie = document.getElementById('eqSerie');
+  const infoEqpSel = document.getElementById('infoEqpSel');
+  const listaEqp = document.getElementById('listaEqp');
+  const syncStatus = document.getElementById('syncStatus');
+
+  const selEqpTarefa = document.getElementById('selEqpTarefa');
+  const hintEqpTarefa = document.getElementById('hintEqpTarefa');
+
+  const tkTitulo = document.getElementById('tkTitulo');
+  const tkPeriodo = document.getElementById('tkPeriodo');
+  const tkUltima = document.getElementById('tkUltima');
+  const tkObs = document.getElementById('tkObs');
+
+  const busca = document.getElementById('busca');
+  const selFiltro = document.getElementById('selFiltro');
+  const todaySpan = document.getElementById('today');
+
+  const kpiAtr = document.getElementById('kpiAtr');
+  const kpi7 = document.getElementById('kpi7');
+  const kpi30 = document.getElementById('kpi30');
+  const kpiTot = document.getElementById('kpiTot');
+  const tbody = document.getElementById('tbody');
+
+  const btnSalvarEqp = document.getElementById('btnSalvarEqp');
+  const btnLimparEqp = document.getElementById('btnLimparEqp');
+  const btnAddTarefa = document.getElementById('btnAddTarefa');
+  const btnLimparTarefa = document.getElementById('btnLimparTarefa');
+  const btnNovoEqp = document.getElementById('btnNovoEqp');
+
+  function setSyncStatus(text){
+    syncStatus.textContent = "Sincronização: " + text;
+  }
+
+  function setTaskMode(isEdit){
+    if(!originalBtnAddText) originalBtnAddText = btnAddTarefa.textContent || "Adicionar";
+    if(isEdit){
+      btnAddTarefa.textContent = "Salvar alterações";
+      btnAddTarefa.classList.add("warn");
+      btnAddTarefa.classList.remove("primary");
+    }else{
+      btnAddTarefa.textContent = originalBtnAddText || "Adicionar";
+      btnAddTarefa.classList.add("primary");
+      btnAddTarefa.classList.remove("warn");
+      editingTask = null;
+    }
+  }
 
   function loadLocal(){
     try{
-      const raw = localStorage.getItem("preventivas");
-      if(raw) store = JSON.parse(raw);
+      const raw = localStorage.getItem('preventivas');
+      if(raw){ store = JSON.parse(raw); }
     }catch{}
   }
   function saveLocal(){
-    try{ localStorage.setItem("preventivas", JSON.stringify(store)); }catch{}
+    try{ localStorage.setItem('preventivas', JSON.stringify(store)); }catch{}
   }
-
   function saveRemote(){
     setSyncStatus("enviando ao servidor…");
-    return db.ref(DB_PATH).set(store)
+    db.ref(DB_PATH).set(store)
       .then(()=> setSyncStatus("ok (sincronizado)"))
       .catch(err=>{
         console.error(err);
-        setSyncStatus("erro ao sincronizar");
-        toast("warn","Sem sincronizar","Falha ao enviar. Dados ficaram salvos no navegador.");
+        setSyncStatus("erro ao sincronizar (ver console)");
       });
   }
-
   function fullSave(){
     saveLocal();
-    return saveRemote();
+    saveRemote();
   }
 
   function syncFromFirebaseOnce(){
@@ -1058,231 +727,197 @@
       })
       .catch(err=>{
         console.error(err);
-        setSyncStatus("erro ao carregar (usando local)");
-        toast("warn","Modo local","Não consegui carregar do servidor. Vou usar dados locais.");
+        setSyncStatus("erro ao carregar (usando dados locais)");
       })
       .finally(()=>{
+        renderEqpList();
+        renderEqpSelect();
+        renderTabela();
         setSyncStatus("ok");
-        renderAll();
       });
   }
 
-  // ====== NAV ======
-  function goPage(key){
-    navItems.forEach(n=> n.classList.toggle("active", n.dataset.nav===key));
-    Object.keys(pages).forEach(k=>{
-      if(pages[k]) pages[k].classList.toggle("active", k===key);
-    });
-
-    const titles = {
-      dashboard: ["Dashboard","Visão geral das preventivas"],
-      maquinas: ["Máquinas","Cadastro e gestão de equipamentos"],
-      tarefas: ["Tarefas","Cadastro, edição e controle"],
-      relatorios: ["Relatórios","Geração para impressão e CSV"]
-    };
-    if(pageTitle) pageTitle.textContent = titles[key]?.[0] || "Preventivas";
-    if(pageSubtitle) pageSubtitle.textContent = titles[key]?.[1] || "";
-
-    if(key==="relatorios") renderRelatorioPreview();
-  }
-  navItems.forEach(n=> n.addEventListener("click", ()=> goPage(n.dataset.nav)));
-
-  // ====== CRUD MÁQUINAS ======
   function clearEqpForm(){
     selectedEqpId = null;
-    if(eqNome) eqNome.value = "";
-    if(eqLocal) eqLocal.value = "";
-    if(eqSerie) eqSerie.value = "";
-    if(infoEqpSel) infoEqpSel.textContent = "Nenhuma máquina selecionada.";
-    renderMaquinasList();
-    renderEqpSelects();
-    renderTabelas();
+    eqNome.value  = '';
+    eqLocal.value = '';
+    eqSerie.value = '';
+    infoEqpSel.textContent = 'Nenhuma máquina selecionada.';
+    renderEqpList();
+    renderEqpSelect();
+    renderTabela();
+  }
+
+  function clearTaskForm(){
+    tkTitulo.value  = '';
+    tkPeriodo.value = '30';
+    tkUltima.value  = '';
+    tkObs.value     = '';
+    setTaskMode(false); // volta para "Adicionar"
   }
 
   function setSelectedEqp(eqp){
-    selectedEqpId = eqp?.id || null;
-    if(!eqp) return clearEqpForm();
-    if(eqNome) eqNome.value = eqp.nome || "";
-    if(eqLocal) eqLocal.value = eqp.local || "";
-    if(eqSerie) eqSerie.value = eqp.serie || "";
-    if(infoEqpSel) infoEqpSel.textContent = "Editando: " + (eqp.nome || "—");
-    renderMaquinasList();
-    renderEqpSelects();
-    renderTabelas();
+    if(!eqp){
+      clearEqpForm();
+      return;
+    }
+    selectedEqpId = eqp.id;
+    eqNome.value  = eqp.nome;
+    eqLocal.value = eqp.local || '';
+    eqSerie.value = eqp.serie || '';
+    infoEqpSel.textContent = 'Editando: ' + eqp.nome;
+
+    // sincroniza o SELECT da aba Tarefas
+    selEqpTarefa.value = eqp.id;
+    hintEqpTarefa.textContent =
+      (eqp.local ? ("Local: " + eqp.local + " • ") : "") +
+      (eqp.serie ? ("Patrimônio/Série: " + eqp.serie) : "");
+
+    renderEqpList();
+    renderTabela();
+  }
+
+  function renderEqpList(){
+    listaEqp.innerHTML = '';
+    if(!store.equipamentos.length){
+      listaEqp.innerHTML = '<div class="muted">Nenhuma máquina cadastrada ainda.</div>';
+      return;
+    }
+
+    store.equipamentos.forEach(eqp=>{
+      const div = document.createElement('div');
+      div.className = 'chip-eqp' + (eqp.id===selectedEqpId ? ' active' : '');
+
+      const left = document.createElement('div');
+      left.innerHTML = `
+        <div class="title">${eqp.nome}</div>
+        <div class="sub">${(eqp.local||'')}${eqp.serie ? (' • ' + eqp.serie) : ''}</div>
+      `;
+
+      const btnDel = document.createElement('button');
+      btnDel.className = 'err';
+      btnDel.textContent = 'Excluir';
+      btnDel.title = 'Excluir máquina';
+      btnDel.addEventListener('click', (ev)=>{
+        ev.stopPropagation();
+        if(confirm('Excluir máquina e todas as tarefas dela?')){
+          store.equipamentos = store.equipamentos.filter(e=> e.id!==eqp.id);
+          if(selectedEqpId===eqp.id) selectedEqpId=null;
+          fullSave();
+          renderEqpList();
+          renderEqpSelect();
+          renderTabela();
+        }
+      });
+
+      div.appendChild(left);
+      div.appendChild(btnDel);
+      div.addEventListener('click', ()=> {
+        setSelectedEqp(eqp);
+        openTab('maquinas');
+      });
+      listaEqp.appendChild(div);
+    });
+  }
+
+  function renderEqpSelect(){
+    selEqpTarefa.innerHTML = '';
+    if(!store.equipamentos.length){
+      const opt = document.createElement('option');
+      opt.value = '';
+      opt.textContent = 'Cadastre uma máquina primeiro';
+      selEqpTarefa.appendChild(opt);
+      selEqpTarefa.disabled = true;
+      hintEqpTarefa.textContent = '';
+      return;
+    }
+
+    selEqpTarefa.disabled = false;
+
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = 'Selecione uma máquina…';
+    selEqpTarefa.appendChild(placeholder);
+
+    store.equipamentos.forEach(e=>{
+      const opt = document.createElement('option');
+      opt.value = e.id;
+      opt.textContent = e.nome;
+      selEqpTarefa.appendChild(opt);
+    });
+
+    // manter seleção se possível
+    if(selectedEqpId && store.equipamentos.some(e=> e.id===selectedEqpId)){
+      selEqpTarefa.value = selectedEqpId;
+      const eqp = store.equipamentos.find(e=> e.id===selectedEqpId);
+      hintEqpTarefa.textContent =
+        (eqp.local ? ("Local: " + eqp.local + " • ") : "") +
+        (eqp.serie ? ("Patrimônio/Série: " + eqp.serie) : "");
+    }else{
+      selEqpTarefa.value = '';
+      hintEqpTarefa.textContent = '';
+    }
   }
 
   function addOrUpdateEquipamento(){
-    const nome = (eqNome?.value || "").trim();
-    if(!nome){ toast("err","Campo obrigatório","Informe o nome da máquina."); return; }
+    const nome = eqNome.value.trim();
+    if(!nome){ alert('Informe o nome da máquina'); return; }
 
     if(selectedEqpId){
       const eqp = store.equipamentos.find(e=> e.id===selectedEqpId);
       if(eqp){
         eqp.nome = nome;
-        eqp.local = (eqLocal?.value || "").trim();
-        eqp.serie = (eqSerie?.value || "").trim();
-        fullSave();
-        toast("ok","Salvo","Máquina atualizada.");
-        setSelectedEqp(eqp);
+        eqp.local = eqLocal.value.trim();
+        eqp.serie = eqSerie.value.trim();
       }
+    }else{
+      const eqp = {
+        id: uid(),
+        nome,
+        local: eqLocal.value.trim(),
+        serie: eqSerie.value.trim(),
+        tarefas: []
+      };
+      store.equipamentos.push(eqp);
+      selectedEqpId = eqp.id;
+    }
+
+    fullSave();
+    renderEqpList();
+    renderEqpSelect();
+    setSelectedEqp(store.equipamentos.find(e=> e.id===selectedEqpId));
+  }
+
+  // Adicionar OU Salvar edição
+  function addTarefa(){
+    const eqpIdSel = selEqpTarefa.value || '';
+    if(!eqpIdSel){
+      alert('Selecione a máquina para cadastrar a tarefa.');
       return;
     }
 
-    const eqp = {
-      id: uid(),
-      nome,
-      local: (eqLocal?.value || "").trim(),
-      serie: (eqSerie?.value || "").trim(),
-      tarefas: []
-    };
-    store.equipamentos.push(eqp);
-    selectedEqpId = eqp.id;
-    fullSave();
-    toast("ok","Salvo","Máquina cadastrada.");
-    setSelectedEqp(eqp);
-  }
-
-  async function deleteEquipamento(eqpId){
-    const eqp = store.equipamentos.find(e=> e.id===eqpId);
-    if(!eqp) return;
-    const ok = await confirmBox("Excluir máquina", `Excluir "${eqp.nome}" e todas as tarefas?`);
-    if(!ok) return;
-
-    store.equipamentos = store.equipamentos.filter(e=> e.id!==eqpId);
-    if(selectedEqpId===eqpId) selectedEqpId=null;
-    fullSave();
-    toast("ok","Excluído","Máquina removida.");
-    renderAll();
-  }
-
-  function renderMaquinasList(){
-    if(!listaEqp || !countEqp || !emptyEqp) return;
-
-    const q = (buscaEqp?.value || "").trim().toLowerCase();
-    const list = store.equipamentos
-      .slice()
-      .sort((a,b)=> (a.nome||"").localeCompare(b.nome||""))
-      .filter(e=> !q || `${e.nome} ${e.local||""} ${e.serie||""}`.toLowerCase().includes(q));
-
-    listaEqp.innerHTML = "";
-    countEqp.textContent = `${store.equipamentos.length} máquinas`;
-    emptyEqp.style.display = store.equipamentos.length ? "none" : "block";
-
-    list.forEach(eqp=>{
-      const div = document.createElement("div");
-      div.className = "item" + (eqp.id===selectedEqpId ? " active" : "");
-      const sub = [eqp.local, eqp.serie].filter(Boolean).join(" • ");
-      div.innerHTML = `
-        <div>
-          <b>${escapeHtml(eqp.nome||"—")}</b>
-          <small>${escapeHtml(sub || "—")}</small>
-        </div>
-        <div class="actions">
-          <button class="icon-btn danger" title="Excluir" data-del="${eqp.id}" type="button">🗑</button>
-        </div>
-      `;
-      div.addEventListener("click", (ev)=>{
-        const t = ev.target;
-        if(t instanceof HTMLElement && t.closest("[data-del]")) return;
-        setSelectedEqp(eqp);
-      });
-      const delBtn = div.querySelector("[data-del]");
-      if(delBtn) delBtn.addEventListener("click", (ev)=>{ ev.stopPropagation(); deleteEquipamento(eqp.id); });
-      listaEqp.appendChild(div);
-    });
-  }
-
-  function buildEqpHint(eqp){
-    const parts = [];
-    if(eqp.local) parts.push("Local: " + eqp.local);
-    if(eqp.serie) parts.push("Patrimônio/Série: " + eqp.serie);
-    return parts.join(" • ");
-  }
-
-  function renderEqpSelects(){
-    if(!selEqpTarefa || !repMaquina) return;
-
-    selEqpTarefa.innerHTML = "";
-    repMaquina.innerHTML = "";
-
-    const has = store.equipamentos.length > 0;
-
-    const opt0 = document.createElement("option");
-    opt0.value = "";
-    opt0.textContent = has ? "Selecione uma máquina…" : "Cadastre uma máquina primeiro";
-    selEqpTarefa.appendChild(opt0);
-    selEqpTarefa.disabled = !has;
-
-    const optR0 = document.createElement("option");
-    optR0.value = "";
-    optR0.textContent = "Todas as máquinas";
-    repMaquina.appendChild(optR0);
-
-    store.equipamentos
-      .slice()
-      .sort((a,b)=> (a.nome||"").localeCompare(b.nome||""))
-      .forEach(e=>{
-        const o = document.createElement("option");
-        o.value = e.id;
-        o.textContent = e.nome;
-        selEqpTarefa.appendChild(o);
-
-        const o2 = document.createElement("option");
-        o2.value = e.id;
-        o2.textContent = e.nome;
-        repMaquina.appendChild(o2);
-      });
-
-    if(selectedEqpId && store.equipamentos.some(e=> e.id===selectedEqpId)){
-      selEqpTarefa.value = selectedEqpId;
-      const eqp = store.equipamentos.find(e=> e.id===selectedEqpId);
-      if(hintEqpTarefa) hintEqpTarefa.textContent = eqp ? buildEqpHint(eqp) : "";
-    }else{
-      selEqpTarefa.value = "";
-      if(hintEqpTarefa) hintEqpTarefa.textContent = "";
+    const titulo = tkTitulo.value.trim();
+    if(!titulo){
+      alert('Informe o título da tarefa');
+      return;
     }
-  }
 
-  // ====== TAREFAS (ADD + EDIT + SAVE) ======
-  function clearTaskForm(){
-    if(tkTitulo) tkTitulo.value = "";
-    if(tkPeriodo) tkPeriodo.value = "30";
-    if(tkUltima) tkUltima.value = "";
-    if(tkObs) tkObs.value = "";
-    editingTask = null;
-    if(btnSalvarTarefa){
-      btnSalvarTarefa.textContent = "Adicionar";
-      btnSalvarTarefa.classList.remove("warn");
-      btnSalvarTarefa.classList.add("primary");
+    const periodo = parseInt(tkPeriodo.value,10) || 30;
+    const ultimaISO = tkUltima.value || '';
+    const obs = tkObs.value.trim();
+
+    const eqp = store.equipamentos.find(e=> e.id===eqpIdSel);
+    if(!eqp){
+      alert('Erro: máquina não encontrada.');
+      return;
     }
-  }
-  function setTaskModeEdit(){
-    if(btnSalvarTarefa){
-      btnSalvarTarefa.textContent = "Salvar alterações";
-      btnSalvarTarefa.classList.remove("primary");
-      btnSalvarTarefa.classList.add("warn");
-    }
-  }
 
-  function saveTask(){
-    const eqpId = (selEqpTarefa?.value || "");
-    if(!eqpId){ toast("err","Seleção obrigatória","Selecione a máquina."); return; }
-    const titulo = (tkTitulo?.value || "").trim();
-    if(!titulo){ toast("err","Campo obrigatório","Informe o título da tarefa."); return; }
-
-    const periodo = parseInt(tkPeriodo?.value || "30",10) || 30;
-    const ultimaISO = tkUltima?.value || "";
-    const obs = (tkObs?.value || "").trim();
-
-    const eqp = store.equipamentos.find(e=> e.id===eqpId);
-    if(!eqp){ toast("err","Erro","Máquina não encontrada."); return; }
-    if(!Array.isArray(eqp.tarefas)) eqp.tarefas = [];
-
-    if(editingTask && editingTask.eqpId === eqpId){
-      const tk = eqp.tarefas.find(t=> t.id===editingTask.tkId);
+    // ✅ EDITAR
+    if(editingTask && editingTask.eqpId === eqpIdSel){
+      const tk = (eqp.tarefas||[]).find(t=> t.id === editingTask.tkId);
       if(!tk){
-        toast("warn","Aviso","Tarefa não encontrada. Voltando para adicionar.");
-        clearTaskForm();
+        alert('Erro: tarefa não encontrada.');
+        setTaskMode(false);
         return;
       }
       tk.titulo = titulo;
@@ -1291,429 +926,216 @@
       tk.obs = obs;
 
       fullSave();
-      toast("ok","Atualizado","Tarefa atualizada.");
+      renderTabela();
       clearTaskForm();
-      renderTabelas();
+      alert('Tarefa atualizada!');
       return;
     }
 
+    // ✅ ADICIONAR
     eqp.tarefas.push({ id: uid(), titulo, periodo, ultimaISO, obs });
+
     fullSave();
-    toast("ok","Salvo","Tarefa adicionada.");
+    renderTabela();
     clearTaskForm();
-    renderTabelas();
   }
 
-  async function deleteTask(eqpId, tkId){
-    const eqp = store.equipamentos.find(e=> e.id===eqpId);
-    const tk = eqp?.tarefas?.find(t=> t.id===tkId);
-    if(!eqp || !tk) return;
-
-    const ok = await confirmBox("Excluir tarefa", `Excluir "${tk.titulo}" da máquina "${eqp.nome}"?`);
-    if(!ok) return;
-
-    eqp.tarefas = eqp.tarefas.filter(t=> t.id!==tkId);
-    fullSave();
-    toast("ok","Excluído","Tarefa removida.");
-    if(editingTask && editingTask.eqpId===eqpId && editingTask.tkId===tkId) clearTaskForm();
-    renderTabelas();
+  function computeNext(ultimaISO, periodo){
+    const base = ultimaISO || todayISO();
+    return addDays(base, periodo);
+  }
+  function statusFor(nextISO){
+    const t = todayISO();
+    if(nextISO < t) return {label:'ATRASADA', cls:'b-err'};
+    const d = diffDays(nextISO, t);
+    if(d <= 7) return {label:'EM BREVE', cls:'b-warn'};
+    return {label:'OK', cls:'b-ok'};
   }
 
-  function markDoneToday(eqpId, tkId){
-    const eqp = store.equipamentos.find(e=> e.id===eqpId);
-    const tk = eqp?.tarefas?.find(t=> t.id===tkId);
-    if(!eqp || !tk) return;
-
-    tk.ultimaISO = todayISO();
-    fullSave();
-    toast("ok","Concluída","Marcada como feita hoje.");
-    renderTabelas();
-  }
-
-  function editTask(eqpId, tkId){
-    const eqp = store.equipamentos.find(e=> e.id===eqpId);
-    const tk = eqp?.tarefas?.find(t=> t.id===tkId);
-    if(!eqp || !tk) return;
-
-    goPage("tarefas");
-    selectedEqpId = eqp.id;
-    renderEqpSelects();
-
-    if(selEqpTarefa) selEqpTarefa.value = eqp.id;
-    if(hintEqpTarefa) hintEqpTarefa.textContent = buildEqpHint(eqp);
-
-    if(tkTitulo) tkTitulo.value = tk.titulo || "";
-    if(tkPeriodo) tkPeriodo.value = String(tk.periodo || 30);
-    if(tkUltima) tkUltima.value = tk.ultimaISO || "";
-    if(tkObs) tkObs.value = tk.obs || "";
-
-    editingTask = { eqpId, tkId };
-    setTaskModeEdit();
-    window.scrollTo({top:0,behavior:"smooth"});
-  }
-
-  // ====== DADOS UNIFICADOS ======
-  function buildRows(){
+  function renderTabela(){
     const rows = [];
     store.equipamentos.forEach(eqp=>{
-      (eqp.tarefas || []).forEach(tk=>{
+      (eqp.tarefas||[]).forEach(tk=>{
         const nextISO = computeNext(tk.ultimaISO, tk.periodo);
         rows.push({
           eqpId:eqp.id,
           tkId:tk.id,
-          equipamento:eqp.nome || "—",
-          local:eqp.local || "",
-          serie:eqp.serie || "",
-          tarefa:tk.titulo || "—",
-          periodo: tk.periodo || 30,
-          ultima: tk.ultimaISO || "",
-          proxima: nextISO,
-          status: statusFor(nextISO),
-          obs: tk.obs || ""
+          equipamento:eqp.nome,
+          tarefa:tk.titulo,
+          periodo:tk.periodo,
+          ultima:tk.ultimaISO || '',
+          proxima:nextISO,
+          status:statusFor(nextISO),
+          local:eqp.local||'',
+          serie:eqp.serie||'',
+          obs:tk.obs||''
         });
       });
     });
-    rows.sort((a,b)=> a.proxima.localeCompare(b.proxima));
-    return rows;
-  }
-
-  // ====== RENDER KPI/TABELAS ======
-  function renderDash(rows){
-    if(!tbodyDash) return;
-    const t = todayISO();
-    const mode = dashFiltro?.value || "todas";
-    let list = rows.slice();
-
-    if(mode==="atrasadas") list = list.filter(r=> r.proxima < t);
-    else if(mode==="sete") list = list.filter(r=> { const d=diffDays(r.proxima,t); return d>=0 && d<=7; });
-    else if(mode==="trinta") list = list.filter(r=> { const d=diffDays(r.proxima,t); return d>=0 && d<=30; });
-
-    list = list.slice(0,20);
-
-    tbodyDash.innerHTML = "";
-    if(!list.length){
-      tbodyDash.innerHTML = `<tr><td colspan="5" class="muted">Nenhuma tarefa para este filtro.</td></tr>`;
-      return;
-    }
-
-    list.forEach(r=>{
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td><b>${escapeHtml(r.equipamento)}</b><div class="muted">${escapeHtml(r.local || "")}</div></td>
-        <td>${escapeHtml(r.tarefa)}</td>
-        <td>${escapeHtml(fmtBR(r.proxima))}</td>
-        <td><span class="badge ${r.status.cls}">${escapeHtml(r.status.label)}</span></td>
-        <td>
-          <div class="row">
-            <button class="ok" data-dashdone="${r.eqpId}|${r.tkId}" type="button">Feita hoje</button>
-            <button class="ghost" data-dashedit="${r.eqpId}|${r.tkId}" type="button">Editar</button>
-          </div>
-        </td>
-      `;
-      tbodyDash.appendChild(tr);
-    });
-  }
-
-  function renderTabelas(){
-    const rows = buildRows();
 
     const t = todayISO();
     const atr = rows.filter(r=> r.proxima < t).length;
     const ate7 = rows.filter(r=> { const d = diffDays(r.proxima, t); return d>=0 && d<=7; }).length;
     const ate30 = rows.filter(r=> { const d = diffDays(r.proxima, t); return d>=0 && d<=30; }).length;
 
-    if(kpiAtr) kpiAtr.textContent = atr;
-    if(kpi7) kpi7.textContent = ate7;
-    if(kpi30) kpi30.textContent = ate30;
-    if(kpiTot) kpiTot.textContent = rows.length;
-    if(kpiMeta) kpiMeta.textContent = `${store.equipamentos.length} máquinas cadastradas`;
+    kpiAtr.textContent = atr;
+    kpi7.textContent   = ate7;
+    kpi30.textContent  = ate30;
+    kpiTot.textContent = rows.length;
 
-    // tabela tarefas
-    if(tbody){
-      const q = (busca?.value || "").trim().toLowerCase();
-      const fil = selFiltro?.value || "todos";
+    const q = (busca.value || '').trim().toLowerCase();
+    const fil = selFiltro.value;
 
-      const lista = rows.filter(r=>{
-        const passBusca = !q || `${r.equipamento} ${r.tarefa} ${r.local} ${r.serie}`.toLowerCase().includes(q);
-        let passFiltro = true;
-        const d = diffDays(r.proxima, t);
-        if(fil==="atrasadas") passFiltro = r.proxima < t;
-        else if(fil==="sete") passFiltro = d>=0 && d<=7;
-        else if(fil==="trinta") passFiltro = d>=0 && d<=30;
-        return passBusca && passFiltro;
-      });
+    let lista = rows;
 
-      tbody.innerHTML = "";
-      if(!lista.length){
-        tbody.innerHTML = `<tr><td colspan="7" class="muted">Nenhuma tarefa para o filtro atual.</td></tr>`;
-      }else{
-        lista.forEach(r=>{
-          const meta = [r.local, r.serie].filter(Boolean).join(" • ");
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td><b>${escapeHtml(r.equipamento)}</b><div class="muted">${escapeHtml(meta || "")}</div></td>
-            <td>${escapeHtml(r.tarefa)}<div class="muted">${escapeHtml(r.obs || "")}</div></td>
-            <td>${escapeHtml(String(r.periodo))}d</td>
-            <td>${escapeHtml(fmtBR(r.ultima))}</td>
-            <td>${escapeHtml(fmtBR(r.proxima))}</td>
-            <td><span class="badge ${r.status.cls}">${escapeHtml(r.status.label)}</span></td>
-            <td>
-              <div class="row">
-                <button class="ok" data-done="${r.eqpId}|${r.tkId}" type="button">Feita hoje</button>
-                <button class="ghost" data-edit="${r.eqpId}|${r.tkId}" type="button">Editar</button>
-                <button class="danger" data-del="${r.eqpId}|${r.tkId}" type="button">Excluir</button>
-              </div>
-            </td>
-          `;
-          tbody.appendChild(tr);
-        });
-      }
-    }
+    lista = lista.filter(r=>{
+      const passBusca = !q || `${r.equipamento} ${r.tarefa} ${r.local} ${r.serie}`.toLowerCase().includes(q);
+      let passFiltro = true;
+      const d = diffDays(r.proxima, t);
+      if(fil==='atrasadas') passFiltro = r.proxima < t;
+      else if(fil==='sete') passFiltro = d>=0 && d<=7;
+      else if(fil==='trinta') passFiltro = d>=0 && d<=30;
+      return passBusca && passFiltro;
+    });
 
-    renderDash(rows);
-    renderRelatorioPreview(rows);
-  }
+    lista.sort((a,b)=> a.proxima.localeCompare(b.proxima));
 
-  // ====== RELATÓRIO ======
-  function filterForReport(rows){
-    const t = todayISO();
-    let list = rows ? rows.slice() : buildRows();
-
-    const tipo = repFiltro?.value || "atrasadas";
-    if(tipo==="atrasadas") list = list.filter(r=> r.proxima < t);
-    else if(tipo==="sete") list = list.filter(r=> { const d=diffDays(r.proxima,t); return d>=0 && d<=7; });
-    else if(tipo==="trinta") list = list.filter(r=> { const d=diffDays(r.proxima,t); return d>=0 && d<=30; });
-
-    const loc = (repLocal?.value || "").trim().toLowerCase();
-    if(loc) list = list.filter(r=> (r.local||"").toLowerCase().includes(loc));
-
-    const eqpId = repMaquina?.value || "";
-    if(eqpId) list = list.filter(r=> r.eqpId === eqpId);
-
-    list.sort((a,b)=> a.proxima.localeCompare(b.proxima));
-    return list;
-  }
-
-  function renderRelatorioPreview(rows){
-    if(!tbodyRep || !repCount) return;
-    const list = filterForReport(rows);
-    repCount.textContent = `${list.length} itens`;
-
-    tbodyRep.innerHTML = "";
-    if(!list.length){
-      tbodyRep.innerHTML = `<tr><td colspan="5" class="muted">Nenhum item para o filtro do relatório.</td></tr>`;
+    tbody.innerHTML = '';
+    if(!lista.length){
+      const tr = document.createElement('tr');
+      tr.innerHTML = '<td colspan="7" class="muted">Nenhuma tarefa cadastrada para o filtro atual.</td>';
+      tbody.appendChild(tr);
       return;
     }
 
-    list.slice(0,200).forEach(r=>{
-      const tr = document.createElement("tr");
+    lista.forEach(r=>{
+      const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td><b>${escapeHtml(r.equipamento)}</b></td>
-        <td>${escapeHtml(r.local || "")}</td>
-        <td>${escapeHtml(r.tarefa)}</td>
-        <td>${escapeHtml(fmtBR(r.proxima))}</td>
-        <td><span class="badge ${r.status.cls}">${escapeHtml(r.status.label)}</span></td>
+        <td><b>${r.equipamento}</b><div class="muted">${r.local||''} ${r.serie?('• '+r.serie):''}</div></td>
+        <td>${r.tarefa}<div class="muted">${r.obs||''}</div></td>
+        <td>${r.periodo}d</td>
+        <td>${fmtBR(r.ultima)}</td>
+        <td>${fmtBR(r.proxima)}</td>
+        <td><span class="badge ${r.status.cls}">${r.status.label}</span></td>
+        <td>
+          <div class="row">
+            <button class="ok" data-done="${r.eqpId}|${r.tkId}" type="button">Feita hoje</button>
+            <button class="ghost" data-edit="${r.eqpId}|${r.tkId}" type="button">Editar</button>
+            <button class="err" data-del="${r.eqpId}|${r.tkId}" type="button">Excluir</button>
+          </div>
+        </td>
       `;
-      tbodyRep.appendChild(tr);
+      tbody.appendChild(tr);
     });
   }
 
-  function generateReportPrint(){
-    const rows = filterForReport();
-    const tipoTxt = repFiltro?.options?.[repFiltro.selectedIndex]?.textContent || "—";
-    const locTxt = (repLocal?.value || "").trim();
-    const eqpTxt = (repMaquina?.value)
-      ? (repMaquina.options?.[repMaquina.selectedIndex]?.textContent || "—")
-      : "Todas";
-    const now = new Date();
-
-    const css = `
-      body{font-family:Arial, sans-serif; margin:18px; color:#111;}
-      h1{margin:0; font-size:18px;}
-      .meta{margin-top:6px; color:#444; font-size:12px;}
-      table{width:100%; border-collapse:collapse; margin-top:14px; font-size:12px;}
-      th,td{border:1px solid #ddd; padding:8px; text-align:left; vertical-align:top;}
-      th{background:#f3f4f6;}
-      .badge{display:inline-block; padding:3px 8px; border-radius:999px; font-weight:700; font-size:11px; border:1px solid #ddd;}
-      .b-ok{background:#ecfdf5; color:#166534; border-color:#86efac;}
-      .b-warn{background:#fffbeb; color:#92400e; border-color:#fde68a;}
-      .b-err{background:#fef2f2; color:#991b1b; border-color:#fecaca;}
-      @media print{button{display:none}}
-    `;
-
-    const trs = rows.map(r=>`
-      <tr>
-        <td><b>${escapeHtml(r.equipamento)}</b><div style="color:#666; font-size:11px">${escapeHtml([r.local,r.serie].filter(Boolean).join(" • "))}</div></td>
-        <td>${escapeHtml(r.tarefa)}<div style="color:#666; font-size:11px">${escapeHtml(r.obs||"")}</div></td>
-        <td>${escapeHtml(String(r.periodo))}d</td>
-        <td>${escapeHtml(fmtBR(r.ultima))}</td>
-        <td>${escapeHtml(fmtBR(r.proxima))}</td>
-        <td><span class="badge ${r.status.cls}">${escapeHtml(r.status.label)}</span></td>
-      </tr>
-    `).join("");
-
-    const html = `
-      <!doctype html>
-      <html><head><meta charset="utf-8"><title>Relatório Preventivas</title><style>${css}</style></head>
-      <body>
-        <h1>Relatório de Preventivas — Grilazer</h1>
-        <div class="meta">
-          Gerado em: ${now.toLocaleString('pt-BR')}<br>
-          Tipo: <b>${escapeHtml(tipoTxt)}</b><br>
-          Local/Setor: <b>${escapeHtml(locTxt || "Todos")}</b><br>
-          Máquina: <b>${escapeHtml(eqpTxt)}</b><br>
-          Total: <b>${rows.length}</b>
-        </div>
-
-        <table>
-          <thead>
-            <tr>
-              <th>Máquina</th>
-              <th>Tarefa</th>
-              <th>Período</th>
-              <th>Última</th>
-              <th>Próxima</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>${trs || `<tr><td colspan="6">Nenhum item</td></tr>`}</tbody>
-        </table>
-
-        <script>window.print();</script>
-      </body></html>
-    `;
-
-    const w = window.open("", "_blank");
-    w.document.open();
-    w.document.write(html);
-    w.document.close();
-  }
-
-  function downloadCSV(){
-    const rows = filterForReport();
-    const header = ["Maquina","Local","Serie","Tarefa","PeriodoDias","Ultima","Proxima","Status","Obs"];
-    const lines = rows.map(r=>[
-      r.equipamento, r.local, r.serie, r.tarefa, r.periodo,
-      r.ultima, r.proxima, r.status.label, (r.obs||"")
-    ].map(v => `"${String(v??"").replace(/"/g,'""')}"`).join(","));
-    const csv = [header.join(","), ...lines].join("\n");
-
-    const blob = new Blob([csv], {type:"text/csv;charset=utf-8"});
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = `relatorio_preventivas_${todayISO()}.csv`;
-    a.click();
-    URL.revokeObjectURL(a.href);
-    toast("ok","CSV gerado","Download iniciado.");
-  }
-
-  // ====== RENDER GERAL ======
-  function renderAll(){
-    renderMaquinasList();
-    renderEqpSelects();
-    renderTabelas();
-  }
-
-  // ====== LISTENERS (SAFE) ======
-  if(btnNovoEqp) btnNovoEqp.addEventListener("click", clearEqpForm);
-  if(btnSalvarEqp) btnSalvarEqp.addEventListener("click", addOrUpdateEquipamento);
-  if(btnLimparEqp) btnLimparEqp.addEventListener("click", clearEqpForm);
-  if(buscaEqp) buscaEqp.addEventListener("input", renderMaquinasList);
-
-  if(selEqpTarefa) selEqpTarefa.addEventListener("change", ()=>{
-    selectedEqpId = selEqpTarefa.value || null;
-    const eqp = store.equipamentos.find(e=> e.id===selectedEqpId);
-    if(hintEqpTarefa) hintEqpTarefa.textContent = eqp ? buildEqpHint(eqp) : "";
-    if(editingTask) clearTaskForm();
-  });
-
-  if(btnSalvarTarefa) btnSalvarTarefa.addEventListener("click", saveTask);
-  if(btnLimparTarefa) btnLimparTarefa.addEventListener("click", clearTaskForm);
-  if(busca) busca.addEventListener("input", renderTabelas);
-  if(selFiltro) selFiltro.addEventListener("change", renderTabelas);
-
-  if(dashFiltro) dashFiltro.addEventListener("change", renderTabelas);
-  if(btnGoRelatorio) btnGoRelatorio.addEventListener("click", ()=> goPage("relatorios"));
-
-  if(repFiltro) repFiltro.addEventListener("change", ()=> renderRelatorioPreview());
-  if(repLocal) repLocal.addEventListener("input", ()=> renderRelatorioPreview());
-  if(repMaquina) repMaquina.addEventListener("change", ()=> renderRelatorioPreview());
-  if(btnGerarRelatorio) btnGerarRelatorio.addEventListener("click", generateReportPrint);
-  if(btnBaixarCSV) btnBaixarCSV.addEventListener("click", downloadCSV);
-
-  if(btnPrintGlobal) btnPrintGlobal.addEventListener("click", ()=> window.print());
-  if(btnLogout) btnLogout.addEventListener("click", ()=> auth.signOut());
-
-  // TABELAS (delegação)
-  if(tbody) tbody.addEventListener("click", (ev)=>{
+  // Ações na tabela
+  tbody.addEventListener('click', (ev)=>{
     const el = ev.target;
     if(!(el instanceof HTMLElement)) return;
-    if(el.hasAttribute("data-done")){
-      const [eqpId, tkId] = el.getAttribute("data-done").split("|");
-      markDoneToday(eqpId, tkId);
-    }else if(el.hasAttribute("data-edit")){
-      const [eqpId, tkId] = el.getAttribute("data-edit").split("|");
-      editTask(eqpId, tkId);
-    }else if(el.hasAttribute("data-del")){
-      const [eqpId, tkId] = el.getAttribute("data-del").split("|");
-      deleteTask(eqpId, tkId);
+
+    if(el.hasAttribute('data-done')){
+      const [eqpId, tkId] = el.getAttribute('data-done').split('|');
+      const eqp = store.equipamentos.find(e=> e.id===eqpId);
+      const tk = eqp?.tarefas.find(x=> x.id===tkId);
+      if(tk){
+        tk.ultimaISO = todayISO();
+        fullSave();
+        renderTabela();
+      }
+    }else if(el.hasAttribute('data-edit')){
+      const [eqpId, tkId] = el.getAttribute('data-edit').split('|');
+      const eqp = store.equipamentos.find(e=> e.id===eqpId);
+      const tk = eqp?.tarefas.find(x=> x.id===tkId);
+      if(eqp && tk){
+        // abre aba tarefas e preenche
+        openTab('tarefas');
+
+        selectedEqpId = eqp.id;
+        renderEqpSelect();
+        selEqpTarefa.value = eqp.id;
+        hintEqpTarefa.textContent =
+          (eqp.local ? ("Local: " + eqp.local + " • ") : "") +
+          (eqp.serie ? ("Patrimônio/Série: " + eqp.serie) : "");
+
+        tkTitulo.value  = tk.titulo;
+        tkPeriodo.value = String(tk.periodo);
+        tkUltima.value  = tk.ultimaISO || '';
+        tkObs.value     = tk.obs || '';
+
+        // ✅ ativa modo edição
+        editingTask = { eqpId, tkId };
+        setTaskMode(true);
+
+        window.scrollTo({top:0,behavior:'smooth'});
+      }
+    }else if(el.hasAttribute('data-del')){
+      const [eqpId, tkId] = el.getAttribute('data-del').split('|');
+      const eqp = store.equipamentos.find(e=> e.id===eqpId);
+      if(!eqp) return;
+      if(confirm('Excluir esta tarefa?')){
+        eqp.tarefas = (eqp.tarefas||[]).filter(x=> x.id!==tkId);
+        fullSave();
+        renderTabela();
+        // se estava editando essa tarefa, cancela modo edição
+        if(editingTask && editingTask.eqpId===eqpId && editingTask.tkId===tkId){
+          clearTaskForm();
+        }
+      }
     }
   });
 
-  if(tbodyDash) tbodyDash.addEventListener("click", (ev)=>{
-    const el = ev.target;
-    if(!(el instanceof HTMLElement)) return;
-    if(el.hasAttribute("data-dashdone")){
-      const [eqpId, tkId] = el.getAttribute("data-dashdone").split("|");
-      markDoneToday(eqpId, tkId);
-    }else if(el.hasAttribute("data-dashedit")){
-      const [eqpId, tkId] = el.getAttribute("data-dashedit").split("|");
-      editTask(eqpId, tkId);
-    }
-  });
+  function initAppOnce(){
+    if(appInitialized) return;
+    appInitialized = true;
 
-  // ====== LOGIN FLOW ======
-  function setLoginLoading(isLoading){
-    if(!btnLogin) return;
-    btnLogin.disabled = isLoading;
-    btnLogin.textContent = isLoading ? "Entrando..." : "Entrar";
+    todaySpan.textContent = new Date().toLocaleDateString('pt-BR');
+
+    loadLocal();
+    renderEqpList();
+    renderEqpSelect();
+    renderTabela();
+    syncFromFirebaseOnce();
+
+    // tabs
+    tabMaquinas.addEventListener('click', ()=> openTab('maquinas'));
+    tabTarefas.addEventListener('click', ()=> openTab('tarefas'));
+
+    // seleção via select (trocar máquina cancela edição)
+    selEqpTarefa.addEventListener('change', ()=>{
+      const id = selEqpTarefa.value;
+      selectedEqpId = id || null;
+      const eqp = store.equipamentos.find(e=> e.id===id);
+      hintEqpTarefa.textContent = eqp
+        ? ((eqp.local ? ("Local: " + eqp.local + " • ") : "") + (eqp.serie ? ("Patrimônio/Série: " + eqp.serie) : ""))
+        : '';
+      setTaskMode(false);
+    });
+
+    // botões
+    btnSalvarEqp.addEventListener('click', addOrUpdateEquipamento);
+    btnLimparEqp.addEventListener('click', clearEqpForm);
+    btnAddTarefa.addEventListener('click', addTarefa);
+    btnLimparTarefa.addEventListener('click', clearTaskForm);
+    btnNovoEqp.addEventListener('click', ()=>{
+      clearEqpForm();
+      clearTaskForm();
+      openTab('maquinas');
+    });
+
+    // filtros
+    busca.addEventListener('input', renderTabela);
+    selFiltro.addEventListener('change', renderTabela);
+
+    // garante estado inicial do botão
+    setTaskMode(false);
   }
 
-  function showLogin(){
-    if(loginScreen) loginScreen.style.display = "flex";
-    if(appShell) appShell.style.display = "none";
-    if(loginError) loginError.textContent = "";
-    if(loginSenha) loginSenha.value = "";
-  }
-
-  function showApp(user){
-    if(loginScreen) loginScreen.style.display = "none";
-    if(appShell) appShell.style.display = "block";
-    if(userInfoSide) userInfoSide.textContent = "Logado como: " + (user?.email || "—");
-  }
-
-  function updateNet(){
-    if(!netPill) return;
-    const on = navigator.onLine;
-    netPill.textContent = on ? "Status: online" : "Status: offline";
-    netPill.style.borderColor = on ? "rgba(22,163,74,.25)" : "rgba(245,158,11,.35)";
-  }
-  window.addEventListener("online", ()=>{ updateNet(); toast("ok","Online","Conexão voltou."); saveRemote(); });
-  window.addEventListener("offline", ()=>{ updateNet(); toast("warn","Offline","Sem internet. Salvando local."); });
-  updateNet();
-
-  if(todaySpan) todaySpan.textContent = new Date().toLocaleDateString("pt-BR");
-
+  // ===== AUTH =====
   auth.onAuthStateChanged(user=>{
     if(user && allowedEmails.includes(user.email)){
       showApp(user);
-      if(!appInitialized){
-        appInitialized = true;
-        loadLocal();
-        renderAll();
-        syncFromFirebaseOnce();
-        goPage("dashboard");
-      }
+      initAppOnce();
     }else{
       if(user && !allowedEmails.includes(user.email)){
         auth.signOut();
@@ -1722,34 +1144,33 @@
     }
   });
 
-  if(btnLogin) btnLogin.addEventListener("click", ()=>{
-    const email = (loginEmail?.value || "").trim();
-    const senha = (loginSenha?.value || "");
+  btnLogin.addEventListener('click', ()=>{
+    const email = loginEmail.value.trim();
+    const senha = loginSenha.value;
     if(!email || !senha){
-      if(loginError) loginError.textContent = "Preencha e-mail e senha.";
+      loginError.textContent = "Preencha e-mail e senha.";
       return;
     }
     setLoginLoading(true);
-    if(loginError) loginError.textContent = "";
-
+    loginError.textContent = "";
     auth.signInWithEmailAndPassword(email, senha)
       .then(cred=>{
-        const u = cred.user;
-        if(u && !allowedEmails.includes(u.email)){
+        const user = cred.user;
+        if(!allowedEmails.includes(user.email)){
           auth.signOut();
-          if(loginError) loginError.textContent = "Seu usuário não tem permissão para acessar este painel.";
+          loginError.textContent = "Seu usuário não tem permissão para acessar este painel.";
         }
       })
       .catch(err=>{
         console.error(err);
-        if(loginError) loginError.textContent = "Login inválido. Verifique e-mail e senha.";
+        loginError.textContent = "Login inválido. Verifique e-mail e senha.";
       })
       .finally(()=> setLoginLoading(false));
   });
 
-  // start
+  btnLogout.addEventListener('click', ()=> auth.signOut());
+
   showLogin();
-})();
 </script>
 
 </body>
