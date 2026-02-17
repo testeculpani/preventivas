@@ -502,6 +502,7 @@
               <h3>Cadastro de Máquina</h3>
               <div class="muted" id="infoEqpSel">Nenhuma máquina selecionada.</div>
               <div id="syncStatus">Sincronização: carregando…</div>
+              <div class="muted" style="margin-top:6px">QR = Nome da máquina (somente leitura para selecionar).</div>
             </div>
             <button class="ghost" id="btnScanQrMachine" type="button">Ler QR</button>
           </div>
@@ -514,9 +515,6 @@
 
           <label for="eqSerie">Nº de Série / Patrimônio</label>
           <input id="eqSerie" placeholder="Ex.: SER-000123 / PAT-045">
-
-          <label for="eqQr">Código (QR Code)</label>
-          <input id="eqQr" placeholder="Ex.: QR-PR30T-001 (texto dentro do QR)">
 
           <div class="row" style="margin-top:10px">
             <button class="primary" id="btnSalvarEqp" type="button">Salvar</button>
@@ -538,7 +536,7 @@
           <div class="row" style="justify-content:space-between;align-items:center">
             <div>
               <h3>Cadastro de Tarefa</h3>
-              <div class="muted">Selecione a máquina ou leia o QR</div>
+              <div class="muted">Selecione a máquina ou leia o QR (QR = Nome)</div>
             </div>
             <button class="ghost" id="btnScanQrTask" type="button">Ler QR</button>
           </div>
@@ -642,11 +640,11 @@
       </div>
       <div class="modal-body">
         <div class="muted" id="qrHint" style="margin-bottom:8px">
-          Aponte a câmera para o QR da máquina.
+          Aponte a câmera para o QR da máquina (texto = Nome da Máquina).
         </div>
         <div id="qr-reader"></div>
         <div class="qr-help" id="qrHelp">
-          Dica: câmera só funciona em HTTPS (GitHub Pages ok). Se o navegador pedir permissão, permita.
+          Dica: câmera só funciona em HTTPS (GitHub Pages ok).
         </div>
       </div>
       <div class="modal-foot">
@@ -729,6 +727,14 @@
       .replaceAll("'","&#039;");
   }
 
+  // Normaliza texto do QR e do nome (evita erro por espaço duplo, caixa alta/baixa)
+  function normalizeName(s){
+    return String(s||"")
+      .trim()
+      .replace(/\s+/g, " ")
+      .toLowerCase();
+  }
+
   // =========================
   // STORE
   // =========================
@@ -747,7 +753,6 @@
   const eqNome = document.getElementById('eqNome');
   const eqLocal = document.getElementById('eqLocal');
   const eqSerie = document.getElementById('eqSerie');
-  const eqQr = document.getElementById('eqQr');
   const infoEqpSel = document.getElementById('infoEqpSel');
   const listaEqp = document.getElementById('listaEqp');
   const syncStatus = document.getElementById('syncStatus');
@@ -858,7 +863,6 @@
     eqNome.value  = '';
     eqLocal.value = '';
     eqSerie.value = '';
-    eqQr.value    = '';
     infoEqpSel.textContent = 'Nenhuma máquina selecionada.';
     renderEqpList();
     renderEqpSelect();
@@ -869,7 +873,6 @@
     const parts = [];
     if(eqp.local) parts.push("Local: " + eqp.local);
     if(eqp.serie) parts.push("Patrimônio/Série: " + eqp.serie);
-    if(eqp.qr) parts.push("QR: " + eqp.qr);
     return parts.join(" • ");
   }
 
@@ -882,7 +885,6 @@
     eqNome.value  = eqp.nome;
     eqLocal.value = eqp.local || '';
     eqSerie.value = eqp.serie || '';
-    eqQr.value    = eqp.qr || '';
     infoEqpSel.textContent = 'Editando: ' + eqp.nome;
 
     renderEqpSelect();
@@ -899,14 +901,13 @@
 
     const local = eqLocal.value.trim();
     const serie = eqSerie.value.trim();
-    const qr = eqQr.value.trim();
 
-    if(qr){
-      const dup = store.equipamentos.find(e => (e.qr||"").trim() === qr && e.id !== selectedEqpId);
-      if(dup){
-        alert('Este QR já está cadastrado na máquina: ' + dup.nome);
-        return;
-      }
+    // evitar nome duplicado (porque QR = nome)
+    const norm = normalizeName(nome);
+    const dup = store.equipamentos.find(e => normalizeName(e.nome) === norm && e.id !== selectedEqpId);
+    if(dup){
+      alert('Já existe uma máquina com esse nome (QR = Nome). Use outro nome ou edite a existente.');
+      return;
     }
 
     if(selectedEqpId){
@@ -915,10 +916,9 @@
         eqp.nome = nome;
         eqp.local = local;
         eqp.serie = serie;
-        eqp.qr = qr;
       }
     }else{
-      const eqp = { id: uid(), nome, local, serie, qr, tarefas: [] };
+      const eqp = { id: uid(), nome, local, serie, tarefas: [] };
       store.equipamentos.push(eqp);
       selectedEqpId = eqp.id;
     }
@@ -946,7 +946,6 @@
       const subParts = [];
       if(eqp.local) subParts.push(eqp.local);
       if(eqp.serie) subParts.push(eqp.serie);
-      if(eqp.qr) subParts.push("QR: " + eqp.qr);
 
       left.innerHTML = `
         <div class="title">${escapeHtml(eqp.nome)}</div>
@@ -1005,7 +1004,7 @@
     store.equipamentos.forEach(e=>{
       const opt = document.createElement('option');
       opt.value = e.id;
-      opt.textContent = e.qr ? `${e.nome} (QR: ${e.qr})` : e.nome;
+      opt.textContent = e.nome;
       selEqpTarefa.appendChild(opt);
     });
 
@@ -1129,7 +1128,6 @@
           status:statusFor(nextISO),
           local:eqp.local||'',
           serie:eqp.serie||'',
-          qr:eqp.qr||'',
           obs:tk.obs||''
         });
       });
@@ -1150,7 +1148,7 @@
 
     let lista = rows;
     lista = lista.filter(r=>{
-      const passBusca = !q || `${r.equipamento} ${r.tarefa} ${r.local} ${r.serie} ${r.qr}`.toLowerCase().includes(q);
+      const passBusca = !q || `${r.equipamento} ${r.tarefa} ${r.local} ${r.serie}`.toLowerCase().includes(q);
       let passFiltro = true;
       const d = diffDays(r.proxima, t);
       if(fil==='atrasadas') passFiltro = r.proxima < t;
@@ -1173,7 +1171,6 @@
       const metaParts = [];
       if(r.local) metaParts.push(r.local);
       if(r.serie) metaParts.push(r.serie);
-      if(r.qr) metaParts.push("QR: " + r.qr);
 
       const tr = document.createElement('tr');
       tr.innerHTML = `
@@ -1247,7 +1244,7 @@
   });
 
   // =========================
-  // QR (SEM CDN) — usa Html5Qrcode já carregado do arquivo local
+  // QR (QR = NOME DA MÁQUINA)
   // =========================
   const qrModal = document.getElementById('qrModal');
   const btnCloseQr = document.getElementById('btnCloseQr');
@@ -1285,41 +1282,31 @@
     hideQrModal();
   }
 
-  function findEqpByQr(code){
-    const c = String(code||"").trim();
-    if(!c) return null;
-    return store.equipamentos.find(e => (e.qr||"").trim() === c) || null;
+  function findEqpByQrName(qrText){
+    const key = normalizeName(qrText);
+    if(!key) return null;
+    return store.equipamentos.find(e => normalizeName(e.nome) === key) || null;
   }
 
   function handleQrResult(code){
-    const eqp = findEqpByQr(code);
+    const eqp = findEqpByQrName(code);
 
-    if(eqp){
-      selectedEqpId = eqp.id;
-
-      if(qrContext === "task"){
-        openTab('tarefas');
-        renderEqpSelect();
-        selEqpTarefa.value = eqp.id;
-        hintEqpTarefa.textContent = buildEqpHint(eqp);
-        setTaskMode(false);
-      }else{
-        openTab('maquinas');
-        setSelectedEqp(eqp);
-      }
+    if(!eqp){
+      alert("Máquina NÃO encontrada:\n" + code + "\n\nCadastre a máquina com esse mesmo nome (QR = Nome).");
       return;
     }
 
-    // QR não cadastrado
-    if(qrContext === "machine"){
-      openTab('maquinas');
-      clearEqpForm();
-      eqQr.value = code;
-      infoEqpSel.textContent = "QR lido: " + code + " (não cadastrado). Preencha nome e salve.";
-      eqNome.focus();
+    selectedEqpId = eqp.id;
+
+    if(qrContext === "task"){
+      openTab('tarefas');
+      renderEqpSelect();
+      selEqpTarefa.value = eqp.id;
+      hintEqpTarefa.textContent = buildEqpHint(eqp);
+      setTaskMode(false);
     }else{
-      alert("QR não cadastrado: " + code + "\nCadastre a máquina primeiro na aba Máquinas.");
       openTab('maquinas');
+      setSelectedEqp(eqp);
     }
   }
 
@@ -1327,7 +1314,7 @@
     if(typeof Html5Qrcode === "undefined"){
       alert(
         "Leitor de QR não carregou.\n\n" +
-        "Confirme se o arquivo 'html5-qrcode.min.js' está na mesma pasta do index.html no GitHub."
+        "Confirme se 'html5-qrcode.min.js' está na mesma pasta do index.html no GitHub."
       );
       return;
     }
@@ -1336,19 +1323,17 @@
 
     showQrModal(
       qrContext === "task" ? "Ler QR — Selecionar Máquina" : "Ler QR — Buscar Máquina",
-      "Aponte a câmera para o QR grudado na máquina."
+      "Aponte a câmera para o QR. O texto do QR deve ser exatamente o NOME da máquina."
     );
 
-    // checar HTTPS (camera)
     if(!(location.protocol === "https:" || location.hostname === "localhost")){
       qrHelp.textContent =
         "⚠️ A câmera só funciona em HTTPS ou localhost. Publique no GitHub Pages (https) para usar.";
     }else{
       qrHelp.textContent =
-        "Dica: se pedir permissão da câmera, permita. Use a câmera traseira se estiver no celular.";
+        "Dica: permita a câmera. Se estiver no celular, use a câmera traseira.";
     }
 
-    // limpar scanner antigo
     try{
       if(qrScanner){
         await qrScanner.stop();
@@ -1357,7 +1342,6 @@
     }catch{}
     qrScanner = new Html5Qrcode("qr-reader");
 
-    // listar câmeras
     try{
       cameraList = await Html5Qrcode.getCameras();
       if(!cameraList || !cameraList.length){
@@ -1366,7 +1350,6 @@
         return;
       }
 
-      // tenta priorizar traseira
       const backIndex = cameraList.findIndex(c => /back|traseira|rear/i.test(c.label||""));
       cameraIndex = backIndex >= 0 ? backIndex : 0;
       currentCameraId = cameraList[cameraIndex].id;
@@ -1378,7 +1361,6 @@
       return;
     }
 
-    // iniciar scan
     try{
       await qrScanner.start(
         { deviceId: { exact: currentCameraId } },
@@ -1449,11 +1431,9 @@
     renderTabela();
     syncFromFirebaseOnce();
 
-    // tabs
     tabMaquinas.addEventListener('click', ()=> openTab('maquinas'));
     tabTarefas.addEventListener('click', ()=> openTab('tarefas'));
 
-    // select tarefa: trocar máquina cancela edição
     selEqpTarefa.addEventListener('change', ()=>{
       const id = selEqpTarefa.value;
       selectedEqpId = id || null;
@@ -1462,7 +1442,6 @@
       setTaskMode(false);
     });
 
-    // botões
     btnSalvarEqp.addEventListener('click', addOrUpdateEquipamento);
     btnLimparEqp.addEventListener('click', clearEqpForm);
     btnAddTarefa.addEventListener('click', addTarefa);
@@ -1474,11 +1453,9 @@
       openTab('maquinas');
     });
 
-    // filtros
     busca.addEventListener('input', renderTabela);
     selFiltro.addEventListener('change', renderTabela);
 
-    // QR
     btnScanQrMachine.addEventListener('click', ()=> startQrScan("machine"));
     btnScanQrTask.addEventListener('click', ()=> startQrScan("task"));
     btnOpenQrTop.addEventListener('click', ()=> startQrScan("task"));
@@ -1527,7 +1504,6 @@
 
   btnLogout.addEventListener('click', ()=> auth.signOut());
 
-  // start
   showLogin();
 </script>
 
