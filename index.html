@@ -1,42 +1,42 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Preventivas de Máquinas — Grilazer (Admin)</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Preventivas de Máquinas — Grilazer</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#1e3a8a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="apple-touch-icon" href="icon-192.svg">
 
   <style>
     :root{
-      --bg:#f3f5f8;
+      --bg:#eef2f7;
       --panel:#ffffff;
-      --panel2:#fbfcfe;
       --text:#0f172a;
       --muted:#64748b;
-      --border:#e5e7eb;
-      --border2:#eef2f7;
+      --border:#dbe3ec;
 
-      --primary:#2563eb;
-      --primary2:#1d4ed8;
+      --primary:#1e3a8a;
+      --primary2:#2563eb;
+      --primary-soft:#e0ecff;
 
       --ok:#16a34a;
       --warn:#f59e0b;
-      --err:#ef4444;
+      --err:#dc2626;
 
-      --shadow: 0 14px 35px rgba(15,23,42,.10);
-      --shadow2: 0 10px 25px rgba(15,23,42,.08);
+      --shadow: 0 10px 24px rgba(15,23,42,.06);
     }
-
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
       margin:0;
       font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Arial, sans-serif;
+      background:var(--bg);
       color:var(--text);
-      background:
-        radial-gradient(1200px 600px at 15% -10%, rgba(37,99,235,.12), transparent 60%),
-        radial-gradient(900px 500px at 90% 10%, rgba(22,163,74,.08), transparent 55%),
-        linear-gradient(180deg, #f7f8fb, var(--bg));
-      min-height:100dvh;
       padding:18px;
     }
 
@@ -50,384 +50,308 @@
     }
     .login-card{
       width:100%;
-      max-width:420px;
-      padding:18px;
-      border-radius:18px;
+      max-width:430px;
+      background:#fff;
       border:1px solid var(--border);
-      background: linear-gradient(180deg, #fff, #fbfcff);
-      box-shadow: var(--shadow);
+      border-radius:14px;
+      box-shadow:var(--shadow);
+      padding:18px;
       display:flex;
       flex-direction:column;
       gap:10px;
     }
-    .login-card h1{margin:0;font-size:18px;font-weight:900}
+    .login-card h1{margin:0;font-size:18px;font-weight:950;color:var(--primary)}
     .login-card p{margin:0;color:var(--muted);font-size:13px;line-height:1.35}
     .field{display:flex;flex-direction:column;gap:6px;margin-top:6px}
-    .field label{font-size:12px;color:var(--muted);font-weight:700}
+    .field label{font-size:12px;color:var(--muted);font-weight:800}
     .field input{
-      width:100%;
       padding:10px 12px;
-      border-radius:12px;
+      border-radius:10px;
       border:1px solid var(--border);
-      background:#fff;
-      color:var(--text);
       outline:none;
       font-size:14px;
+      background:#fff;
     }
     .field input:focus{
-      border-color: rgba(37,99,235,.45);
-      box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+      border-color:rgba(37,99,235,.45);
+      box-shadow:0 0 0 3px rgba(37,99,235,.10);
     }
     .btn{
       margin-top:8px;
       width:100%;
       padding:10px 12px;
       border-radius:999px;
-      border:1px solid rgba(37,99,235,.25);
-      background: linear-gradient(135deg, var(--primary), var(--primary2));
+      border:none;
+      background:linear-gradient(135deg,var(--primary2),#1d4ed8);
       color:#fff;
-      font-weight:900;
+      font-weight:950;
       cursor:pointer;
-      box-shadow: 0 10px 20px rgba(37,99,235,.18);
     }
     .btn:disabled{opacity:.65;cursor:wait}
-    .login-error{margin-top:4px;font-size:12px;color:var(--err);min-height:14px}
-    .login-foot{font-size:11px;color:var(--muted);margin-top:2px}
+    .login-error{min-height:16px;font-size:12px;color:var(--err)}
+    .login-foot{font-size:11px;color:var(--muted)}
 
     /* APP */
-    .wrap{width:100%;max-width:1200px;margin:0 auto}
-
+    .wrap{max-width:1250px;margin:0 auto;display:none}
     .topbar{
+      background:var(--primary);
+      color:#fff;
+      border-radius:14px;
+      padding:16px;
       display:flex;
       justify-content:space-between;
       align-items:flex-start;
       gap:12px;
-      padding:14px 14px;
-      border-radius:18px;
-      border:1px solid var(--border);
-      background: linear-gradient(180deg, #fff, #fbfcff);
-      box-shadow: var(--shadow2);
-      margin-bottom:14px;
+      margin-bottom:16px;
+      box-shadow:var(--shadow);
     }
-    .brand{display:flex;gap:10px;align-items:center;min-width:260px}
+    .brand{display:flex;align-items:center;gap:10px}
     .logo{
-      width:44px;height:44px;border-radius:14px;
-      border:1px solid var(--border);
-      background: linear-gradient(135deg, rgba(37,99,235,.12), rgba(37,99,235,.03));
+      width:42px;height:42px;border-radius:12px;
+      background:#fff;
+      color:var(--primary);
       display:grid;place-items:center;
       font-weight:1000;
       letter-spacing:.2px;
-      color:#0b2a7a;
     }
-    .brand h1{margin:0;font-size:16px;font-weight:950;line-height:1.1}
-    #userInfoTop{font-size:11px;color:var(--muted);margin-top:4px}
+    .brand h1{margin:0;font-size:16px;font-weight:950}
+    #userInfoTop{margin-top:4px;font-size:11px;opacity:.85}
 
-    .controls{
-      display:flex;flex-wrap:wrap;justify-content:flex-end;
-      gap:8px;align-items:center;
-    }
-
+    .controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;align-items:center}
     button{
-      appearance:none;
-      border:1px solid var(--border);
-      border-radius:12px;
-      padding:9px 11px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,.15);
+      padding:9px 12px;
       font-weight:900;
       cursor:pointer;
-      color:var(--text);
-      background: #fff;
-      transition: transform .08s ease, box-shadow .12s ease, border-color .12s ease;
-      box-shadow: 0 1px 0 rgba(15,23,42,.04);
-    }
-    button:hover{border-color:#cbd5e1;box-shadow: 0 8px 18px rgba(15,23,42,.08)}
-    button:active{transform: translateY(1px)}
-    .ghost{background:#fff}
-    .primary{
+      background:rgba(255,255,255,.10);
       color:#fff;
-      border-color: rgba(37,99,235,.25);
-      background: linear-gradient(135deg, var(--primary), var(--primary2));
-      box-shadow: 0 10px 20px rgba(37,99,235,.18);
+      transition:transform .08s ease, filter .12s ease;
+      backdrop-filter: blur(6px);
     }
-    .ok{
-      color:#fff;border-color: rgba(22,163,74,.25);
-      background: linear-gradient(135deg, #22c55e, #16a34a);
-    }
-    .warn{
-      color:#fff;border-color: rgba(245,158,11,.25);
-      background: linear-gradient(135deg, #fbbf24, #f59e0b);
-    }
-    .err{
-      color:#fff;border-color: rgba(239,68,68,.25);
-      background: linear-gradient(135deg, #f87171, #ef4444);
+    button:hover{filter:brightness(1.07)}
+    button:active{transform:translateY(1px)}
+    .btn-white{
+      background:#fff;
+      color:var(--primary);
+      border:1px solid rgba(255,255,255,.35);
     }
 
     .grid{
       display:grid;
-      gap:14px;
-      grid-template-columns: 380px 1fr;
+      gap:16px;
+      grid-template-columns: 400px 1fr;
       align-items:start;
     }
-
     .card{
-      border:1px solid var(--border);
-      background: linear-gradient(180deg, var(--panel), var(--panel2));
-      border-radius: 18px;
-      box-shadow: var(--shadow2);
-      padding:14px;
-    }
-
-    h3,h4{margin:0}
-    h3{font-size:14px;font-weight:950}
-    h4{font-size:13px;font-weight:900;color:var(--text);opacity:.95}
-    .muted{color:var(--muted);font-size:12px;line-height:1.35}
-    .sep{height:1px;background: var(--border2);margin:12px 0}
-
-    label{
-      display:block;
-      font-weight:800;
-      margin:10px 0 6px;
-      color: rgba(15,23,42,.85);
-      font-size:12px;
-    }
-    input,select,textarea{
-      width:100%;
-      padding:10px 12px;
-      border:1px solid var(--border);
-      border-radius:12px;
       background:#fff;
-      color: var(--text);
-      outline:none;
-      font-size:14px;
-    }
-    textarea{min-height:76px;resize:vertical}
-    input:focus,select:focus,textarea:focus{
-      border-color: rgba(37,99,235,.40);
-      box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+      border:1px solid var(--border);
+      border-radius:14px;
+      box-shadow:var(--shadow);
+      padding:16px;
     }
 
-    .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-    #syncStatus{font-size:11px;color:var(--muted);margin-top:6px}
+    .muted{color:var(--muted);font-size:12px;line-height:1.35}
+    .sep{height:1px;background:#edf2f7;margin:12px 0}
 
     /* TABS */
-    .tabs{
-      display:flex;
-      gap:8px;
-      border-bottom:1px solid var(--border2);
-      padding-bottom:10px;
-      margin-bottom:10px;
-    }
+    .tabs{display:flex;gap:8px;margin-bottom:12px}
     .tab{
-      border:1px solid var(--border);
       background:#fff;
+      border:1px solid var(--border);
       color:var(--text);
       border-radius:999px;
-      padding:8px 12px;
+      padding:7px 14px;
       font-weight:950;
       font-size:12px;
-      box-shadow: 0 1px 0 rgba(15,23,42,.04);
+      cursor:pointer;
     }
     .tab.active{
-      border-color: rgba(37,99,235,.35);
-      background: rgba(37,99,235,.08);
-      color:#0b2a7a;
+      background:var(--primary-soft);
+      color:var(--primary);
+      border-color:rgba(30,58,138,.35);
     }
     .pane{display:none}
     .pane.active{display:block}
 
-    /* Lista máquinas */
-    #listaEqp{
-      margin-top:8px;
-      max-height:280px;
-      overflow:auto;
-      padding-right:2px;
+    /* FORM */
+    label{display:block;margin:10px 0 6px;font-size:12px;font-weight:900;color:rgba(15,23,42,.85)}
+    input,select,textarea{
+      width:100%;
+      padding:10px 12px;
+      border-radius:10px;
+      border:1px solid var(--border);
+      outline:none;
+      font-size:14px;
+      background:#fff;
     }
+    textarea{min-height:78px;resize:vertical}
+    input:focus,select:focus,textarea:focus{
+      border-color:rgba(37,99,235,.45);
+      box-shadow:0 0 0 3px rgba(37,99,235,.10);
+    }
+    .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+    /* Left list */
+    #listaEqp{max-height:300px;overflow:auto;padding-right:2px;margin-top:8px}
     #listaEqp::-webkit-scrollbar{width:8px}
-    #listaEqp::-webkit-scrollbar-thumb{background: rgba(15,23,42,.12);border-radius:999px}
+    #listaEqp::-webkit-scrollbar-thumb{background:rgba(15,23,42,.14);border-radius:999px}
 
     .chip-eqp{
-      border-radius:14px;
       border:1px solid var(--border);
-      padding:10px 10px;
-      margin:8px 0;
+      border-radius:12px;
+      padding:10px;
       display:flex;
       justify-content:space-between;
-      align-items:flex-start;
-      font-size:12px;
-      cursor:pointer;
-      background: #fff;
-      transition: background .12s ease, border-color .12s ease, transform .08s ease;
       gap:10px;
+      margin:8px 0;
+      cursor:pointer;
+      background:#fff;
+      transition: background .12s ease, border-color .12s ease, transform .08s ease;
     }
-    .chip-eqp:hover{background: #f8fafc; border-color:#cbd5e1}
-    .chip-eqp:active{transform: translateY(1px)}
+    .chip-eqp:hover{background:#f8fafc;border-color:#cbd5e1}
+    .chip-eqp:active{transform:translateY(1px)}
+    .chip-eqp.active{background:var(--primary-soft);border-color:rgba(30,58,138,.35)}
     .chip-eqp .title{font-weight:950}
-    .chip-eqp .sub{color:var(--muted);margin-top:2px}
-    .chip-eqp.active{
-      background: rgba(37,99,235,.08);
-      border-color: rgba(37,99,235,.35);
+    .chip-eqp .sub{margin-top:2px;color:var(--muted);font-size:12px}
+    .chip-eqp .actions{display:flex;align-items:flex-start;gap:8px}
+    .mini{
+      border-radius:10px;
+      padding:8px 10px;
+      font-size:12px;
+      font-weight:900;
+      border:1px solid var(--border);
+      background:#fff;
+      color:var(--text);
+      cursor:pointer;
     }
-    .chip-eqp button{
-      padding:7px 10px;
-      font-size:11px;
-      border-radius:12px;
-      white-space:nowrap;
-      box-shadow:none;
-    }
-    .chip-eqp button:hover{box-shadow:none}
+    .mini.err{background:#fee2e2;border-color:#fecaca;color:#991b1b}
 
-    /* Direita */
+    /* RIGHT */
     .filters{
       display:flex;
       gap:8px;
       flex-wrap:wrap;
       align-items:center;
-      margin-bottom:10px
+      margin-bottom:10px;
     }
     .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:8px 10px;
-      border-radius:999px;
-      background: #fff;
+      display:inline-flex;align-items:center;gap:6px;
+      padding:8px 10px;border-radius:999px;
       border:1px solid var(--border);
-      font-weight:900;
+      background:#fff;
       font-size:11px;
-      color: var(--muted);
+      font-weight:950;
+      color:var(--muted);
     }
-
     .kpi{
       display:grid;
       gap:10px;
       grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-      margin:10px 0 6px;
+      margin-bottom:12px;
     }
     .kpi .card{
-      padding:12px;
-      border-radius:16px;
-      box-shadow: 0 10px 20px rgba(15,23,42,.06);
+      background:var(--primary-soft);
+      border-color:#c7dbff;
+      box-shadow:none;
     }
     .kpi .big{
+      margin-top:4px;
       font-size:22px;
       font-weight:1000;
-      margin-top:4px;
+      color:var(--primary);
       letter-spacing:.2px;
     }
 
+    /* TABLE */
     .table{
       width:100%;
-      border-collapse:separate;
-      border-spacing:0;
-      overflow:hidden;
-      border-radius:16px;
-      margin-top:8px;
+      border-collapse:collapse;
       border:1px solid var(--border);
+      border-radius:12px;
+      overflow:hidden;
       background:#fff;
     }
-    .table th,.table td{
-      padding:10px 10px;
-      font-size:13px;
-      text-align:left;
-      vertical-align:top;
-      border-bottom:1px solid var(--border2);
-    }
     .table th{
-      background: #f8fafc;
-      color: rgba(15,23,42,.75);
+      background:var(--primary-soft);
+      color:var(--primary);
       font-size:12px;
-      letter-spacing:.2px;
+      text-align:left;
+      padding:10px;
       position:sticky;
       top:0;
       z-index:1;
     }
-    .table tr:last-child td{border-bottom:none}
-
+    .table td{
+      padding:10px;
+      border-top:1px solid #edf2f7;
+      vertical-align:top;
+      font-size:13px;
+    }
     .badge{
       display:inline-block;
       padding:5px 10px;
       border-radius:999px;
-      font-weight:1000;
       font-size:11px;
-      letter-spacing:.2px;
+      font-weight:950;
+    }
+    .b-ok{background:#dcfce7;color:#166534}
+    .b-warn{background:#fef9c3;color:#854d0e}
+    .b-err{background:#fee2e2;color:#991b1b}
+
+    .actionsRow{display:flex;gap:8px;flex-wrap:wrap}
+    .act{
+      padding:8px 10px;
+      border-radius:10px;
+      font-weight:950;
+      font-size:12px;
       border:1px solid var(--border);
       background:#fff;
+      cursor:pointer;
     }
-    .b-ok{background: #ecfdf5; color:#166534; border-color:#86efac}
-    .b-warn{background:#fffbeb; color:#92400e; border-color:#fde68a}
-    .b-err{background:#fef2f2; color:#991b1b; border-color:#fecaca}
+    .act.ok{background:#16a34a;color:#fff;border:none}
+    .act.err{background:#dc2626;color:#fff;border:none}
+    .act.warn{background:#f59e0b;color:#fff;border:none}
 
-    .foot{
-      margin-top:12px;
-      color:rgba(100,116,139,.9);
-      text-align:center;
-      font-size:12px;
-    }
-
-    /* MODAL QR */
-    .modal{
-      position:fixed; inset:0;
-      background: rgba(2,6,23,.55);
+    /* Edit mode bar */
+    .editbar{
       display:none;
-      align-items:center;
-      justify-content:center;
-      padding:14px;
-      z-index: 9999;
-    }
-    .modal.show{display:flex}
-    .modal-card{
-      width:min(560px, 100%);
-      background:#fff;
-      border:1px solid var(--border);
-      border-radius:18px;
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-    .modal-head{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      padding:12px 12px;
-      border-bottom:1px solid var(--border2);
-      background: linear-gradient(180deg, #fff, #fbfcff);
-    }
-    .modal-title{font-weight:950;font-size:13px}
-    .modal-body{padding:12px}
-    #qr-reader{
-      width:100%;
-      border-radius:14px;
-      overflow:hidden;
-      border:1px solid var(--border);
-      background:#0b1220;
-      min-height: 280px;
-    }
-    .modal-foot{
-      display:flex;
-      gap:8px;
-      padding:12px;
-      border-top:1px solid var(--border2);
-      justify-content:flex-end;
-      background:#fff;
-    }
-    .qr-help{
-      margin-top:8px;
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid #fde68a;
+      background:#fffbeb;
+      color:#92400e;
+      font-weight:900;
       font-size:12px;
-      color:var(--muted);
-      line-height:1.35;
     }
+    .editbar.show{display:flex;justify-content:space-between;gap:8px;align-items:center}
+    .editbar .right{display:flex;gap:8px;align-items:center}
+    .editbar button{
+      border-radius:10px;
+      padding:8px 10px;
+      font-weight:950;
+      border:1px solid #f59e0b33;
+      background:#fff;
+      color:#92400e;
+      cursor:pointer;
+    }
+    .editbar button:hover{filter:brightness(1.05)}
 
-    @media (max-width: 980px){
+    #syncStatus{margin-top:6px;font-size:11px;color:var(--muted)}
+
+    .foot{margin-top:12px;color:rgba(100,116,139,.9);text-align:center;font-size:12px}
+
+    @media(max-width:980px){
       body{padding:12px}
       .grid{grid-template-columns:1fr}
       .controls{justify-content:flex-start}
     }
     @media print{
-      body{background:#fff;color:#000;padding:0}
-      #login-screen{display:none !important}
-      .controls{display:none !important}
-      .card,.topbar{box-shadow:none !important}
-      .table{background:#fff}
-      .modal{display:none !important}
+      body{background:#fff;padding:0}
+      #login-screen{display:none!important}
+      .topbar .controls{display:none!important}
+      .card,.topbar{box-shadow:none!important}
     }
   </style>
 
@@ -435,9 +359,6 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-
-  <!-- ✅ Leitor QR local (suba html5-qrcode.min.js junto do index.html) -->
-  <script src="./html5-qrcode.min.js"></script>
 </head>
 
 <body>
@@ -461,14 +382,12 @@
       <button class="btn" id="btnLogin">Entrar</button>
       <div class="login-error" id="loginError"></div>
 
-      <div class="login-foot">
-        Usuários válidos são gerenciados no Firebase Authentication (E-mail/Senha).
-      </div>
+      <div class="login-foot">Usuários válidos são gerenciados no Firebase Authentication (E-mail/Senha).</div>
     </div>
   </section>
 
   <!-- APP -->
-  <div class="wrap" id="app-wrap" style="display:none">
+  <div class="wrap" id="app-wrap">
 
     <div class="topbar">
       <div class="brand">
@@ -480,15 +399,15 @@
       </div>
 
       <div class="controls">
-        <button class="ghost" id="btnNovoEqp" type="button">Novo</button>
-        <button class="ghost" id="btnOpenQrTop" type="button">Ler QR</button>
-        <button class="ghost" type="button" onclick="window.print()">Imprimir</button>
-        <button class="ghost" id="btnLogout" type="button">Sair</button>
+        <button class="btn-white" id="btnNovoEqp" type="button">Novo</button>
+        <button class="btn-white" id="btnReportCsv" type="button">Relatório CSV</button>
+        <button class="btn-white" type="button" onclick="window.print()">Imprimir</button>
+        <button class="btn-white" id="btnLogout" type="button">Sair</button>
       </div>
     </div>
 
     <div class="grid">
-      <!-- ESQUERDA (ABAS) -->
+      <!-- ESQUERDA -->
       <div class="card">
         <div class="tabs">
           <button class="tab active" id="tabMaquinas" type="button">Máquinas</button>
@@ -499,12 +418,13 @@
         <div class="pane active" id="paneMaquinas">
           <div class="row" style="justify-content:space-between;align-items:center">
             <div>
-              <h3>Cadastro de Máquina</h3>
+              <div style="font-weight:1000;color:var(--primary)">Cadastro de Máquina</div>
               <div class="muted" id="infoEqpSel">Nenhuma máquina selecionada.</div>
               <div id="syncStatus">Sincronização: carregando…</div>
-              <div class="muted" style="margin-top:6px">QR = Nome da máquina (somente leitura para selecionar).</div>
             </div>
-            <button class="ghost" id="btnScanQrMachine" type="button">Ler QR</button>
+
+            <!-- ✅ QR somente aqui (aba Máquinas) -->
+            <button class="mini" id="btnScanQrMachine" type="button">Ler QR</button>
           </div>
 
           <label for="eqNome">Nome da máquina</label>
@@ -516,15 +436,20 @@
           <label for="eqSerie">Nº de Série / Patrimônio</label>
           <input id="eqSerie" placeholder="Ex.: SER-000123 / PAT-045">
 
+          <!-- ✅ Sem campo QR: o QR será igual ao Nome da máquina (conforme você pediu) -->
+          <div class="muted" style="margin-top:8px">
+            Observação: o QR Code deve conter o mesmo texto do <b>Nome da máquina</b>.
+          </div>
+
           <div class="row" style="margin-top:10px">
-            <button class="primary" id="btnSalvarEqp" type="button">Salvar</button>
-            <button class="ghost" id="btnLimparEqp" type="button">Limpar</button>
+            <button class="mini" id="btnSalvarEqp" type="button" style="background:var(--primary2);color:#fff;border:none">Salvar</button>
+            <button class="mini" id="btnLimparEqp" type="button">Limpar</button>
           </div>
 
           <div class="sep"></div>
 
           <div class="row" style="justify-content:space-between;align-items:baseline">
-            <h4>Máquinas cadastradas</h4>
+            <div style="font-weight:950">Máquinas cadastradas</div>
             <span class="muted">Clique para selecionar</span>
           </div>
 
@@ -533,17 +458,20 @@
 
         <!-- PANE TAREFAS -->
         <div class="pane" id="paneTarefas">
-          <div class="row" style="justify-content:space-between;align-items:center">
-            <div>
-              <h3>Cadastro de Tarefa</h3>
-              <div class="muted">Selecione a máquina ou leia o QR (QR = Nome)</div>
-            </div>
-            <button class="ghost" id="btnScanQrTask" type="button">Ler QR</button>
-          </div>
+          <div style="font-weight:1000;color:var(--primary)">Cadastro de Tarefa</div>
+          <div class="muted">Selecione a máquina e cadastre a tarefa</div>
 
           <label for="selEqpTarefa">Máquina</label>
           <select id="selEqpTarefa"></select>
           <div class="muted" id="hintEqpTarefa" style="margin-top:6px"></div>
+
+          <!-- Barra modo edição -->
+          <div class="editbar" id="editBar">
+            <div id="editBarText">Modo edição</div>
+            <div class="right">
+              <button id="btnCancelEdit" type="button">Cancelar edição</button>
+            </div>
+          </div>
 
           <label for="tkTitulo">Título da tarefa</label>
           <input id="tkTitulo" placeholder="Ex.: Lubrificar guias e mancais">
@@ -569,8 +497,8 @@
           <textarea id="tkObs" placeholder="Materiais, torque, check-list, segurança, etc."></textarea>
 
           <div class="row" style="margin-top:10px">
-            <button class="primary" id="btnAddTarefa" type="button">Adicionar</button>
-            <button class="ghost" id="btnLimparTarefa" type="button">Limpar</button>
+            <button class="mini" id="btnAddTarefa" type="button" style="background:var(--primary2);color:#fff;border:none">Adicionar</button>
+            <button class="mini" id="btnLimparTarefa" type="button">Limpar</button>
           </div>
 
           <div class="muted" style="margin-top:6px">
@@ -579,11 +507,18 @@
         </div>
       </div>
 
-      <!-- DIREITA (VISÃO GERAL) -->
+      <!-- DIREITA -->
       <div class="card">
         <div class="filters">
           <input id="busca" placeholder="Buscar por máquina/tarefa…" style="flex:1;min-width:220px">
+
           <span class="pill">Hoje: <span id="today"></span></span>
+
+          <!-- ✅ filtro por máquina -->
+          <select id="selFiltroEqp" title="Filtrar por máquina" style="min-width:220px">
+            <option value="">Todas as máquinas</option>
+          </select>
+
           <select id="selFiltro">
             <option value="todos">Todos</option>
             <option value="atrasadas">Atrasadas</option>
@@ -631,30 +566,18 @@
     <div class="foot">Grilazer — Preventivas</div>
   </div>
 
-  <!-- MODAL QR -->
-  <div class="modal" id="qrModal" aria-hidden="true">
-    <div class="modal-card">
-      <div class="modal-head">
-        <div class="modal-title" id="qrModalTitle">Ler QR Code</div>
-        <button class="ghost" id="btnCloseQr" type="button">Fechar</button>
-      </div>
-      <div class="modal-body">
-        <div class="muted" id="qrHint" style="margin-bottom:8px">
-          Aponte a câmera para o QR da máquina (texto = Nome da Máquina).
-        </div>
-        <div id="qr-reader"></div>
-        <div class="qr-help" id="qrHelp">
-          Dica: câmera só funciona em HTTPS (GitHub Pages ok).
-        </div>
-      </div>
-      <div class="modal-foot">
-        <button class="ghost" id="btnSwitchCamera" type="button">Trocar câmera</button>
-        <button class="err" id="btnStopQr" type="button">Parar</button>
-      </div>
-    </div>
-  </div>
-
 <script>
+  // =========================
+  // PWA: Service Worker
+  // =========================
+  (function(){
+    if("serviceWorker" in navigator){
+      window.addEventListener("load", ()=>{
+        navigator.serviceWorker.register("./sw.js").catch(console.error);
+      });
+    }
+  })();
+
   // =========================
   // FIREBASE CONFIG
   // =========================
@@ -674,19 +597,20 @@
   const auth = firebase.auth();
   const DB_PATH = "preventivas_grilazer";
 
+  // E-mails autorizados
   const allowedEmails = ["engenhariagrilazer@gmail.com"];
 
   // =========================
   // ELEMENTOS LOGIN
   // =========================
-  const loginScreen   = document.getElementById('login-screen');
-  const appWrap       = document.getElementById('app-wrap');
-  const loginEmail    = document.getElementById('loginEmail');
-  const loginSenha    = document.getElementById('loginSenha');
-  const btnLogin      = document.getElementById('btnLogin');
-  const loginError    = document.getElementById('loginError');
-  const btnLogout     = document.getElementById('btnLogout');
-  const userInfoTop   = document.getElementById('userInfoTop');
+  const loginScreen = document.getElementById("login-screen");
+  const appWrap = document.getElementById("app-wrap");
+  const loginEmail = document.getElementById("loginEmail");
+  const loginSenha = document.getElementById("loginSenha");
+  const btnLogin = document.getElementById("btnLogin");
+  const loginError = document.getElementById("loginError");
+  const btnLogout = document.getElementById("btnLogout");
+  const userInfoTop = document.getElementById("userInfoTop");
 
   function setLoginLoading(isLoading){
     btnLogin.disabled = isLoading;
@@ -694,14 +618,14 @@
   }
   function showLogin(){
     loginScreen.style.display = "flex";
-    appWrap.style.display     = "none";
-    loginError.textContent    = "";
-    loginSenha.value          = "";
+    appWrap.style.display = "none";
+    loginError.textContent = "";
+    loginSenha.value = "";
   }
   function showApp(user){
     loginScreen.style.display = "none";
-    appWrap.style.display     = "block";
-    userInfoTop.textContent   = "Logado como: " + user.email;
+    appWrap.style.display = "block";
+    userInfoTop.textContent = "Logado como: " + user.email;
   }
 
   // =========================
@@ -709,13 +633,13 @@
   // =========================
   const todayISO = ()=> new Date().toISOString().slice(0,10);
   const addDays = (iso, n)=>{
-    const d = iso? new Date(iso) : new Date();
+    const d = iso ? new Date(iso) : new Date();
     d.setHours(12,0,0,0);
     d.setDate(d.getDate()+n);
     return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10);
   };
   const diffDays = (a,b)=> Math.floor((new Date(a)-new Date(b))/(1000*60*60*24));
-  const fmtBR = (iso)=> iso? new Date(iso+'T00:00:00').toLocaleDateString('pt-BR') : '—';
+  const fmtBR = (iso)=> iso ? new Date(iso+'T00:00:00').toLocaleDateString('pt-BR') : '—';
   const uid = ()=> 'id-'+Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(4);
 
   function escapeHtml(str){
@@ -725,14 +649,6 @@
       .replaceAll(">","&gt;")
       .replaceAll('"',"&quot;")
       .replaceAll("'","&#039;");
-  }
-
-  // Normaliza texto do QR e do nome (evita erro por espaço duplo, caixa alta/baixa)
-  function normalizeName(s){
-    return String(s||"")
-      .trim()
-      .replace(/\s+/g, " ")
-      .toLowerCase();
   }
 
   // =========================
@@ -745,59 +661,63 @@
   // =========================
   // ELEMENTOS APP
   // =========================
-  const tabMaquinas = document.getElementById('tabMaquinas');
-  const tabTarefas  = document.getElementById('tabTarefas');
-  const paneMaquinas = document.getElementById('paneMaquinas');
-  const paneTarefas  = document.getElementById('paneTarefas');
+  const tabMaquinas = document.getElementById("tabMaquinas");
+  const tabTarefas  = document.getElementById("tabTarefas");
+  const paneMaquinas = document.getElementById("paneMaquinas");
+  const paneTarefas  = document.getElementById("paneTarefas");
 
-  const eqNome = document.getElementById('eqNome');
-  const eqLocal = document.getElementById('eqLocal');
-  const eqSerie = document.getElementById('eqSerie');
-  const infoEqpSel = document.getElementById('infoEqpSel');
-  const listaEqp = document.getElementById('listaEqp');
-  const syncStatus = document.getElementById('syncStatus');
+  const eqNome = document.getElementById("eqNome");
+  const eqLocal = document.getElementById("eqLocal");
+  const eqSerie = document.getElementById("eqSerie");
+  const infoEqpSel = document.getElementById("infoEqpSel");
+  const listaEqp = document.getElementById("listaEqp");
+  const syncStatus = document.getElementById("syncStatus");
 
-  const selEqpTarefa = document.getElementById('selEqpTarefa');
-  const hintEqpTarefa = document.getElementById('hintEqpTarefa');
+  const selEqpTarefa = document.getElementById("selEqpTarefa");
+  const hintEqpTarefa = document.getElementById("hintEqpTarefa");
+  const selFiltroEqp = document.getElementById("selFiltroEqp");
 
-  const tkTitulo = document.getElementById('tkTitulo');
-  const tkPeriodo = document.getElementById('tkPeriodo');
-  const tkUltima = document.getElementById('tkUltima');
-  const tkObs = document.getElementById('tkObs');
+  const tkTitulo = document.getElementById("tkTitulo");
+  const tkPeriodo = document.getElementById("tkPeriodo");
+  const tkUltima = document.getElementById("tkUltima");
+  const tkObs = document.getElementById("tkObs");
 
-  const busca = document.getElementById('busca');
-  const selFiltro = document.getElementById('selFiltro');
-  const todaySpan = document.getElementById('today');
+  const editBar = document.getElementById("editBar");
+  const editBarText = document.getElementById("editBarText");
+  const btnCancelEdit = document.getElementById("btnCancelEdit");
 
-  const kpiAtr = document.getElementById('kpiAtr');
-  const kpi7 = document.getElementById('kpi7');
-  const kpi30 = document.getElementById('kpi30');
-  const kpiTot = document.getElementById('kpiTot');
-  const tbody = document.getElementById('tbody');
+  const busca = document.getElementById("busca");
+  const selFiltro = document.getElementById("selFiltro");
+  const todaySpan = document.getElementById("today");
 
-  const btnSalvarEqp = document.getElementById('btnSalvarEqp');
-  const btnLimparEqp = document.getElementById('btnLimparEqp');
-  const btnAddTarefa = document.getElementById('btnAddTarefa');
-  const btnLimparTarefa = document.getElementById('btnLimparTarefa');
-  const btnNovoEqp = document.getElementById('btnNovoEqp');
+  const kpiAtr = document.getElementById("kpiAtr");
+  const kpi7 = document.getElementById("kpi7");
+  const kpi30 = document.getElementById("kpi30");
+  const kpiTot = document.getElementById("kpiTot");
+  const tbody = document.getElementById("tbody");
 
-  const btnScanQrMachine = document.getElementById('btnScanQrMachine');
-  const btnScanQrTask = document.getElementById('btnScanQrTask');
-  const btnOpenQrTop = document.getElementById('btnOpenQrTop');
+  const btnSalvarEqp = document.getElementById("btnSalvarEqp");
+  const btnLimparEqp = document.getElementById("btnLimparEqp");
+  const btnAddTarefa = document.getElementById("btnAddTarefa");
+  const btnLimparTarefa = document.getElementById("btnLimparTarefa");
+  const btnNovoEqp = document.getElementById("btnNovoEqp");
+  const btnReportCsv = document.getElementById("btnReportCsv");
+
+  const btnScanQrMachine = document.getElementById("btnScanQrMachine");
 
   // =========================
   // ABAS
   // =========================
   function openTab(which){
-    const isM = which === 'maquinas';
-    tabMaquinas.classList.toggle('active', isM);
-    tabTarefas.classList.toggle('active', !isM);
-    paneMaquinas.classList.toggle('active', isM);
-    paneTarefas.classList.toggle('active', !isM);
+    const isM = which === "maquinas";
+    tabMaquinas.classList.toggle("active", isM);
+    tabTarefas.classList.toggle("active", !isM);
+    paneMaquinas.classList.toggle("active", isM);
+    paneTarefas.classList.toggle("active", !isM);
   }
 
   // =========================
-  // SYNC STATUS
+  // SYNC
   // =========================
   function setSyncStatus(text){
     syncStatus.textContent = "Sincronização: " + text;
@@ -808,12 +728,12 @@
   // =========================
   function loadLocal(){
     try{
-      const raw = localStorage.getItem('preventivas');
-      if(raw){ store = JSON.parse(raw); }
+      const raw = localStorage.getItem("preventivas");
+      if(raw) store = JSON.parse(raw);
     }catch{}
   }
   function saveLocal(){
-    try{ localStorage.setItem('preventivas', JSON.stringify(store)); }catch{}
+    try{ localStorage.setItem("preventivas", JSON.stringify(store)); }catch{}
   }
 
   // =========================
@@ -832,7 +752,6 @@
     saveLocal();
     saveRemote();
   }
-
   function syncFromFirebaseOnce(){
     setSyncStatus("carregando do servidor…");
     db.ref(DB_PATH).once("value")
@@ -850,22 +769,24 @@
       .finally(()=>{
         renderEqpList();
         renderEqpSelect();
+        renderFiltroEqp();
         renderTabela();
         setSyncStatus("ok");
       });
   }
 
   // =========================
-  // FORM: MÁQUINA
+  // MÁQUINA
   // =========================
   function clearEqpForm(){
     selectedEqpId = null;
-    eqNome.value  = '';
-    eqLocal.value = '';
-    eqSerie.value = '';
-    infoEqpSel.textContent = 'Nenhuma máquina selecionada.';
+    eqNome.value = "";
+    eqLocal.value = "";
+    eqSerie.value = "";
+    infoEqpSel.textContent = "Nenhuma máquina selecionada.";
     renderEqpList();
     renderEqpSelect();
+    renderFiltroEqp();
     renderTabela();
   }
 
@@ -877,36 +798,33 @@
   }
 
   function setSelectedEqp(eqp){
-    if(!eqp){
-      clearEqpForm();
-      return;
-    }
+    if(!eqp){ clearEqpForm(); return; }
     selectedEqpId = eqp.id;
-    eqNome.value  = eqp.nome;
-    eqLocal.value = eqp.local || '';
-    eqSerie.value = eqp.serie || '';
-    infoEqpSel.textContent = 'Editando: ' + eqp.nome;
+    eqNome.value = eqp.nome || "";
+    eqLocal.value = eqp.local || "";
+    eqSerie.value = eqp.serie || "";
+    infoEqpSel.textContent = "Editando: " + (eqp.nome || "");
 
     renderEqpSelect();
     selEqpTarefa.value = eqp.id;
     hintEqpTarefa.textContent = buildEqpHint(eqp);
 
     renderEqpList();
+    renderFiltroEqp();
     renderTabela();
   }
 
   function addOrUpdateEquipamento(){
     const nome = eqNome.value.trim();
-    if(!nome){ alert('Informe o nome da máquina'); return; }
+    if(!nome){ alert("Informe o nome da máquina"); return; }
 
     const local = eqLocal.value.trim();
     const serie = eqSerie.value.trim();
 
-    // evitar nome duplicado (porque QR = nome)
-    const norm = normalizeName(nome);
-    const dup = store.equipamentos.find(e => normalizeName(e.nome) === norm && e.id !== selectedEqpId);
+    // evitar nome duplicado
+    const dup = store.equipamentos.find(e => (e.nome||"").trim().toLowerCase() === nome.toLowerCase() && e.id !== selectedEqpId);
     if(dup){
-      alert('Já existe uma máquina com esse nome (QR = Nome). Use outro nome ou edite a existente.');
+      alert("Já existe uma máquina com esse nome: " + dup.nome);
       return;
     }
 
@@ -925,84 +843,80 @@
 
     fullSave();
     setSelectedEqp(store.equipamentos.find(e=> e.id===selectedEqpId));
-    renderEqpSelect();
   }
 
-  // =========================
-  // LISTA: MÁQUINAS
-  // =========================
   function renderEqpList(){
-    listaEqp.innerHTML = '';
+    listaEqp.innerHTML = "";
     if(!store.equipamentos.length){
       listaEqp.innerHTML = '<div class="muted">Nenhuma máquina cadastrada ainda.</div>';
       return;
     }
 
     store.equipamentos.forEach(eqp=>{
-      const div = document.createElement('div');
-      div.className = 'chip-eqp' + (eqp.id===selectedEqpId ? ' active' : '');
+      const div = document.createElement("div");
+      div.className = "chip-eqp" + (eqp.id===selectedEqpId ? " active" : "");
 
-      const left = document.createElement('div');
-      const subParts = [];
-      if(eqp.local) subParts.push(eqp.local);
-      if(eqp.serie) subParts.push(eqp.serie);
-
+      const left = document.createElement("div");
       left.innerHTML = `
         <div class="title">${escapeHtml(eqp.nome)}</div>
-        <div class="sub">${escapeHtml(subParts.join(" • "))}</div>
+        <div class="sub">${escapeHtml([eqp.local, eqp.serie].filter(Boolean).join(" • "))}</div>
       `;
 
-      const btnDel = document.createElement('button');
-      btnDel.className = 'err';
-      btnDel.textContent = 'Excluir';
-      btnDel.title = 'Excluir máquina';
-      btnDel.addEventListener('click', (ev)=>{
+      const actions = document.createElement("div");
+      actions.className = "actions";
+
+      const btnDel = document.createElement("button");
+      btnDel.className = "mini err";
+      btnDel.type = "button";
+      btnDel.textContent = "Excluir";
+      btnDel.addEventListener("click",(ev)=>{
         ev.stopPropagation();
-        if(confirm('Excluir máquina e todas as tarefas dela?')){
+        if(confirm("Excluir máquina e todas as tarefas dela?")){
           store.equipamentos = store.equipamentos.filter(e=> e.id!==eqp.id);
           if(selectedEqpId===eqp.id) selectedEqpId=null;
           fullSave();
           renderEqpList();
           renderEqpSelect();
+          renderFiltroEqp();
           renderTabela();
         }
       });
 
+      actions.appendChild(btnDel);
       div.appendChild(left);
-      div.appendChild(btnDel);
-      div.addEventListener('click', ()=> {
+      div.appendChild(actions);
+
+      div.addEventListener("click", ()=>{
         setSelectedEqp(eqp);
-        openTab('maquinas');
+        openTab("maquinas");
       });
+
       listaEqp.appendChild(div);
     });
   }
 
-  // =========================
-  // SELECT: MÁQUINAS (TAREFAS)
-  // =========================
   function renderEqpSelect(){
-    selEqpTarefa.innerHTML = '';
+    selEqpTarefa.innerHTML = "";
 
     if(!store.equipamentos.length){
-      const opt = document.createElement('option');
-      opt.value = '';
-      opt.textContent = 'Cadastre uma máquina primeiro';
+      const opt = document.createElement("option");
+      opt.value = "";
+      opt.textContent = "Cadastre uma máquina primeiro";
       selEqpTarefa.appendChild(opt);
       selEqpTarefa.disabled = true;
-      hintEqpTarefa.textContent = '';
+      hintEqpTarefa.textContent = "";
       return;
     }
 
     selEqpTarefa.disabled = false;
 
-    const placeholder = document.createElement('option');
-    placeholder.value = '';
-    placeholder.textContent = 'Selecione uma máquina…';
+    const placeholder = document.createElement("option");
+    placeholder.value = "";
+    placeholder.textContent = "Selecione uma máquina…";
     selEqpTarefa.appendChild(placeholder);
 
     store.equipamentos.forEach(e=>{
-      const opt = document.createElement('option');
+      const opt = document.createElement("option");
       opt.value = e.id;
       opt.textContent = e.nome;
       selEqpTarefa.appendChild(opt);
@@ -1013,13 +927,29 @@
       const eqp = store.equipamentos.find(e=> e.id===selectedEqpId);
       hintEqpTarefa.textContent = buildEqpHint(eqp);
     }else{
-      selEqpTarefa.value = '';
-      hintEqpTarefa.textContent = '';
+      selEqpTarefa.value = "";
+      hintEqpTarefa.textContent = "";
+    }
+  }
+
+  // filtro por máquina na tabela
+  function renderFiltroEqp(){
+    const current = selFiltroEqp.value || "";
+    selFiltroEqp.innerHTML = `<option value="">Todas as máquinas</option>`;
+    store.equipamentos.forEach(e=>{
+      const opt = document.createElement("option");
+      opt.value = e.id;
+      opt.textContent = e.nome;
+      selFiltroEqp.appendChild(opt);
+    });
+    // tenta manter seleção
+    if(current && store.equipamentos.some(e=> e.id===current)){
+      selFiltroEqp.value = current;
     }
   }
 
   // =========================
-  // TAREFAS: MODO EDIÇÃO
+  // TAREFAS: modo edição
   // =========================
   let editingTask = null; // { eqpId, tkId }
   let originalBtnAddText = null;
@@ -1028,52 +958,42 @@
     if(!originalBtnAddText) originalBtnAddText = btnAddTarefa.textContent || "Adicionar";
     if(isEdit){
       btnAddTarefa.textContent = "Salvar alterações";
-      btnAddTarefa.classList.add("warn");
-      btnAddTarefa.classList.remove("primary");
+      editingTask && (editBarText.textContent = "✏️ Modo edição: altere os campos e clique em “Salvar alterações”.");
+      editBar.classList.add("show");
     }else{
       btnAddTarefa.textContent = originalBtnAddText || "Adicionar";
-      btnAddTarefa.classList.add("primary");
-      btnAddTarefa.classList.remove("warn");
       editingTask = null;
+      editBar.classList.remove("show");
     }
   }
 
   function clearTaskForm(){
-    tkTitulo.value  = '';
-    tkPeriodo.value = '30';
-    tkUltima.value  = '';
-    tkObs.value     = '';
+    tkTitulo.value = "";
+    tkPeriodo.value = "30";
+    tkUltima.value = "";
+    tkObs.value = "";
     setTaskMode(false);
   }
 
   function addTarefa(){
-    const eqpIdSel = selEqpTarefa.value || '';
-    if(!eqpIdSel){
-      alert('Selecione a máquina para cadastrar a tarefa.');
-      return;
-    }
+    const eqpIdSel = selEqpTarefa.value || "";
+    if(!eqpIdSel){ alert("Selecione a máquina para cadastrar a tarefa."); return; }
 
     const titulo = tkTitulo.value.trim();
-    if(!titulo){
-      alert('Informe o título da tarefa');
-      return;
-    }
+    if(!titulo){ alert("Informe o título da tarefa"); return; }
 
     const periodo = parseInt(tkPeriodo.value,10) || 30;
-    const ultimaISO = tkUltima.value || '';
+    const ultimaISO = tkUltima.value || "";
     const obs = tkObs.value.trim();
 
     const eqp = store.equipamentos.find(e=> e.id===eqpIdSel);
-    if(!eqp){
-      alert('Erro: máquina não encontrada.');
-      return;
-    }
+    if(!eqp){ alert("Erro: máquina não encontrada."); return; }
 
     // EDITAR
     if(editingTask && editingTask.eqpId === eqpIdSel){
-      const tk = (eqp.tarefas||[]).find(t=> t.id === editingTask.tkId);
+      const tk = (eqp.tarefas||[]).find(t=> t.id===editingTask.tkId);
       if(!tk){
-        alert('Erro: tarefa não encontrada.');
+        alert("Erro: tarefa não encontrada.");
         setTaskMode(false);
         return;
       }
@@ -1085,13 +1005,11 @@
       fullSave();
       renderTabela();
       clearTaskForm();
-      alert('Tarefa atualizada!');
       return;
     }
 
     // ADICIONAR
     eqp.tarefas.push({ id: uid(), titulo, periodo, ultimaISO, obs });
-
     fullSave();
     renderTabela();
     clearTaskForm();
@@ -1106,13 +1024,13 @@
   }
   function statusFor(nextISO){
     const t = todayISO();
-    if(nextISO < t) return {label:'ATRASADA', cls:'b-err'};
+    if(nextISO < t) return {label:"ATRASADA", cls:"b-err"};
     const d = diffDays(nextISO, t);
-    if(d <= 7) return {label:'EM BREVE', cls:'b-warn'};
-    return {label:'OK', cls:'b-ok'};
+    if(d <= 7) return {label:"EM BREVE", cls:"b-warn"};
+    return {label:"OK", cls:"b-ok"};
   }
 
-  function renderTabela(){
+  function buildRows(){
     const rows = [];
     store.equipamentos.forEach(eqp=>{
       (eqp.tarefas||[]).forEach(tk=>{
@@ -1123,68 +1041,72 @@
           equipamento:eqp.nome,
           tarefa:tk.titulo,
           periodo:tk.periodo,
-          ultima:tk.ultimaISO || '',
+          ultima:tk.ultimaISO || "",
           proxima:nextISO,
           status:statusFor(nextISO),
-          local:eqp.local||'',
-          serie:eqp.serie||'',
-          obs:tk.obs||''
+          local:eqp.local||"",
+          serie:eqp.serie||"",
+          obs:tk.obs||""
         });
       });
     });
+    return rows;
+  }
+
+  function renderTabela(){
+    const rowsAll = buildRows();
 
     const t = todayISO();
-    const atr = rows.filter(r=> r.proxima < t).length;
-    const ate7 = rows.filter(r=> { const d = diffDays(r.proxima, t); return d>=0 && d<=7; }).length;
-    const ate30 = rows.filter(r=> { const d = diffDays(r.proxima, t); return d>=0 && d<=30; }).length;
+    kpiAtr.textContent  = rowsAll.filter(r=> r.proxima < t).length;
+    kpi7.textContent    = rowsAll.filter(r=> { const d=diffDays(r.proxima,t); return d>=0 && d<=7; }).length;
+    kpi30.textContent   = rowsAll.filter(r=> { const d=diffDays(r.proxima,t); return d>=0 && d<=30; }).length;
+    kpiTot.textContent  = rowsAll.length;
 
-    kpiAtr.textContent = atr;
-    kpi7.textContent   = ate7;
-    kpi30.textContent  = ate30;
-    kpiTot.textContent = rows.length;
-
-    const q = (busca.value || '').trim().toLowerCase();
+    const q = (busca.value||"").trim().toLowerCase();
     const fil = selFiltro.value;
+    const eqpFilter = selFiltroEqp.value || "";
 
-    let lista = rows;
+    let lista = rowsAll;
+
+    if(eqpFilter){
+      lista = lista.filter(r=> r.eqpId === eqpFilter);
+    }
+
     lista = lista.filter(r=>{
       const passBusca = !q || `${r.equipamento} ${r.tarefa} ${r.local} ${r.serie}`.toLowerCase().includes(q);
       let passFiltro = true;
       const d = diffDays(r.proxima, t);
-      if(fil==='atrasadas') passFiltro = r.proxima < t;
-      else if(fil==='sete') passFiltro = d>=0 && d<=7;
-      else if(fil==='trinta') passFiltro = d>=0 && d<=30;
+      if(fil==="atrasadas") passFiltro = r.proxima < t;
+      else if(fil==="sete") passFiltro = d>=0 && d<=7;
+      else if(fil==="trinta") passFiltro = d>=0 && d<=30;
       return passBusca && passFiltro;
     });
 
     lista.sort((a,b)=> a.proxima.localeCompare(b.proxima));
 
-    tbody.innerHTML = '';
+    tbody.innerHTML = "";
     if(!lista.length){
-      const tr = document.createElement('tr');
-      tr.innerHTML = '<td colspan="7" class="muted">Nenhuma tarefa cadastrada para o filtro atual.</td>';
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td colspan="7" class="muted" style="padding:12px">Nenhuma tarefa cadastrada para o filtro atual.</td>`;
       tbody.appendChild(tr);
       return;
     }
 
     lista.forEach(r=>{
-      const metaParts = [];
-      if(r.local) metaParts.push(r.local);
-      if(r.serie) metaParts.push(r.serie);
-
-      const tr = document.createElement('tr');
+      const meta = [r.local, r.serie].filter(Boolean).join(" • ");
+      const tr = document.createElement("tr");
       tr.innerHTML = `
-        <td><b>${escapeHtml(r.equipamento)}</b><div class="muted">${escapeHtml(metaParts.join(" • "))}</div></td>
-        <td>${escapeHtml(r.tarefa)}<div class="muted">${escapeHtml(r.obs||'')}</div></td>
+        <td><b>${escapeHtml(r.equipamento)}</b><div class="muted">${escapeHtml(meta)}</div></td>
+        <td>${escapeHtml(r.tarefa)}<div class="muted">${escapeHtml(r.obs||"")}</div></td>
         <td>${escapeHtml(String(r.periodo))}d</td>
         <td>${escapeHtml(fmtBR(r.ultima))}</td>
         <td>${escapeHtml(fmtBR(r.proxima))}</td>
         <td><span class="badge ${r.status.cls}">${escapeHtml(r.status.label)}</span></td>
         <td>
-          <div class="row">
-            <button class="ok" data-done="${r.eqpId}|${r.tkId}" type="button">Feita hoje</button>
-            <button class="ghost" data-edit="${r.eqpId}|${r.tkId}" type="button">Editar</button>
-            <button class="err" data-del="${r.eqpId}|${r.tkId}" type="button">Excluir</button>
+          <div class="actionsRow">
+            <button class="act ok" data-done="${r.eqpId}|${r.tkId}" type="button">Feita hoje</button>
+            <button class="act warn" data-edit="${r.eqpId}|${r.tkId}" type="button">Editar</button>
+            <button class="act err" data-del="${r.eqpId}|${r.tkId}" type="button">Excluir</button>
           </div>
         </td>
       `;
@@ -1192,13 +1114,13 @@
     });
   }
 
-  // Delegação de ações na tabela
-  tbody.addEventListener('click', (ev)=>{
+  // Ações na tabela
+  tbody.addEventListener("click",(ev)=>{
     const el = ev.target;
     if(!(el instanceof HTMLElement)) return;
 
-    if(el.hasAttribute('data-done')){
-      const [eqpId, tkId] = el.getAttribute('data-done').split('|');
+    if(el.hasAttribute("data-done")){
+      const [eqpId, tkId] = el.getAttribute("data-done").split("|");
       const eqp = store.equipamentos.find(e=> e.id===eqpId);
       const tk = eqp?.tarefas?.find(x=> x.id===tkId);
       if(tk){
@@ -1206,13 +1128,13 @@
         fullSave();
         renderTabela();
       }
-    }else if(el.hasAttribute('data-edit')){
-      const [eqpId, tkId] = el.getAttribute('data-edit').split('|');
+    }
+    else if(el.hasAttribute("data-edit")){
+      const [eqpId, tkId] = el.getAttribute("data-edit").split("|");
       const eqp = store.equipamentos.find(e=> e.id===eqpId);
       const tk = eqp?.tarefas?.find(x=> x.id===tkId);
       if(eqp && tk){
-        openTab('tarefas');
-
+        openTab("tarefas");
         selectedEqpId = eqp.id;
         renderEqpSelect();
         selEqpTarefa.value = eqp.id;
@@ -1220,19 +1142,19 @@
 
         tkTitulo.value  = tk.titulo;
         tkPeriodo.value = String(tk.periodo);
-        tkUltima.value  = tk.ultimaISO || '';
-        tkObs.value     = tk.obs || '';
+        tkUltima.value  = tk.ultimaISO || "";
+        tkObs.value     = tk.obs || "";
 
         editingTask = { eqpId, tkId };
         setTaskMode(true);
-
-        window.scrollTo({top:0,behavior:'smooth'});
+        window.scrollTo({top:0,behavior:"smooth"});
       }
-    }else if(el.hasAttribute('data-del')){
-      const [eqpId, tkId] = el.getAttribute('data-del').split('|');
+    }
+    else if(el.hasAttribute("data-del")){
+      const [eqpId, tkId] = el.getAttribute("data-del").split("|");
       const eqp = store.equipamentos.find(e=> e.id===eqpId);
       if(!eqp) return;
-      if(confirm('Excluir esta tarefa?')){
+      if(confirm("Excluir esta tarefa?")){
         eqp.tarefas = (eqp.tarefas||[]).filter(x=> x.id!==tkId);
         fullSave();
         renderTabela();
@@ -1244,221 +1166,216 @@
   });
 
   // =========================
-  // QR (QR = NOME DA MÁQUINA)
+  // RELATÓRIO CSV
   // =========================
-  const qrModal = document.getElementById('qrModal');
-  const btnCloseQr = document.getElementById('btnCloseQr');
-  const btnStopQr = document.getElementById('btnStopQr');
-  const btnSwitchCamera = document.getElementById('btnSwitchCamera');
-  const qrModalTitle = document.getElementById('qrModalTitle');
-  const qrHint = document.getElementById('qrHint');
-  const qrHelp = document.getElementById('qrHelp');
+  function exportCsv(){
+    const rows = buildRows();
+    const t = todayISO();
+    // aplica os filtros atuais (mesmo da tela)
+    const q = (busca.value||"").trim().toLowerCase();
+    const fil = selFiltro.value;
+    const eqpFilter = selFiltroEqp.value || "";
 
-  let qrScanner = null;
-  let qrContext = "machine"; // "machine" | "task"
-  let cameraList = [];
-  let cameraIndex = 0;
-  let currentCameraId = null;
+    let lista = rows;
+    if(eqpFilter) lista = lista.filter(r=> r.eqpId===eqpFilter);
 
-  function showQrModal(title, hint){
-    qrModalTitle.textContent = title || "Ler QR Code";
-    qrHint.textContent = hint || "Aponte a câmera para o QR da máquina.";
-    qrModal.classList.add('show');
-    qrModal.setAttribute('aria-hidden','false');
+    lista = lista.filter(r=>{
+      const passBusca = !q || `${r.equipamento} ${r.tarefa} ${r.local} ${r.serie}`.toLowerCase().includes(q);
+      let passFiltro = true;
+      const d = diffDays(r.proxima, t);
+      if(fil==="atrasadas") passFiltro = r.proxima < t;
+      else if(fil==="sete") passFiltro = d>=0 && d<=7;
+      else if(fil==="trinta") passFiltro = d>=0 && d<=30;
+      return passBusca && passFiltro;
+    });
+
+    lista.sort((a,b)=> a.proxima.localeCompare(b.proxima));
+
+    const header = ["Maquina","Local","Serie/Patrimonio","Tarefa","Periodicidade(dias)","Ultima","Proxima","Status","Observacoes"];
+    const lines = [header.join(";")];
+
+    for(const r of lista){
+      const line = [
+        r.equipamento,
+        r.local,
+        r.serie,
+        r.tarefa,
+        String(r.periodo),
+        fmtBR(r.ultima),
+        fmtBR(r.proxima),
+        r.status.label,
+        (r.obs||"")
+      ].map(v => `"${String(v ?? "").replaceAll('"','""')}"`).join(";");
+      lines.push(line);
+    }
+
+    const csv = "\uFEFF" + lines.join("\n");
+    const blob = new Blob([csv], {type:"text/csv;charset=utf-8"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `preventivas_${todayISO()}.csv`;
+    a.click();
+    URL.revokeObjectURL(a.href);
   }
-  function hideQrModal(){
-    qrModal.classList.remove('show');
-    qrModal.setAttribute('aria-hidden','true');
-  }
 
-  async function stopQr(){
-    try{
-      if(qrScanner){
-        await qrScanner.stop();
-        await qrScanner.clear();
-      }
-    }catch(e){}
-    qrScanner = null;
-    hideQrModal();
-  }
-
-  function findEqpByQrName(qrText){
-    const key = normalizeName(qrText);
-    if(!key) return null;
-    return store.equipamentos.find(e => normalizeName(e.nome) === key) || null;
-  }
-
-  function handleQrResult(code){
-    const eqp = findEqpByQrName(code);
-
-    if(!eqp){
-      alert("Máquina NÃO encontrada:\n" + code + "\n\nCadastre a máquina com esse mesmo nome (QR = Nome).");
+  // =========================
+  // QR LEITOR (NOME = QR)
+  // =========================
+  // ✅ sem libs externas: usa BarcodeDetector quando disponível (Chrome/Android)
+  // ✅ fallback para digitar/colar o valor do QR
+  async function scanQrNativeOrPrompt(){
+    // Caso não tenha câmera/BarcodeDetector -> prompt simples
+    if(!("BarcodeDetector" in window)){
+      const code = prompt("Leitor QR não disponível neste dispositivo/navegador.\nCole aqui o texto do QR (igual ao nome da máquina):");
+      if(code) handleQrText(code);
       return;
     }
 
-    selectedEqpId = eqp.id;
+    // Modal simples com câmera
+    const overlay = document.createElement("div");
+    overlay.style.cssText = "position:fixed;inset:0;background:rgba(2,6,23,.55);display:flex;align-items:center;justify-content:center;padding:14px;z-index:9999";
+    overlay.innerHTML = `
+      <div style="width:min(560px,100%);background:#fff;border-radius:14px;overflow:hidden;border:1px solid #dbe3ec;box-shadow:0 10px 24px rgba(15,23,42,.20)">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 12px;background:#f8fafc;border-bottom:1px solid #edf2f7">
+          <div style="font-weight:1000;color:#1e3a8a">Ler QR da máquina</div>
+          <button id="__close" style="border:1px solid #dbe3ec;background:#fff;border-radius:10px;padding:8px 10px;font-weight:900;cursor:pointer">Fechar</button>
+        </div>
+        <div style="padding:12px">
+          <div style="font-size:12px;color:#64748b;margin-bottom:8px">Aponte a câmera para o QR. O texto do QR deve ser igual ao Nome da máquina.</div>
+          <video id="__v" style="width:100%;border-radius:12px;border:1px solid #dbe3ec;background:#0b1220" playsinline></video>
+          <div style="font-size:12px;color:#64748b;margin-top:8px">Se não ler, clique em Fechar e cole o texto manualmente.</div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
 
-    if(qrContext === "task"){
-      openTab('tarefas');
-      renderEqpSelect();
-      selEqpTarefa.value = eqp.id;
-      hintEqpTarefa.textContent = buildEqpHint(eqp);
-      setTaskMode(false);
-    }else{
-      openTab('maquinas');
+    const btnClose = overlay.querySelector("#__close");
+    const video = overlay.querySelector("#__v");
+
+    let stream = null;
+    let stopped = false;
+
+    const stopAll = ()=>{
+      stopped = true;
+      try{ stream && stream.getTracks().forEach(t=>t.stop()); }catch{}
+      overlay.remove();
+    };
+
+    btnClose.addEventListener("click", ()=>{
+      stopAll();
+      const code = prompt("Cole aqui o texto do QR (igual ao nome da máquina):");
+      if(code) handleQrText(code);
+    });
+
+    try{
+      // câmera traseira se possível
+      stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio:false });
+      video.srcObject = stream;
+      await video.play();
+
+      const detector = new BarcodeDetector({ formats: ["qr_code"] });
+
+      const tick = async ()=>{
+        if(stopped) return;
+        try{
+          const codes = await detector.detect(video);
+          if(codes && codes.length){
+            const code = codes[0].rawValue || "";
+            stopAll();
+            handleQrText(code);
+            return;
+          }
+        }catch{}
+        requestAnimationFrame(tick);
+      };
+      tick();
+
+    }catch(err){
+      console.error(err);
+      stopAll();
+      alert("Não foi possível acessar a câmera. Verifique permissões.");
+    }
+  }
+
+  function handleQrText(text){
+    const code = String(text||"").trim();
+    if(!code) return;
+
+    // busca máquina pelo NOME (igual ao QR)
+    const eqp = store.equipamentos.find(e => (e.nome||"").trim().toLowerCase() === code.toLowerCase());
+
+    if(eqp){
       setSelectedEqp(eqp);
-    }
-  }
-
-  async function startQrScan(context){
-    if(typeof Html5Qrcode === "undefined"){
-      alert(
-        "Leitor de QR não carregou.\n\n" +
-        "Confirme se 'html5-qrcode.min.js' está na mesma pasta do index.html no GitHub."
-      );
-      return;
-    }
-
-    qrContext = context || "machine";
-
-    showQrModal(
-      qrContext === "task" ? "Ler QR — Selecionar Máquina" : "Ler QR — Buscar Máquina",
-      "Aponte a câmera para o QR. O texto do QR deve ser exatamente o NOME da máquina."
-    );
-
-    if(!(location.protocol === "https:" || location.hostname === "localhost")){
-      qrHelp.textContent =
-        "⚠️ A câmera só funciona em HTTPS ou localhost. Publique no GitHub Pages (https) para usar.";
+      openTab("maquinas");
+      alert("Máquina encontrada: " + eqp.nome);
     }else{
-      qrHelp.textContent =
-        "Dica: permita a câmera. Se estiver no celular, use a câmera traseira.";
-    }
-
-    try{
-      if(qrScanner){
-        await qrScanner.stop();
-        await qrScanner.clear();
-      }
-    }catch{}
-    qrScanner = new Html5Qrcode("qr-reader");
-
-    try{
-      cameraList = await Html5Qrcode.getCameras();
-      if(!cameraList || !cameraList.length){
-        alert("Nenhuma câmera encontrada.");
-        await stopQr();
-        return;
-      }
-
-      const backIndex = cameraList.findIndex(c => /back|traseira|rear/i.test(c.label||""));
-      cameraIndex = backIndex >= 0 ? backIndex : 0;
-      currentCameraId = cameraList[cameraIndex].id;
-
-    }catch(err){
-      console.error(err);
-      alert("Não foi possível acessar a câmera. Dê permissão e tente novamente.");
-      await stopQr();
-      return;
-    }
-
-    try{
-      await qrScanner.start(
-        { deviceId: { exact: currentCameraId } },
-        { fps: 10, qrbox: { width: 260, height: 260 } },
-        async (decodedText)=>{
-          const code = String(decodedText||"").trim();
-          if(!code) return;
-
-          await stopQr();
-          handleQrResult(code);
-        },
-        ()=>{}
-      );
-    }catch(err){
-      console.error(err);
-      alert("Erro ao iniciar o leitor. Verifique permissões/bloqueios do navegador.");
-      await stopQr();
+      // se não existe, já preenche nome pra cadastrar
+      openTab("maquinas");
+      clearEqpForm();
+      eqNome.value = code;
+      infoEqpSel.textContent = "QR lido: " + code + " (não cadastrado). Complete os dados e clique em Salvar.";
+      eqLocal.focus();
     }
   }
-
-  btnCloseQr.addEventListener('click', stopQr);
-  btnStopQr.addEventListener('click', stopQr);
-
-  btnSwitchCamera.addEventListener('click', async ()=>{
-    if(!cameraList.length){
-      alert("Câmeras não carregadas.");
-      return;
-    }
-    cameraIndex = (cameraIndex + 1) % cameraList.length;
-    currentCameraId = cameraList[cameraIndex].id;
-
-    try{
-      if(qrScanner){
-        await qrScanner.stop();
-        await qrScanner.clear();
-      }
-      qrScanner = new Html5Qrcode("qr-reader");
-      await qrScanner.start(
-        { deviceId: { exact: currentCameraId } },
-        { fps: 10, qrbox: { width: 260, height: 260 } },
-        async (decodedText)=>{
-          const code = String(decodedText||"").trim();
-          if(!code) return;
-          await stopQr();
-          handleQrResult(code);
-        },
-        ()=>{}
-      );
-    }catch(err){
-      console.error(err);
-      alert("Não foi possível trocar a câmera.");
-      await stopQr();
-    }
-  });
 
   // =========================
-  // INIT APP
+  // INIT
   // =========================
   function initAppOnce(){
     if(appInitialized) return;
     appInitialized = true;
 
-    todaySpan.textContent = new Date().toLocaleDateString('pt-BR');
+    todaySpan.textContent = new Date().toLocaleDateString("pt-BR");
 
     loadLocal();
     renderEqpList();
     renderEqpSelect();
+    renderFiltroEqp();
     renderTabela();
     syncFromFirebaseOnce();
 
-    tabMaquinas.addEventListener('click', ()=> openTab('maquinas'));
-    tabTarefas.addEventListener('click', ()=> openTab('tarefas'));
+    // abas
+    tabMaquinas.addEventListener("click", ()=> openTab("maquinas"));
+    tabTarefas.addEventListener("click", ()=> openTab("tarefas"));
 
-    selEqpTarefa.addEventListener('change', ()=>{
-      const id = selEqpTarefa.value;
+    // select tarefas
+    selEqpTarefa.addEventListener("change", ()=>{
+      const id = selEqpTarefa.value || "";
       selectedEqpId = id || null;
       const eqp = store.equipamentos.find(e=> e.id===id);
-      hintEqpTarefa.textContent = eqp ? buildEqpHint(eqp) : '';
+      hintEqpTarefa.textContent = eqp ? buildEqpHint(eqp) : "";
       setTaskMode(false);
     });
 
-    btnSalvarEqp.addEventListener('click', addOrUpdateEquipamento);
-    btnLimparEqp.addEventListener('click', clearEqpForm);
-    btnAddTarefa.addEventListener('click', addTarefa);
-    btnLimparTarefa.addEventListener('click', clearTaskForm);
+    // filtro por máquina na tabela
+    selFiltroEqp.addEventListener("change", renderTabela);
 
-    btnNovoEqp.addEventListener('click', ()=>{
+    // botões
+    btnSalvarEqp.addEventListener("click", addOrUpdateEquipamento);
+    btnLimparEqp.addEventListener("click", clearEqpForm);
+    btnAddTarefa.addEventListener("click", addTarefa);
+    btnLimparTarefa.addEventListener("click", clearTaskForm);
+    btnNovoEqp.addEventListener("click", ()=>{
       clearEqpForm();
       clearTaskForm();
-      openTab('maquinas');
+      openTab("maquinas");
     });
 
-    busca.addEventListener('input', renderTabela);
-    selFiltro.addEventListener('change', renderTabela);
+    // cancelar edição
+    btnCancelEdit.addEventListener("click", ()=>{
+      clearTaskForm();
+      alert("Edição cancelada.");
+    });
 
-    btnScanQrMachine.addEventListener('click', ()=> startQrScan("machine"));
-    btnScanQrTask.addEventListener('click', ()=> startQrScan("task"));
-    btnOpenQrTop.addEventListener('click', ()=> startQrScan("task"));
+    // filtros
+    busca.addEventListener("input", renderTabela);
+    selFiltro.addEventListener("change", renderTabela);
+
+    // relatório
+    btnReportCsv.addEventListener("click", exportCsv);
+
+    // QR apenas em máquinas
+    btnScanQrMachine.addEventListener("click", scanQrNativeOrPrompt);
 
     setTaskMode(false);
   }
@@ -1478,7 +1395,7 @@
     }
   });
 
-  btnLogin.addEventListener('click', ()=>{
+  btnLogin.addEventListener("click", ()=>{
     const email = loginEmail.value.trim();
     const senha = loginSenha.value;
     if(!email || !senha){
@@ -1502,8 +1419,9 @@
       .finally(()=> setLoginLoading(false));
   });
 
-  btnLogout.addEventListener('click', ()=> auth.signOut());
+  btnLogout.addEventListener("click", ()=> auth.signOut());
 
+  // start
   showLogin();
 </script>
 
