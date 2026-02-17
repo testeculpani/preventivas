@@ -296,20 +296,6 @@
       color: var(--muted);
     }
 
-    /* Aviso modo edição */
-    .edit-banner{
-      display:none;
-      margin:10px 0 0 0;
-      border:1px solid rgba(245,158,11,.35);
-      background: rgba(245,158,11,.12);
-      color:#92400e;
-      border-radius:14px;
-      padding:10px 10px;
-      font-size:12px;
-      font-weight:900;
-    }
-    .edit-banner strong{font-weight:1000}
-
     .kpi{
       display:grid;
       gap:10px;
@@ -377,6 +363,59 @@
       font-size:12px;
     }
 
+    /* MODAL QR */
+    .modal{
+      position:fixed; inset:0;
+      background: rgba(2,6,23,.55);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:14px;
+      z-index: 9999;
+    }
+    .modal.show{display:flex}
+    .modal-card{
+      width:min(560px, 100%);
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:18px;
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .modal-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      padding:12px 12px;
+      border-bottom:1px solid var(--border2);
+      background: linear-gradient(180deg, #fff, #fbfcff);
+    }
+    .modal-title{font-weight:950;font-size:13px}
+    .modal-body{padding:12px}
+    #qr-reader{
+      width:100%;
+      border-radius:14px;
+      overflow:hidden;
+      border:1px solid var(--border);
+      background:#0b1220;
+      min-height: 280px;
+    }
+    .modal-foot{
+      display:flex;
+      gap:8px;
+      padding:12px;
+      border-top:1px solid var(--border2);
+      justify-content:flex-end;
+      background:#fff;
+    }
+    .qr-help{
+      margin-top:8px;
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.35;
+    }
+
     @media (max-width: 980px){
       body{padding:12px}
       .grid{grid-template-columns:1fr}
@@ -388,7 +427,7 @@
       .controls{display:none !important}
       .card,.topbar{box-shadow:none !important}
       .table{background:#fff}
-      .tabs,.filters,.edit-banner{display:none !important}
+      .modal{display:none !important}
     }
   </style>
 
@@ -416,7 +455,7 @@
         <input type="password" id="loginSenha" autocomplete="current-password" placeholder="••••••••">
       </div>
 
-      <button class="btn" id="btnLogin" type="button">Entrar</button>
+      <button class="btn" id="btnLogin">Entrar</button>
       <div class="login-error" id="loginError"></div>
 
       <div class="login-foot">
@@ -439,7 +478,7 @@
 
       <div class="controls">
         <button class="ghost" id="btnNovoEqp" type="button">Novo</button>
-        <button class="ghost" id="btnRelatorio" type="button">Relatório</button>
+        <button class="ghost" id="btnOpenQrTop" type="button">Ler QR</button>
         <button class="ghost" type="button" onclick="window.print()">Imprimir</button>
         <button class="ghost" id="btnLogout" type="button">Sair</button>
       </div>
@@ -455,9 +494,14 @@
 
         <!-- PANE MÁQUINAS -->
         <div class="pane active" id="paneMaquinas">
-          <h3>Cadastro de Máquina</h3>
-          <div class="muted" id="infoEqpSel">Nenhuma máquina selecionada.</div>
-          <div id="syncStatus">Sincronização: carregando…</div>
+          <div class="row" style="justify-content:space-between;align-items:center">
+            <div>
+              <h3>Cadastro de Máquina</h3>
+              <div class="muted" id="infoEqpSel">Nenhuma máquina selecionada.</div>
+              <div id="syncStatus">Sincronização: carregando…</div>
+            </div>
+            <button class="ghost" id="btnScanQrMachine" type="button">Ler QR</button>
+          </div>
 
           <label for="eqNome">Nome da máquina</label>
           <input id="eqNome" placeholder="Ex.: Prensa Hidráulica 30T">
@@ -467,6 +511,9 @@
 
           <label for="eqSerie">Nº de Série / Patrimônio</label>
           <input id="eqSerie" placeholder="Ex.: SER-000123 / PAT-045">
+
+          <label for="eqQr">Código (QR Code)</label>
+          <input id="eqQr" placeholder="Ex.: QR-PR30T-001 (texto dentro do QR)">
 
           <div class="row" style="margin-top:10px">
             <button class="primary" id="btnSalvarEqp" type="button">Salvar</button>
@@ -485,11 +532,12 @@
 
         <!-- PANE TAREFAS -->
         <div class="pane" id="paneTarefas">
-          <h3>Cadastro de Tarefa</h3>
-          <div class="muted">Selecione a máquina e cadastre a tarefa</div>
-
-          <div class="edit-banner" id="editBanner">
-            ✏️ <strong>Modo edição:</strong> você está editando uma tarefa. Clique em <b>Salvar alterações</b> ou <b>Cancelar</b>.
+          <div class="row" style="justify-content:space-between;align-items:center">
+            <div>
+              <h3>Cadastro de Tarefa</h3>
+              <div class="muted">Selecione a máquina ou leia o QR</div>
+            </div>
+            <button class="ghost" id="btnScanQrTask" type="button">Ler QR</button>
           </div>
 
           <label for="selEqpTarefa">Máquina</label>
@@ -521,7 +569,6 @@
 
           <div class="row" style="margin-top:10px">
             <button class="primary" id="btnAddTarefa" type="button">Adicionar</button>
-            <button class="ghost" id="btnCancelarEdicao" type="button" style="display:none">Cancelar</button>
             <button class="ghost" id="btnLimparTarefa" type="button">Limpar</button>
           </div>
 
@@ -535,13 +582,7 @@
       <div class="card">
         <div class="filters">
           <input id="busca" placeholder="Buscar por máquina/tarefa…" style="flex:1;min-width:220px">
-
-          <select id="filtroEqp" title="Filtrar por máquina" style="min-width:180px">
-            <option value="__all__">Todas as máquinas</option>
-          </select>
-
           <span class="pill">Hoje: <span id="today"></span></span>
-
           <select id="selFiltro">
             <option value="todos">Todos</option>
             <option value="atrasadas">Atrasadas</option>
@@ -589,8 +630,31 @@
     <div class="foot">Grilazer — Preventivas</div>
   </div>
 
+  <!-- MODAL QR -->
+  <div class="modal" id="qrModal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div class="modal-title" id="qrModalTitle">Ler QR Code</div>
+        <button class="ghost" id="btnCloseQr" type="button">Fechar</button>
+      </div>
+      <div class="modal-body">
+        <div class="muted" id="qrHint" style="margin-bottom:8px">
+          Aponte a câmera para o QR da máquina.
+        </div>
+        <div id="qr-reader"></div>
+        <div class="qr-help" id="qrHelp"></div>
+      </div>
+      <div class="modal-foot">
+        <button class="ghost" id="btnSwitchCamera" type="button">Trocar câmera</button>
+        <button class="err" id="btnStopQr" type="button">Parar</button>
+      </div>
+    </div>
+  </div>
+
 <script>
-  // 🔗 CONFIG FIREBASE – preventivas-27185
+  // =========================
+  // FIREBASE CONFIG
+  // =========================
   const firebaseConfig = {
     apiKey: "AIzaSyDNrOyDmI5NOkVuG3yh8HkDrn4dqYXOrW0",
     authDomain: "preventivas-27185.firebaseapp.com",
@@ -607,9 +671,14 @@
   const auth = firebase.auth();
   const DB_PATH = "preventivas_grilazer";
 
-  const allowedEmails = ["engenhariagrilazer@gmail.com"];
+  // E-mails autorizados
+  const allowedEmails = [
+    "engenhariagrilazer@gmail.com"
+  ];
 
-  // ===== LOGIN =====
+  // =========================
+  // ELEMENTOS LOGIN
+  // =========================
   const loginScreen   = document.getElementById('login-screen');
   const appWrap       = document.getElementById('app-wrap');
   const loginEmail    = document.getElementById('loginEmail');
@@ -635,12 +704,9 @@
     userInfoTop.textContent   = "Logado como: " + user.email;
   }
 
-  // Enter para logar
-  loginSenha.addEventListener('keydown', (e)=>{
-    if(e.key === 'Enter') btnLogin.click();
-  });
-
-  // ===== APP =====
+  // =========================
+  // HELPERS
+  // =========================
   const todayISO = ()=> new Date().toISOString().slice(0,10);
   const addDays = (iso, n)=>{
     const d = iso? new Date(iso) : new Date();
@@ -652,40 +718,31 @@
   const fmtBR = (iso)=> iso? new Date(iso+'T00:00:00').toLocaleDateString('pt-BR') : '—';
   const uid = ()=> 'id-'+Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(4);
 
+  // =========================
+  // STORE
+  // =========================
   let store = { equipamentos: [] };
   let selectedEqpId = null;
   let appInitialized = false;
 
-  // ====== MODO EDIÇÃO DE TAREFA ======
-  let editingTask = null; // { eqpId, tkId }
-  let originalBtnAddText = null;
-
-  // Tabs
+  // =========================
+  // ELEMENTOS APP
+  // =========================
   const tabMaquinas = document.getElementById('tabMaquinas');
   const tabTarefas  = document.getElementById('tabTarefas');
   const paneMaquinas = document.getElementById('paneMaquinas');
   const paneTarefas  = document.getElementById('paneTarefas');
 
-  function openTab(which){
-    const isM = which === 'maquinas';
-    tabMaquinas.classList.toggle('active', isM);
-    tabTarefas.classList.toggle('active', !isM);
-    paneMaquinas.classList.toggle('active', isM);
-    paneTarefas.classList.toggle('active', !isM);
-  }
-
-  // Elements
   const eqNome = document.getElementById('eqNome');
   const eqLocal = document.getElementById('eqLocal');
   const eqSerie = document.getElementById('eqSerie');
+  const eqQr = document.getElementById('eqQr');
   const infoEqpSel = document.getElementById('infoEqpSel');
   const listaEqp = document.getElementById('listaEqp');
   const syncStatus = document.getElementById('syncStatus');
 
   const selEqpTarefa = document.getElementById('selEqpTarefa');
   const hintEqpTarefa = document.getElementById('hintEqpTarefa');
-  const editBanner = document.getElementById('editBanner');
-  const btnCancelarEdicao = document.getElementById('btnCancelarEdicao');
 
   const tkTitulo = document.getElementById('tkTitulo');
   const tkPeriodo = document.getElementById('tkPeriodo');
@@ -693,7 +750,6 @@
   const tkObs = document.getElementById('tkObs');
 
   const busca = document.getElementById('busca');
-  const filtroEqp = document.getElementById('filtroEqp');
   const selFiltro = document.getElementById('selFiltro');
   const todaySpan = document.getElementById('today');
 
@@ -709,30 +765,31 @@
   const btnLimparTarefa = document.getElementById('btnLimparTarefa');
   const btnNovoEqp = document.getElementById('btnNovoEqp');
 
-  const btnRelatorio = document.getElementById('btnRelatorio');
+  const btnScanQrMachine = document.getElementById('btnScanQrMachine');
+  const btnScanQrTask = document.getElementById('btnScanQrTask');
+  const btnOpenQrTop = document.getElementById('btnOpenQrTop');
 
+  // =========================
+  // ABAS
+  // =========================
+  function openTab(which){
+    const isM = which === 'maquinas';
+    tabMaquinas.classList.toggle('active', isM);
+    tabTarefas.classList.toggle('active', !isM);
+    paneMaquinas.classList.toggle('active', isM);
+    paneTarefas.classList.toggle('active', !isM);
+  }
+
+  // =========================
+  // SYNC STATUS
+  // =========================
   function setSyncStatus(text){
     syncStatus.textContent = "Sincronização: " + text;
   }
 
-  function setEditUI(isEdit){
-    if(!originalBtnAddText) originalBtnAddText = btnAddTarefa.textContent || "Adicionar";
-    if(isEdit){
-      btnAddTarefa.textContent = "Salvar alterações";
-      btnAddTarefa.classList.add("warn");
-      btnAddTarefa.classList.remove("primary");
-      if(editBanner) editBanner.style.display = "block";
-      if(btnCancelarEdicao) btnCancelarEdicao.style.display = "inline-block";
-    }else{
-      btnAddTarefa.textContent = originalBtnAddText || "Adicionar";
-      btnAddTarefa.classList.add("primary");
-      btnAddTarefa.classList.remove("warn");
-      if(editBanner) editBanner.style.display = "none";
-      if(btnCancelarEdicao) btnCancelarEdicao.style.display = "none";
-      editingTask = null;
-    }
-  }
-
+  // =========================
+  // LOCAL STORAGE (backup)
+  // =========================
   function loadLocal(){
     try{
       const raw = localStorage.getItem('preventivas');
@@ -742,6 +799,10 @@
   function saveLocal(){
     try{ localStorage.setItem('preventivas', JSON.stringify(store)); }catch{}
   }
+
+  // =========================
+  // FIREBASE SAVE/LOAD
+  // =========================
   function saveRemote(){
     setSyncStatus("enviando ao servidor…");
     db.ref(DB_PATH).set(store)
@@ -773,30 +834,24 @@
       .finally(()=>{
         renderEqpList();
         renderEqpSelect();
-        renderFiltroEqp();
         renderTabela();
         setSyncStatus("ok");
       });
   }
 
+  // =========================
+  // FORM: MÁQUINA
+  // =========================
   function clearEqpForm(){
     selectedEqpId = null;
     eqNome.value  = '';
     eqLocal.value = '';
     eqSerie.value = '';
+    eqQr.value    = '';
     infoEqpSel.textContent = 'Nenhuma máquina selecionada.';
     renderEqpList();
     renderEqpSelect();
-    renderFiltroEqp();
     renderTabela();
-  }
-
-  function clearTaskForm(){
-    tkTitulo.value  = '';
-    tkPeriodo.value = '30';
-    tkUltima.value  = '';
-    tkObs.value     = '';
-    setEditUI(false);
   }
 
   function setSelectedEqp(eqp){
@@ -808,18 +863,72 @@
     eqNome.value  = eqp.nome;
     eqLocal.value = eqp.local || '';
     eqSerie.value = eqp.serie || '';
+    eqQr.value    = eqp.qr || '';
     infoEqpSel.textContent = 'Editando: ' + eqp.nome;
 
-    // sincroniza o SELECT da aba Tarefas
+    // sincroniza select tarefas
+    renderEqpSelect();
     selEqpTarefa.value = eqp.id;
-    hintEqpTarefa.textContent =
-      (eqp.local ? ("Local: " + eqp.local + " • ") : "") +
-      (eqp.serie ? ("Patrimônio/Série: " + eqp.serie) : "");
+    hintEqpTarefa.textContent = buildEqpHint(eqp);
 
     renderEqpList();
     renderTabela();
   }
 
+  function buildEqpHint(eqp){
+    const parts = [];
+    if(eqp.local) parts.push("Local: " + eqp.local);
+    if(eqp.serie) parts.push("Patrimônio/Série: " + eqp.serie);
+    if(eqp.qr) parts.push("QR: " + eqp.qr);
+    return parts.join(" • ");
+  }
+
+  function addOrUpdateEquipamento(){
+    const nome = eqNome.value.trim();
+    if(!nome){ alert('Informe o nome da máquina'); return; }
+
+    const local = eqLocal.value.trim();
+    const serie = eqSerie.value.trim();
+    const qr = eqQr.value.trim();
+
+    // evitar QR duplicado
+    if(qr){
+      const dup = store.equipamentos.find(e => (e.qr||"").trim() === qr && e.id !== selectedEqpId);
+      if(dup){
+        alert('Este QR já está cadastrado na máquina: ' + dup.nome);
+        return;
+      }
+    }
+
+    if(selectedEqpId){
+      const eqp = store.equipamentos.find(e=> e.id===selectedEqpId);
+      if(eqp){
+        eqp.nome = nome;
+        eqp.local = local;
+        eqp.serie = serie;
+        eqp.qr = qr;
+      }
+    }else{
+      const eqp = {
+        id: uid(),
+        nome,
+        local,
+        serie,
+        qr,
+        tarefas: []
+      };
+      store.equipamentos.push(eqp);
+      selectedEqpId = eqp.id;
+    }
+
+    fullSave();
+    setSelectedEqp(store.equipamentos.find(e=> e.id===selectedEqpId));
+    renderEqpSelect();
+  }
+
+  // =========================
+  // LISTA: MÁQUINAS
+  // =========================
   function renderEqpList(){
     listaEqp.innerHTML = '';
     if(!store.equipamentos.length){
@@ -832,9 +941,14 @@
       div.className = 'chip-eqp' + (eqp.id===selectedEqpId ? ' active' : '');
 
       const left = document.createElement('div');
+      const subParts = [];
+      if(eqp.local) subParts.push(eqp.local);
+      if(eqp.serie) subParts.push(eqp.serie);
+      if(eqp.qr) subParts.push("QR: " + eqp.qr);
+
       left.innerHTML = `
-        <div class="title">${eqp.nome}</div>
-        <div class="sub">${(eqp.local||'')}${eqp.serie ? (' • ' + eqp.serie) : ''}</div>
+        <div class="title">${escapeHtml(eqp.nome)}</div>
+        <div class="sub">${escapeHtml(subParts.join(" • "))}</div>
       `;
 
       const btnDel = document.createElement('button');
@@ -849,14 +963,13 @@
           fullSave();
           renderEqpList();
           renderEqpSelect();
-          renderFiltroEqp();
           renderTabela();
         }
       });
 
       div.appendChild(left);
       div.appendChild(btnDel);
-      div.addEventListener('click', ()=>{
+      div.addEventListener('click', ()=> {
         setSelectedEqp(eqp);
         openTab('maquinas');
       });
@@ -864,8 +977,12 @@
     });
   }
 
+  // =========================
+  // SELECT: MÁQUINAS (TAREFAS)
+  // =========================
   function renderEqpSelect(){
     selEqpTarefa.innerHTML = '';
+
     if(!store.equipamentos.length){
       const opt = document.createElement('option');
       opt.value = '';
@@ -886,77 +1003,48 @@
     store.equipamentos.forEach(e=>{
       const opt = document.createElement('option');
       opt.value = e.id;
-      opt.textContent = e.nome;
+      opt.textContent = e.qr ? `${e.nome} (QR: ${e.qr})` : e.nome;
       selEqpTarefa.appendChild(opt);
     });
 
     if(selectedEqpId && store.equipamentos.some(e=> e.id===selectedEqpId)){
       selEqpTarefa.value = selectedEqpId;
       const eqp = store.equipamentos.find(e=> e.id===selectedEqpId);
-      hintEqpTarefa.textContent =
-        (eqp.local ? ("Local: " + eqp.local + " • ") : "") +
-        (eqp.serie ? ("Patrimônio/Série: " + eqp.serie) : "");
+      hintEqpTarefa.textContent = buildEqpHint(eqp);
     }else{
       selEqpTarefa.value = '';
       hintEqpTarefa.textContent = '';
     }
   }
 
-  // Filtro por máquina na tabela (direita)
-  function renderFiltroEqp(){
-    const current = filtroEqp.value || "__all__";
-    filtroEqp.innerHTML = '';
-    const optAll = document.createElement('option');
-    optAll.value = "__all__";
-    optAll.textContent = "Todas as máquinas";
-    filtroEqp.appendChild(optAll);
+  // =========================
+  // TAREFAS: MODO EDIÇÃO
+  // =========================
+  let editingTask = null; // { eqpId, tkId }
+  let originalBtnAddText = null;
 
-    store.equipamentos.forEach(e=>{
-      const opt = document.createElement('option');
-      opt.value = e.id;
-      opt.textContent = e.nome;
-      filtroEqp.appendChild(opt);
-    });
-
-    // tenta manter seleção
-    if([...filtroEqp.options].some(o=>o.value===current)){
-      filtroEqp.value = current;
+  function setTaskMode(isEdit){
+    if(!originalBtnAddText) originalBtnAddText = btnAddTarefa.textContent || "Adicionar";
+    if(isEdit){
+      btnAddTarefa.textContent = "Salvar alterações";
+      btnAddTarefa.classList.add("warn");
+      btnAddTarefa.classList.remove("primary");
     }else{
-      filtroEqp.value = "__all__";
+      btnAddTarefa.textContent = originalBtnAddText || "Adicionar";
+      btnAddTarefa.classList.add("primary");
+      btnAddTarefa.classList.remove("warn");
+      editingTask = null;
     }
   }
 
-  function addOrUpdateEquipamento(){
-    const nome = eqNome.value.trim();
-    if(!nome){ alert('Informe o nome da máquina'); return; }
-
-    if(selectedEqpId){
-      const eqp = store.equipamentos.find(e=> e.id===selectedEqpId);
-      if(eqp){
-        eqp.nome = nome;
-        eqp.local = eqLocal.value.trim();
-        eqp.serie = eqSerie.value.trim();
-      }
-    }else{
-      const eqp = {
-        id: uid(),
-        nome,
-        local: eqLocal.value.trim(),
-        serie: eqSerie.value.trim(),
-        tarefas: []
-      };
-      store.equipamentos.push(eqp);
-      selectedEqpId = eqp.id;
-    }
-
-    fullSave();
-    renderEqpList();
-    renderEqpSelect();
-    renderFiltroEqp();
-    setSelectedEqp(store.equipamentos.find(e=> e.id===selectedEqpId));
+  function clearTaskForm(){
+    tkTitulo.value  = '';
+    tkPeriodo.value = '30';
+    tkUltima.value  = '';
+    tkObs.value     = '';
+    setTaskMode(false);
   }
 
-  // Adicionar OU Salvar edição
   function addTarefa(){
     const eqpIdSel = selEqpTarefa.value || '';
     if(!eqpIdSel){
@@ -985,7 +1073,7 @@
       const tk = (eqp.tarefas||[]).find(t=> t.id === editingTask.tkId);
       if(!tk){
         alert('Erro: tarefa não encontrada.');
-        setEditUI(false);
+        setTaskMode(false);
         return;
       }
       tk.titulo = titulo;
@@ -1008,6 +1096,9 @@
     clearTaskForm();
   }
 
+  // =========================
+  // TABELA / KPI
+  // =========================
   function computeNext(ultimaISO, periodo){
     const base = ultimaISO || todayISO();
     return addDays(base, periodo);
@@ -1036,6 +1127,7 @@
           status:statusFor(nextISO),
           local:eqp.local||'',
           serie:eqp.serie||'',
+          qr:eqp.qr||'',
           obs:tk.obs||''
         });
       });
@@ -1053,17 +1145,10 @@
 
     const q = (busca.value || '').trim().toLowerCase();
     const fil = selFiltro.value;
-    const eqpFilter = filtroEqp.value || "__all__";
 
     let lista = rows;
-
-    // filtro por máquina (direita)
-    if(eqpFilter !== "__all__"){
-      lista = lista.filter(r=> r.eqpId === eqpFilter);
-    }
-
     lista = lista.filter(r=>{
-      const passBusca = !q || `${r.equipamento} ${r.tarefa} ${r.local} ${r.serie}`.toLowerCase().includes(q);
+      const passBusca = !q || `${r.equipamento} ${r.tarefa} ${r.local} ${r.serie} ${r.qr}`.toLowerCase().includes(q);
       let passFiltro = true;
       const d = diffDays(r.proxima, t);
       if(fil==='atrasadas') passFiltro = r.proxima < t;
@@ -1083,14 +1168,19 @@
     }
 
     lista.forEach(r=>{
+      const metaParts = [];
+      if(r.local) metaParts.push(r.local);
+      if(r.serie) metaParts.push(r.serie);
+      if(r.qr) metaParts.push("QR: " + r.qr);
+
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td><b>${r.equipamento}</b><div class="muted">${r.local||''} ${r.serie?('• '+r.serie):''}</div></td>
-        <td>${r.tarefa}<div class="muted">${r.obs||''}</div></td>
-        <td>${r.periodo}d</td>
-        <td>${fmtBR(r.ultima)}</td>
-        <td>${fmtBR(r.proxima)}</td>
-        <td><span class="badge ${r.status.cls}">${r.status.label}</span></td>
+        <td><b>${escapeHtml(r.equipamento)}</b><div class="muted">${escapeHtml(metaParts.join(" • "))}</div></td>
+        <td>${escapeHtml(r.tarefa)}<div class="muted">${escapeHtml(r.obs||'')}</div></td>
+        <td>${escapeHtml(String(r.periodo))}d</td>
+        <td>${escapeHtml(fmtBR(r.ultima))}</td>
+        <td>${escapeHtml(fmtBR(r.proxima))}</td>
+        <td><span class="badge ${r.status.cls}">${escapeHtml(r.status.label)}</span></td>
         <td>
           <div class="row">
             <button class="ok" data-done="${r.eqpId}|${r.tkId}" type="button">Feita hoje</button>
@@ -1103,7 +1193,7 @@
     });
   }
 
-  // Ações na tabela
+  // Delegação de ações na tabela
   tbody.addEventListener('click', (ev)=>{
     const el = ev.target;
     if(!(el instanceof HTMLElement)) return;
@@ -1111,7 +1201,7 @@
     if(el.hasAttribute('data-done')){
       const [eqpId, tkId] = el.getAttribute('data-done').split('|');
       const eqp = store.equipamentos.find(e=> e.id===eqpId);
-      const tk = eqp?.tarefas.find(x=> x.id===tkId);
+      const tk = eqp?.tarefas?.find(x=> x.id===tkId);
       if(tk){
         tk.ultimaISO = todayISO();
         fullSave();
@@ -1120,16 +1210,14 @@
     }else if(el.hasAttribute('data-edit')){
       const [eqpId, tkId] = el.getAttribute('data-edit').split('|');
       const eqp = store.equipamentos.find(e=> e.id===eqpId);
-      const tk = eqp?.tarefas.find(x=> x.id===tkId);
+      const tk = eqp?.tarefas?.find(x=> x.id===tkId);
       if(eqp && tk){
         openTab('tarefas');
 
         selectedEqpId = eqp.id;
         renderEqpSelect();
         selEqpTarefa.value = eqp.id;
-        hintEqpTarefa.textContent =
-          (eqp.local ? ("Local: " + eqp.local + " • ") : "") +
-          (eqp.serie ? ("Patrimônio/Série: " + eqp.serie) : "");
+        hintEqpTarefa.textContent = buildEqpHint(eqp);
 
         tkTitulo.value  = tk.titulo;
         tkPeriodo.value = String(tk.periodo);
@@ -1137,7 +1225,7 @@
         tkObs.value     = tk.obs || '';
 
         editingTask = { eqpId, tkId };
-        setEditUI(true);
+        setTaskMode(true);
 
         window.scrollTo({top:0,behavior:'smooth'});
       }
@@ -1156,157 +1244,246 @@
     }
   });
 
-  // ===== RELATÓRIO (Imprimir + CSV) =====
-  function buildRows(){
-    const rows = [];
-    store.equipamentos.forEach(eqp=>{
-      (eqp.tarefas||[]).forEach(tk=>{
-        const nextISO = computeNext(tk.ultimaISO, tk.periodo);
-        rows.push({
-          eqpId:eqp.id,
-          tkId:tk.id,
-          equipamento:eqp.nome,
-          local:eqp.local||'',
-          serie:eqp.serie||'',
-          tarefa:tk.titulo,
-          periodo:tk.periodo,
-          ultima:tk.ultimaISO || '',
-          proxima:nextISO,
-          status:statusFor(nextISO).label,
-          obs:tk.obs||''
-        });
-      });
+  // =========================
+  // QR: LOADER + MODAL + SCAN
+  // =========================
+  const qrModal = document.getElementById('qrModal');
+  const btnCloseQr = document.getElementById('btnCloseQr');
+  const btnStopQr = document.getElementById('btnStopQr');
+  const btnSwitchCamera = document.getElementById('btnSwitchCamera');
+  const qrModalTitle = document.getElementById('qrModalTitle');
+  const qrHint = document.getElementById('qrHint');
+  const qrHelp = document.getElementById('qrHelp');
+
+  let __qrLibLoading = null;
+
+  function loadScriptOnce(src){
+    return new Promise((resolve, reject)=>{
+      const s = document.createElement("script");
+      s.src = src;
+      s.async = true;
+      s.onload = ()=> resolve(true);
+      s.onerror = ()=> reject(new Error("Falhou: " + src));
+      document.head.appendChild(s);
     });
-    rows.sort((a,b)=> a.proxima.localeCompare(b.proxima));
-    return rows;
   }
 
-  function rowsFilteredForUI(){
-    const t = todayISO();
-    let rows = buildRows();
+  async function ensureQrLibLoaded(){
+    if(typeof Html5Qrcode !== "undefined") return true;
+    if(__qrLibLoading) return __qrLibLoading;
 
-    const q = (busca.value || '').trim().toLowerCase();
-    const fil = selFiltro.value;
-    const eqpFilter = filtroEqp.value || "__all__";
+    __qrLibLoading = (async ()=>{
+      const sources = [
+        "https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.10/minified/html5-qrcode.min.js",
+        "https://unpkg.com/html5-qrcode@2.3.10/minified/html5-qrcode.min.js",
+        "./html5-qrcode.min.js" // opcional: se você colocar no repo
+      ];
 
-    if(eqpFilter !== "__all__"){
-      rows = rows.filter(r=> r.eqpId === eqpFilter);
+      let lastErr = null;
+      for(const src of sources){
+        try{
+          await loadScriptOnce(src);
+          if(typeof Html5Qrcode !== "undefined") return true;
+        }catch(e){
+          lastErr = e;
+        }
+      }
+      console.error(lastErr);
+      return false;
+    })();
+
+    return __qrLibLoading;
+  }
+
+  function showQrModal(title, hint){
+    qrModalTitle.textContent = title || "Ler QR Code";
+    qrHint.textContent = hint || "Aponte a câmera para o QR da máquina.";
+    qrHelp.textContent =
+      "Dicas: a câmera só funciona em HTTPS (GitHub Pages ok). " +
+      "Se a rede bloquear CDNs, coloque o arquivo 'html5-qrcode.min.js' no repositório.";
+    qrModal.classList.add('show');
+    qrModal.setAttribute('aria-hidden','false');
+  }
+  function hideQrModal(){
+    qrModal.classList.remove('show');
+    qrModal.setAttribute('aria-hidden','true');
+  }
+
+  let qrScanner = null;
+  let qrContext = "machine"; // "machine" | "task"
+  let cameraList = [];
+  let cameraIndex = 0;
+  let currentCameraId = null;
+
+  async function stopQr(){
+    try{
+      if(qrScanner){
+        await qrScanner.stop();
+        await qrScanner.clear();
+      }
+    }catch(e){
+      // ignore
+    }finally{
+      qrScanner = null;
+      hideQrModal();
     }
-
-    rows = rows.filter(r=>{
-      const passBusca = !q || `${r.equipamento} ${r.tarefa} ${r.local} ${r.serie}`.toLowerCase().includes(q);
-      let passFiltro = true;
-      const d = diffDays(r.proxima, t);
-      if(fil==='atrasadas') passFiltro = r.proxima < t;
-      else if(fil==='sete') passFiltro = d>=0 && d<=7;
-      else if(fil==='trinta') passFiltro = d>=0 && d<=30;
-      return passBusca && passFiltro;
-    });
-
-    return rows;
   }
 
-  function downloadCSV(rows){
-    const header = ["Maquina","Local","Serie","Tarefa","PeriodoDias","Ultima","Proxima","Status","Obs"];
-    const lines = rows.map(r=>[
-      r.equipamento, r.local, r.serie, r.tarefa, r.periodo,
-      r.ultima, r.proxima, r.status, r.obs
-    ].map(v => `"${String(v??"").replace(/"/g,'""')}"`).join(","));
-
-    const csv = [header.join(","), ...lines].join("\n");
-    const blob = new Blob([csv], {type:"text/csv;charset=utf-8"});
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = `relatorio_preventivas_${todayISO()}.csv`;
-    a.click();
-    URL.revokeObjectURL(a.href);
+  function findEqpByQr(code){
+    const c = String(code||"").trim();
+    if(!c) return null;
+    return store.equipamentos.find(e => (e.qr||"").trim() === c) || null;
   }
 
-  function printReport(rows){
-    const now = new Date().toLocaleString('pt-BR');
-    const css = `
-      body{font-family:Arial, sans-serif; margin:18px; color:#111;}
-      h1{margin:0; font-size:18px;}
-      .meta{margin-top:6px; color:#444; font-size:12px; line-height:1.35}
-      table{width:100%; border-collapse:collapse; margin-top:14px; font-size:12px;}
-      th,td{border:1px solid #ddd; padding:8px; text-align:left; vertical-align:top;}
-      th{background:#f3f4f6;}
-      @media print{button{display:none}}
-    `;
+  function handleQrResult(code){
+    const eqp = findEqpByQr(code);
 
-    const trs = rows.map(r=>`
-      <tr>
-        <td><b>${escapeHtml(r.equipamento)}</b><div style="color:#666; font-size:11px">${escapeHtml([r.local,r.serie].filter(Boolean).join(" • "))}</div></td>
-        <td>${escapeHtml(r.tarefa)}<div style="color:#666; font-size:11px">${escapeHtml(r.obs||"")}</div></td>
-        <td>${escapeHtml(String(r.periodo))}d</td>
-        <td>${escapeHtml(fmtBR(r.ultima))}</td>
-        <td>${escapeHtml(fmtBR(r.proxima))}</td>
-        <td>${escapeHtml(r.status)}</td>
-      </tr>
-    `).join("");
+    if(eqp){
+      selectedEqpId = eqp.id;
 
-    const html = `
-      <!doctype html>
-      <html><head><meta charset="utf-8"><title>Relatório Preventivas</title><style>${css}</style></head>
-      <body>
-        <h1>Relatório de Preventivas — Grilazer</h1>
-        <div class="meta">
-          Gerado em: <b>${now}</b><br>
-          Total de itens: <b>${rows.length}</b>
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Máquina</th>
-              <th>Tarefa</th>
-              <th>Período</th>
-              <th>Última</th>
-              <th>Próxima</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>${trs || `<tr><td colspan="6">Nenhum item</td></tr>`}</tbody>
-        </table>
-        <script>window.print();</script>
-      </body></html>
-    `;
-
-    const w = window.open("", "_blank");
-    w.document.open();
-    w.document.write(html);
-    w.document.close();
-  }
-
-  function openReportDialog(){
-    const rows = rowsFilteredForUI();
-    if(!rows.length){
-      alert("Nenhum item no filtro atual para gerar relatório.");
+      if(qrContext === "task"){
+        openTab('tarefas');
+        renderEqpSelect();
+        selEqpTarefa.value = eqp.id;
+        hintEqpTarefa.textContent = buildEqpHint(eqp);
+        setTaskMode(false);
+      }else{
+        openTab('maquinas');
+        setSelectedEqp(eqp);
+      }
       return;
     }
 
-    const pick = prompt(
-      "Relatório:\n1 = Imprimir\n2 = Baixar CSV\n\nDigite 1 ou 2:",
-      "1"
-    );
-
-    if(pick === "1"){
-      printReport(rows);
-    }else if(pick === "2"){
-      downloadCSV(rows);
+    // QR não cadastrado
+    if(qrContext === "machine"){
+      openTab('maquinas');
+      clearEqpForm();
+      eqQr.value = code;
+      infoEqpSel.textContent = "QR lido: " + code + " (não cadastrado). Preencha nome e salve.";
+      eqNome.focus();
     }else{
-      // nada
+      alert("QR não cadastrado: " + code + "\nCadastre a máquina primeiro na aba Máquinas.");
+      openTab('maquinas');
     }
   }
 
-  function escapeHtml(str){
-    return String(str ?? "")
-      .replace(/&/g,"&amp;")
-      .replace(/</g,"&lt;")
-      .replace(/>/g,"&gt;")
-      .replace(/"/g,"&quot;")
-      .replace(/'/g,"&#039;");
+  async function startQrScan(context){
+    const ok = await ensureQrLibLoaded();
+    if(!ok){
+      alert(
+        "Não consegui carregar o leitor de QR.\n" +
+        "Possíveis causas:\n" +
+        "• Rede bloqueou CDN (empresa)\n" +
+        "• Sem internet\n\n" +
+        "Solução definitiva: coloque 'html5-qrcode.min.js' no repositório (mesma pasta do index.html)."
+      );
+      return;
+    }
+
+    qrContext = context || "machine";
+
+    showQrModal(
+      qrContext === "task" ? "Ler QR — Selecionar Máquina" : "Ler QR — Buscar Máquina",
+      "Aponte a câmera para o QR grudado na máquina."
+    );
+
+    // garantir instância limpa
+    try{
+      if(qrScanner){
+        await qrScanner.stop();
+        await qrScanner.clear();
+      }
+    }catch{}
+    qrScanner = new Html5Qrcode("qr-reader");
+
+    // checar HTTPS (camera)
+    if(!(location.protocol === "https:" || location.hostname === "localhost")){
+      qrHelp.textContent =
+        "⚠️ A câmera só funciona em HTTPS ou localhost. Publique no GitHub Pages (https) para usar.";
+    }
+
+    // listar câmeras
+    try{
+      cameraList = await Html5Qrcode.getCameras();
+      if(!cameraList || !cameraList.length){
+        alert("Nenhuma câmera encontrada.");
+        await stopQr();
+        return;
+      }
+
+      // tenta priorizar traseira
+      const backIndex = cameraList.findIndex(c => /back|traseira|rear/i.test(c.label||""));
+      cameraIndex = backIndex >= 0 ? backIndex : 0;
+      currentCameraId = cameraList[cameraIndex].id;
+
+    }catch(err){
+      console.error(err);
+      alert("Não foi possível acessar a câmera. Dê permissão e tente novamente.");
+      await stopQr();
+      return;
+    }
+
+    // iniciar scan
+    try{
+      await qrScanner.start(
+        { deviceId: { exact: currentCameraId } },
+        { fps: 10, qrbox: { width: 260, height: 260 } },
+        async (decodedText)=>{
+          const code = String(decodedText||"").trim();
+          if(!code) return;
+
+          // parar rápido (evitar repetir)
+          await stopQr();
+          handleQrResult(code);
+        },
+        ()=>{}
+      );
+    }catch(err){
+      console.error(err);
+      alert("Erro ao iniciar o leitor. Se estiver no PC, verifique permissões/bloqueios do navegador.");
+      await stopQr();
+    }
   }
 
+  btnCloseQr.addEventListener('click', stopQr);
+  btnStopQr.addEventListener('click', stopQr);
+
+  btnSwitchCamera.addEventListener('click', async ()=>{
+    if(!cameraList.length){
+      alert("Câmeras não carregadas.");
+      return;
+    }
+    cameraIndex = (cameraIndex + 1) % cameraList.length;
+    currentCameraId = cameraList[cameraIndex].id;
+
+    // reiniciar
+    try{
+      if(qrScanner){
+        await qrScanner.stop();
+        await qrScanner.clear();
+      }
+      qrScanner = new Html5Qrcode("qr-reader");
+      await qrScanner.start(
+        { deviceId: { exact: currentCameraId } },
+        { fps: 10, qrbox: { width: 260, height: 260 } },
+        async (decodedText)=>{
+          const code = String(decodedText||"").trim();
+          if(!code) return;
+          await stopQr();
+          handleQrResult(code);
+        },
+        ()=>{}
+      );
+    }catch(err){
+      console.error(err);
+      alert("Não foi possível trocar a câmera.");
+      await stopQr();
+    }
+  });
+
+  // =========================
+  // INIT APP
+  // =========================
   function initAppOnce(){
     if(appInitialized) return;
     appInitialized = true;
@@ -1316,7 +1493,6 @@
     loadLocal();
     renderEqpList();
     renderEqpSelect();
-    renderFiltroEqp();
     renderTabela();
     syncFromFirebaseOnce();
 
@@ -1324,19 +1500,14 @@
     tabMaquinas.addEventListener('click', ()=> openTab('maquinas'));
     tabTarefas.addEventListener('click', ()=> openTab('tarefas'));
 
-    // seleção via select (trocar máquina cancela edição)
+    // select tarefa: trocar máquina cancela edição
     selEqpTarefa.addEventListener('change', ()=>{
       const id = selEqpTarefa.value;
       selectedEqpId = id || null;
       const eqp = store.equipamentos.find(e=> e.id===id);
-      hintEqpTarefa.textContent = eqp
-        ? ((eqp.local ? ("Local: " + eqp.local + " • ") : "") + (eqp.serie ? ("Patrimônio/Série: " + eqp.serie) : ""))
-        : '';
-      setEditUI(false);
+      hintEqpTarefa.textContent = eqp ? buildEqpHint(eqp) : '';
+      setTaskMode(false);
     });
-
-    // filtro máquina direita
-    filtroEqp.addEventListener('change', renderTabela);
 
     // botões
     btnSalvarEqp.addEventListener('click', addOrUpdateEquipamento);
@@ -1344,30 +1515,28 @@
     btnAddTarefa.addEventListener('click', addTarefa);
     btnLimparTarefa.addEventListener('click', clearTaskForm);
 
-    btnCancelarEdicao.addEventListener('click', ()=>{
-      if(confirm("Cancelar edição? As alterações não salvas serão perdidas.")){
-        clearTaskForm();
-      }
-    });
-
     btnNovoEqp.addEventListener('click', ()=>{
       clearEqpForm();
       clearTaskForm();
       openTab('maquinas');
     });
 
-    // relatório
-    btnRelatorio.addEventListener('click', openReportDialog);
-
     // filtros
     busca.addEventListener('input', renderTabela);
     selFiltro.addEventListener('change', renderTabela);
 
-    // garante estado inicial
-    setEditUI(false);
+    // QR
+    btnScanQrMachine.addEventListener('click', ()=> startQrScan("machine"));
+    btnScanQrTask.addEventListener('click', ()=> startQrScan("task"));
+    btnOpenQrTop.addEventListener('click', ()=> startQrScan("task"));
+
+    // estado inicial
+    setTaskMode(false);
   }
 
-  // ===== AUTH =====
+  // =========================
+  // AUTH
+  // =========================
   auth.onAuthStateChanged(user=>{
     if(user && allowedEmails.includes(user.email)){
       showApp(user);
@@ -1383,15 +1552,12 @@
   btnLogin.addEventListener('click', ()=>{
     const email = loginEmail.value.trim();
     const senha = loginSenha.value;
-
     if(!email || !senha){
       loginError.textContent = "Preencha e-mail e senha.";
       return;
     }
-
     setLoginLoading(true);
     loginError.textContent = "";
-
     auth.signInWithEmailAndPassword(email, senha)
       .then(cred=>{
         const user = cred.user;
@@ -1402,14 +1568,26 @@
       })
       .catch(err=>{
         console.error(err);
-        // Mostra o erro real (ajuda muito quando é domínio não autorizado etc.)
-        loginError.textContent = `Erro: ${err.code || ''} — ${err.message || ''}`;
+        loginError.textContent = "Login inválido. Verifique e-mail e senha.";
       })
       .finally(()=> setLoginLoading(false));
   });
 
   btnLogout.addEventListener('click', ()=> auth.signOut());
 
+  // =========================
+  // UTIL: escape (segurança)
+  // =========================
+  function escapeHtml(str){
+    return String(str ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  // start
   showLogin();
 </script>
 
