@@ -435,6 +435,9 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+
+  <!-- ✅ Leitor QR local (suba html5-qrcode.min.js junto do index.html) -->
+  <script src="./html5-qrcode.min.js"></script>
 </head>
 
 <body>
@@ -642,7 +645,9 @@
           Aponte a câmera para o QR da máquina.
         </div>
         <div id="qr-reader"></div>
-        <div class="qr-help" id="qrHelp"></div>
+        <div class="qr-help" id="qrHelp">
+          Dica: câmera só funciona em HTTPS (GitHub Pages ok). Se o navegador pedir permissão, permita.
+        </div>
       </div>
       <div class="modal-foot">
         <button class="ghost" id="btnSwitchCamera" type="button">Trocar câmera</button>
@@ -671,10 +676,7 @@
   const auth = firebase.auth();
   const DB_PATH = "preventivas_grilazer";
 
-  // E-mails autorizados
-  const allowedEmails = [
-    "engenhariagrilazer@gmail.com"
-  ];
+  const allowedEmails = ["engenhariagrilazer@gmail.com"];
 
   // =========================
   // ELEMENTOS LOGIN
@@ -717,6 +719,15 @@
   const diffDays = (a,b)=> Math.floor((new Date(a)-new Date(b))/(1000*60*60*24));
   const fmtBR = (iso)=> iso? new Date(iso+'T00:00:00').toLocaleDateString('pt-BR') : '—';
   const uid = ()=> 'id-'+Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(4);
+
+  function escapeHtml(str){
+    return String(str ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
 
   // =========================
   // STORE
@@ -854,6 +865,14 @@
     renderTabela();
   }
 
+  function buildEqpHint(eqp){
+    const parts = [];
+    if(eqp.local) parts.push("Local: " + eqp.local);
+    if(eqp.serie) parts.push("Patrimônio/Série: " + eqp.serie);
+    if(eqp.qr) parts.push("QR: " + eqp.qr);
+    return parts.join(" • ");
+  }
+
   function setSelectedEqp(eqp){
     if(!eqp){
       clearEqpForm();
@@ -866,21 +885,12 @@
     eqQr.value    = eqp.qr || '';
     infoEqpSel.textContent = 'Editando: ' + eqp.nome;
 
-    // sincroniza select tarefas
     renderEqpSelect();
     selEqpTarefa.value = eqp.id;
     hintEqpTarefa.textContent = buildEqpHint(eqp);
 
     renderEqpList();
     renderTabela();
-  }
-
-  function buildEqpHint(eqp){
-    const parts = [];
-    if(eqp.local) parts.push("Local: " + eqp.local);
-    if(eqp.serie) parts.push("Patrimônio/Série: " + eqp.serie);
-    if(eqp.qr) parts.push("QR: " + eqp.qr);
-    return parts.join(" • ");
   }
 
   function addOrUpdateEquipamento(){
@@ -891,7 +901,6 @@
     const serie = eqSerie.value.trim();
     const qr = eqQr.value.trim();
 
-    // evitar QR duplicado
     if(qr){
       const dup = store.equipamentos.find(e => (e.qr||"").trim() === qr && e.id !== selectedEqpId);
       if(dup){
@@ -909,14 +918,7 @@
         eqp.qr = qr;
       }
     }else{
-      const eqp = {
-        id: uid(),
-        nome,
-        local,
-        serie,
-        qr,
-        tarefas: []
-      };
+      const eqp = { id: uid(), nome, local, serie, qr, tarefas: [] };
       store.equipamentos.push(eqp);
       selectedEqpId = eqp.id;
     }
@@ -1068,7 +1070,7 @@
       return;
     }
 
-    // ✅ EDITAR
+    // EDITAR
     if(editingTask && editingTask.eqpId === eqpIdSel){
       const tk = (eqp.tarefas||[]).find(t=> t.id === editingTask.tkId);
       if(!tk){
@@ -1088,7 +1090,7 @@
       return;
     }
 
-    // ✅ ADICIONAR
+    // ADICIONAR
     eqp.tarefas.push({ id: uid(), titulo, periodo, ultimaISO, obs });
 
     fullSave();
@@ -1245,7 +1247,7 @@
   });
 
   // =========================
-  // QR: LOADER + MODAL + SCAN
+  // QR (SEM CDN) — usa Html5Qrcode já carregado do arquivo local
   // =========================
   const qrModal = document.getElementById('qrModal');
   const btnCloseQr = document.getElementById('btnCloseQr');
@@ -1255,52 +1257,15 @@
   const qrHint = document.getElementById('qrHint');
   const qrHelp = document.getElementById('qrHelp');
 
-  let __qrLibLoading = null;
-
-  function loadScriptOnce(src){
-    return new Promise((resolve, reject)=>{
-      const s = document.createElement("script");
-      s.src = src;
-      s.async = true;
-      s.onload = ()=> resolve(true);
-      s.onerror = ()=> reject(new Error("Falhou: " + src));
-      document.head.appendChild(s);
-    });
-  }
-
-  async function ensureQrLibLoaded(){
-    if(typeof Html5Qrcode !== "undefined") return true;
-    if(__qrLibLoading) return __qrLibLoading;
-
-    __qrLibLoading = (async ()=>{
-      const sources = [
-        "https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.10/minified/html5-qrcode.min.js",
-        "https://unpkg.com/html5-qrcode@2.3.10/minified/html5-qrcode.min.js",
-        "./html5-qrcode.min.js" // opcional: se você colocar no repo
-      ];
-
-      let lastErr = null;
-      for(const src of sources){
-        try{
-          await loadScriptOnce(src);
-          if(typeof Html5Qrcode !== "undefined") return true;
-        }catch(e){
-          lastErr = e;
-        }
-      }
-      console.error(lastErr);
-      return false;
-    })();
-
-    return __qrLibLoading;
-  }
+  let qrScanner = null;
+  let qrContext = "machine"; // "machine" | "task"
+  let cameraList = [];
+  let cameraIndex = 0;
+  let currentCameraId = null;
 
   function showQrModal(title, hint){
     qrModalTitle.textContent = title || "Ler QR Code";
     qrHint.textContent = hint || "Aponte a câmera para o QR da máquina.";
-    qrHelp.textContent =
-      "Dicas: a câmera só funciona em HTTPS (GitHub Pages ok). " +
-      "Se a rede bloquear CDNs, coloque o arquivo 'html5-qrcode.min.js' no repositório.";
     qrModal.classList.add('show');
     qrModal.setAttribute('aria-hidden','false');
   }
@@ -1309,24 +1274,15 @@
     qrModal.setAttribute('aria-hidden','true');
   }
 
-  let qrScanner = null;
-  let qrContext = "machine"; // "machine" | "task"
-  let cameraList = [];
-  let cameraIndex = 0;
-  let currentCameraId = null;
-
   async function stopQr(){
     try{
       if(qrScanner){
         await qrScanner.stop();
         await qrScanner.clear();
       }
-    }catch(e){
-      // ignore
-    }finally{
-      qrScanner = null;
-      hideQrModal();
-    }
+    }catch(e){}
+    qrScanner = null;
+    hideQrModal();
   }
 
   function findEqpByQr(code){
@@ -1368,14 +1324,10 @@
   }
 
   async function startQrScan(context){
-    const ok = await ensureQrLibLoaded();
-    if(!ok){
+    if(typeof Html5Qrcode === "undefined"){
       alert(
-        "Não consegui carregar o leitor de QR.\n" +
-        "Possíveis causas:\n" +
-        "• Rede bloqueou CDN (empresa)\n" +
-        "• Sem internet\n\n" +
-        "Solução definitiva: coloque 'html5-qrcode.min.js' no repositório (mesma pasta do index.html)."
+        "Leitor de QR não carregou.\n\n" +
+        "Confirme se o arquivo 'html5-qrcode.min.js' está na mesma pasta do index.html no GitHub."
       );
       return;
     }
@@ -1387,7 +1339,16 @@
       "Aponte a câmera para o QR grudado na máquina."
     );
 
-    // garantir instância limpa
+    // checar HTTPS (camera)
+    if(!(location.protocol === "https:" || location.hostname === "localhost")){
+      qrHelp.textContent =
+        "⚠️ A câmera só funciona em HTTPS ou localhost. Publique no GitHub Pages (https) para usar.";
+    }else{
+      qrHelp.textContent =
+        "Dica: se pedir permissão da câmera, permita. Use a câmera traseira se estiver no celular.";
+    }
+
+    // limpar scanner antigo
     try{
       if(qrScanner){
         await qrScanner.stop();
@@ -1395,12 +1356,6 @@
       }
     }catch{}
     qrScanner = new Html5Qrcode("qr-reader");
-
-    // checar HTTPS (camera)
-    if(!(location.protocol === "https:" || location.hostname === "localhost")){
-      qrHelp.textContent =
-        "⚠️ A câmera só funciona em HTTPS ou localhost. Publique no GitHub Pages (https) para usar.";
-    }
 
     // listar câmeras
     try{
@@ -1432,7 +1387,6 @@
           const code = String(decodedText||"").trim();
           if(!code) return;
 
-          // parar rápido (evitar repetir)
           await stopQr();
           handleQrResult(code);
         },
@@ -1440,7 +1394,7 @@
       );
     }catch(err){
       console.error(err);
-      alert("Erro ao iniciar o leitor. Se estiver no PC, verifique permissões/bloqueios do navegador.");
+      alert("Erro ao iniciar o leitor. Verifique permissões/bloqueios do navegador.");
       await stopQr();
     }
   }
@@ -1456,7 +1410,6 @@
     cameraIndex = (cameraIndex + 1) % cameraList.length;
     currentCameraId = cameraList[cameraIndex].id;
 
-    // reiniciar
     try{
       if(qrScanner){
         await qrScanner.stop();
@@ -1530,7 +1483,6 @@
     btnScanQrTask.addEventListener('click', ()=> startQrScan("task"));
     btnOpenQrTop.addEventListener('click', ()=> startQrScan("task"));
 
-    // estado inicial
     setTaskMode(false);
   }
 
@@ -1574,18 +1526,6 @@
   });
 
   btnLogout.addEventListener('click', ()=> auth.signOut());
-
-  // =========================
-  // UTIL: escape (segurança)
-  // =========================
-  function escapeHtml(str){
-    return String(str ?? "")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
-  }
 
   // start
   showLogin();
