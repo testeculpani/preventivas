@@ -12,21 +12,15 @@
       --panel:#ffffff;
       --panel-soft:#f7faff;
       --panel-strong:#eef4ff;
-
       --text:#0f172a;
       --muted:#64748b;
-
       --border:#cfd9e6;
       --border2:#dde7f3;
-
       --primary:#1e40af;
       --primary2:#2563eb;
-      --primary3:#0ea5e9;
-
       --ok:#16a34a;
       --warn:#f59e0b;
       --err:#ef4444;
-
       --shadow:0 14px 35px rgba(15,23,42,.10);
       --shadow2:0 8px 22px rgba(15,23,42,.08);
     }
@@ -143,30 +137,12 @@
       box-shadow:0 10px 20px rgba(37,99,235,.18);
     }
 
-    .btn:disabled{
-      opacity:.65;
-      cursor:wait;
-    }
-
-    .login-error{
-      margin-top:4px;
-      font-size:12px;
-      color:var(--err);
-      min-height:14px;
-    }
-
-    .login-foot{
-      font-size:11px;
-      color:var(--muted);
-      margin-top:2px;
-    }
+    .btn:disabled{opacity:.65;cursor:wait}
+    .login-error{margin-top:4px;font-size:12px;color:var(--err);min-height:14px}
+    .login-foot{font-size:11px;color:var(--muted);margin-top:2px}
 
     /* APP */
-    .wrap{
-      width:100%;
-      max-width:1260px;
-      margin:0 auto;
-    }
+    .wrap{width:100%;max-width:1260px;margin:0 auto}
 
     .topbar{
       display:flex;
@@ -241,10 +217,7 @@
       box-shadow:0 8px 18px rgba(15,23,42,.08);
     }
 
-    button:active{
-      transform:translateY(1px);
-    }
-
+    button:active{transform:translateY(1px)}
     .ghost{background:#fff}
 
     .primary{
@@ -287,40 +260,14 @@
       padding:16px;
     }
 
-    .grid > .card:first-child{
-      background:linear-gradient(180deg,#ffffff,#f3f8ff);
-    }
-
-    .grid > .card:last-child{
-      background:linear-gradient(180deg,#ffffff,#f8fbff);
-    }
+    .grid > .card:first-child{background:linear-gradient(180deg,#ffffff,#f3f8ff)}
+    .grid > .card:last-child{background:linear-gradient(180deg,#ffffff,#f8fbff)}
 
     h3,h4{margin:0}
-
-    h3{
-      font-size:14px;
-      font-weight:1000;
-      color:#102a56;
-    }
-
-    h4{
-      font-size:13px;
-      font-weight:950;
-      color:var(--text);
-      opacity:.95;
-    }
-
-    .muted{
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.35;
-    }
-
-    .sep{
-      height:1px;
-      background:var(--border2);
-      margin:14px 0;
-    }
+    h3{font-size:14px;font-weight:1000;color:#102a56}
+    h4{font-size:13px;font-weight:950;color:var(--text);opacity:.95}
+    .muted{color:var(--muted);font-size:12px;line-height:1.35}
+    .sep{height:1px;background:var(--border2);margin:14px 0}
 
     label{
       display:block;
@@ -360,11 +307,7 @@
       align-items:center;
     }
 
-    #syncStatus{
-      font-size:11px;
-      color:var(--muted);
-      margin-top:6px;
-    }
+    #syncStatus{font-size:11px;color:var(--muted);margin-top:6px}
 
     .tabs{
       display:flex;
@@ -427,20 +370,9 @@
       border-color:#bdd0e7;
     }
 
-    .chip-eqp:active{
-      transform:translateY(1px);
-    }
-
-    .chip-eqp .title{
-      font-weight:1000;
-      color:#0f2550;
-    }
-
-    .chip-eqp .sub{
-      color:var(--muted);
-      margin-top:3px;
-    }
-
+    .chip-eqp:active{transform:translateY(1px)}
+    .chip-eqp .title{font-weight:1000;color:#0f2550}
+    .chip-eqp .sub{color:var(--muted);margin-top:3px}
     .chip-eqp.active{
       background:linear-gradient(135deg,#eaf2ff,#f5f9ff);
       border-color:rgba(37,99,235,.35);
@@ -453,8 +385,6 @@
       white-space:nowrap;
       box-shadow:none;
     }
-
-    .chip-eqp button:hover{box-shadow:none}
 
     .filters{
       display:flex;
@@ -561,23 +491,9 @@
       background:#fff;
     }
 
-    .b-ok{
-      background:#ecfdf5;
-      color:#166534;
-      border-color:#86efac;
-    }
-
-    .b-warn{
-      background:#fffbeb;
-      color:#92400e;
-      border-color:#fde68a;
-    }
-
-    .b-err{
-      background:#fef2f2;
-      color:#991b1b;
-      border-color:#fecaca;
-    }
+    .b-ok{background:#ecfdf5;color:#166534;border-color:#86efac}
+    .b-warn{background:#fffbeb;color:#92400e;border-color:#fde68a}
+    .b-err{background:#fef2f2;color:#991b1b;border-color:#fecaca}
 
     .editbar{
       display:none;
@@ -688,12 +604,10 @@
         </div>
 
         <div class="pane active" id="paneMaquinas">
-          <div class="row" style="justify-content:space-between;align-items:center">
-            <div>
-              <h3>Cadastro de Máquina</h3>
-              <div class="muted" id="infoEqpSel">Nenhuma máquina selecionada.</div>
-              <div id="syncStatus">Sincronização: carregando…</div>
-            </div>
+          <div>
+            <h3>Cadastro de Máquina</h3>
+            <div class="muted" id="infoEqpSel">Nenhuma máquina selecionada.</div>
+            <div id="syncStatus">Sincronização: carregando...</div>
           </div>
 
           <label for="eqNome">Nome da máquina</label>
@@ -761,10 +675,6 @@
             <button class="primary" id="btnAddTarefa" type="button">Adicionar</button>
             <button class="ghost" id="btnLimparTarefa" type="button">Limpar</button>
             <button class="ghost" id="btnCancelEdit" type="button" style="display:none">Cancelar edição</button>
-          </div>
-
-          <div class="muted" style="margin-top:6px">
-            Dica: você pode escrever em várias linhas no título da tarefa.
           </div>
         </div>
       </div>
@@ -1002,17 +912,22 @@
 
     function saveRemote(){
       setSyncStatus("enviando ao servidor...");
-      db.ref(DB_PATH).set(store)
+      return db.ref(DB_PATH).set(store)
         .then(()=> setSyncStatus("ok (sincronizado)"))
         .catch(err=>{
           console.error(err);
-          setSyncStatus("erro ao sincronizar (ver console)");
+          setSyncStatus("erro ao sincronizar");
+          throw err;
         });
     }
 
     function fullSave(){
       saveLocal();
-      saveRemote();
+      renderEqpList();
+      renderEqpSelect();
+      renderFiltroMaquina();
+      renderTabela();
+      return saveRemote();
     }
 
     function syncFromFirebaseOnce(){
@@ -1027,7 +942,7 @@
         })
         .catch(err=>{
           console.error(err);
-          setSyncStatus("erro ao carregar (usando dados locais)");
+          setSyncStatus("erro ao carregar (usando local)");
         })
         .finally(()=>{
           renderEqpList();
@@ -1071,15 +986,13 @@
 
       renderEqpSelect();
       renderFiltroMaquina();
-
       selEqpTarefa.value = eqp.id;
       hintEqpTarefa.textContent = buildEqpHint(eqp);
-
       renderEqpList();
       renderTabela();
     }
 
-    function addOrUpdateEquipamento(){
+    async function addOrUpdateEquipamento(){
       const nome = eqNome.value.trim();
       if(!nome){
         alert("Informe o nome da máquina");
@@ -1115,8 +1028,12 @@
         selectedEqpId = eqp.id;
       }
 
-      fullSave();
-      setSelectedEqp(store.equipamentos.find(e => e.id === selectedEqpId));
+      try{
+        await fullSave();
+        setSelectedEqp(store.equipamentos.find(e => e.id === selectedEqpId));
+      }catch{
+        alert("Não foi possível salvar no Firebase. Verifique permissão/regras.");
+      }
     }
 
     function renderEqpList(){
@@ -1147,16 +1064,16 @@
         btnDel.type = "button";
         btnDel.textContent = "Excluir";
 
-        btnDel.addEventListener("click", (ev)=>{
+        btnDel.addEventListener("click", async (ev)=>{
           ev.stopPropagation();
           if(confirm("Excluir máquina e todas as tarefas dela?")){
             store.equipamentos = store.equipamentos.filter(e => e.id !== eqp.id);
             if(selectedEqpId === eqp.id) selectedEqpId = null;
-            fullSave();
-            renderEqpList();
-            renderEqpSelect();
-            renderFiltroMaquina();
-            renderTabela();
+            try{
+              await fullSave();
+            }catch{
+              alert("Não foi possível excluir no Firebase.");
+            }
           }
         });
 
@@ -1237,7 +1154,7 @@
       setTaskMode(false);
     }
 
-    function addTarefa(){
+    async function addTarefa(){
       const eqpIdSel = selEqpTarefa.value || "";
       if(!eqpIdSel){
         alert("Selecione a máquina para cadastrar a tarefa.");
@@ -1272,25 +1189,23 @@
         tk.periodo = periodo;
         tk.ultimaISO = ultimaISO;
         tk.obs = obs;
-
-        fullSave();
-        renderTabela();
-        clearTaskForm();
-        alert("Tarefa atualizada!");
-        return;
+      }else{
+        eqp.tarefas.push({
+          id: uid(),
+          titulo,
+          periodo,
+          ultimaISO,
+          obs
+        });
       }
 
-      eqp.tarefas.push({
-        id: uid(),
-        titulo,
-        periodo,
-        ultimaISO,
-        obs
-      });
-
-      fullSave();
-      renderTabela();
-      clearTaskForm();
+      try{
+        await fullSave();
+        clearTaskForm();
+        if(editingTask) alert("Tarefa atualizada!");
+      }catch{
+        alert("Não foi possível salvar a tarefa no Firebase.");
+      }
     }
 
     function computeNext(ultimaISO, periodo){
@@ -1432,7 +1347,7 @@
       });
     }
 
-    tbody.addEventListener("click", (ev)=>{
+    tbody.addEventListener("click", async (ev)=>{
       const el = ev.target;
       if(!(el instanceof HTMLElement)) return;
 
@@ -1442,8 +1357,11 @@
         const tk = eqp?.tarefas?.find(x => x.id === tkId);
         if(tk){
           tk.ultimaISO = todayISO();
-          fullSave();
-          renderTabela();
+          try{
+            await fullSave();
+          }catch{
+            alert("Não foi possível atualizar a tarefa.");
+          }
         }
       }else if(el.hasAttribute("data-edit")){
         const [eqpId, tkId] = el.getAttribute("data-edit").split("|");
@@ -1465,8 +1383,7 @@
           autoGrowTextarea(tkObs);
 
           editingTask = { eqpId, tkId };
-          setTaskMode(true, `Editando: ${eqp.nome} — ${tk.titulo.replace(/\n/g, " / ")}`);
-
+          setTaskMode(true, `Editando: ${eqp.nome}`);
           window.scrollTo({ top:0, behavior:"smooth" });
         }
       }else if(el.hasAttribute("data-del")){
@@ -1476,10 +1393,13 @@
 
         if(confirm("Excluir esta tarefa?")){
           eqp.tarefas = (eqp.tarefas || []).filter(x => x.id !== tkId);
-          fullSave();
-          renderTabela();
-          if(editingTask && editingTask.eqpId === eqpId && editingTask.tkId === tkId){
-            clearTaskForm();
+          try{
+            await fullSave();
+            if(editingTask && editingTask.eqpId === eqpId && editingTask.tkId === tkId){
+              clearTaskForm();
+            }
+          }catch{
+            alert("Não foi possível excluir a tarefa.");
           }
         }
       }
