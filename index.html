@@ -552,6 +552,21 @@
       border-bottom:none;
     }
 
+    .group-row td{
+      background:linear-gradient(180deg,#eef5ff,#f7fbff);
+      font-weight:1000;
+      color:#16346b;
+      border-top:1px solid #dbe7f7;
+    }
+
+    .task-bullet{
+      width:32px;
+      text-align:center;
+      color:#64748b;
+      font-weight:1000;
+      padding-left:18px !important;
+    }
+
     .badge{
       display:inline-block;
       padding:5px 10px;
@@ -691,18 +706,13 @@
     }
   </style>
 
-  <!-- Firebase compat -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-
-  <!-- QR local -->
   <script src="./html5-qrcode.min.js"></script>
 </head>
-
 <body>
 
-  <!-- LOGIN -->
   <section id="login-screen">
     <div class="login-card">
       <div class="login-head">
@@ -737,9 +747,7 @@
     </div>
   </section>
 
-  <!-- APP -->
   <div class="wrap" id="app-wrap" style="display:none">
-
     <div class="topbar">
       <div class="brand">
         <div class="logo" aria-hidden="true">
@@ -763,14 +771,12 @@
     </div>
 
     <div class="grid">
-      <!-- ESQUERDA -->
       <div class="card">
         <div class="tabs">
           <button class="tab active" id="tabMaquinas" type="button">Máquinas</button>
           <button class="tab" id="tabTarefas" type="button">Tarefas</button>
         </div>
 
-        <!-- PANE MÁQUINAS -->
         <div class="pane active" id="paneMaquinas">
           <div class="row" style="justify-content:space-between;align-items:center">
             <div>
@@ -805,7 +811,6 @@
           <div id="listaEqp"></div>
         </div>
 
-        <!-- PANE TAREFAS -->
         <div class="pane" id="paneTarefas">
           <h3>Cadastro de Tarefa</h3>
           <div class="muted">Selecione a máquina e cadastre a tarefa</div>
@@ -825,13 +830,12 @@
             <div style="flex:1;min-width:140px">
               <label for="tkPeriodo">Periodicidade</label>
               <select id="tkPeriodo">
-                <option value="30">7 dias</option>
-                <option value="90">15 dias</option>
-                <option value="90">30 dias</option>
-                <option value="90">60 dias</option>
-                <option value="180">90 dias</option>
+                <option value="7">7 dias</option>
+                <option value="15">15 dias</option>
+                <option value="30" selected>30 dias</option>
+                <option value="60">60 dias</option>
+                <option value="90">90 dias</option>
                 <option value="180">180 dias</option>
-                <option value="360">360 dias</option>
               </select>
             </div>
 
@@ -856,7 +860,6 @@
         </div>
       </div>
 
-      <!-- DIREITA -->
       <div class="card">
         <div class="filters">
           <input id="busca" placeholder="Buscar por máquina/tarefa…" style="flex:1;min-width:220px">
@@ -896,7 +899,7 @@
         <table class="table">
           <thead>
             <tr>
-              <th>Máquina</th>
+              <th style="width:36px"></th>
               <th>Tarefa</th>
               <th>Período</th>
               <th>Última</th>
@@ -913,7 +916,6 @@
     <div class="foot">Grilazer — Preventivas</div>
   </div>
 
-  <!-- MODAL QR -->
   <div class="modal" id="qrModal" aria-hidden="true">
     <div class="modal-card">
       <div class="modal-head">
@@ -935,9 +937,6 @@
   </div>
 
 <script>
-  // =========================
-  // FIREBASE CONFIG
-  // =========================
   const firebaseConfig = {
     apiKey: "AIzaSyDNrOyDmI5NOkVuG3yh8HkDrn4dqYXOrW0",
     authDomain: "preventivas-27185.firebaseapp.com",
@@ -953,12 +952,8 @@
   const db = firebase.database();
   const auth = firebase.auth();
   const DB_PATH = "preventivas_grilazer";
-
   const allowedEmails = ["engenhariagrilazer@gmail.com"];
 
-  // =========================
-  // LOGIN
-  // =========================
   const loginScreen = document.getElementById("login-screen");
   const appWrap = document.getElementById("app-wrap");
   const loginEmail = document.getElementById("loginEmail");
@@ -968,65 +963,6 @@
   const btnLogout = document.getElementById("btnLogout");
   const userInfoTop = document.getElementById("userInfoTop");
 
-  function setLoginLoading(isLoading){
-    btnLogin.disabled = isLoading;
-    btnLogin.textContent = isLoading ? "Entrando..." : "Entrar";
-  }
-
-  function showLogin(){
-    loginScreen.style.display = "flex";
-    appWrap.style.display = "none";
-    loginError.textContent = "";
-    loginSenha.value = "";
-  }
-
-  function showApp(user){
-    loginScreen.style.display = "none";
-    appWrap.style.display = "block";
-    userInfoTop.textContent = "Logado como: " + user.email;
-  }
-
-  // =========================
-  // HELPERS
-  // =========================
-  const todayISO = ()=> new Date().toISOString().slice(0,10);
-
-  const addDays = (iso, n)=>{
-    const d = iso ? new Date(iso) : new Date();
-    d.setHours(12,0,0,0);
-    d.setDate(d.getDate()+n);
-    return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10);
-  };
-
-  const diffDays = (a,b)=> Math.floor((new Date(a)-new Date(b))/(1000*60*60*24));
-  const fmtBR = (iso)=> iso ? new Date(iso + "T00:00:00").toLocaleDateString("pt-BR") : "—";
-  const uid = ()=> "id-"+Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(4);
-
-  function escapeHtml(str){
-    return String(str ?? "")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
-  }
-
-  function normName(s){
-    return String(s || "").trim().toLowerCase().replace(/\s+/g," ");
-  }
-
-  // =========================
-  // STORE
-  // =========================
-  let store = { equipamentos: [] };
-  let selectedEqpId = null;
-  let appInitialized = false;
-  let editingTask = null;
-  let originalBtnAddText = null;
-
-  // =========================
-  // ELEMENTOS APP
-  // =========================
   const tabMaquinas = document.getElementById("tabMaquinas");
   const tabTarefas = document.getElementById("tabTarefas");
   const paneMaquinas = document.getElementById("paneMaquinas");
@@ -1071,7 +1007,6 @@
   const editbar = document.getElementById("editbar");
   const editbarTxt = document.getElementById("editbarTxt");
 
-  // QR
   const btnScanQrMachine = document.getElementById("btnScanQrMachine");
   const qrModal = document.getElementById("qrModal");
   const btnCloseQr = document.getElementById("btnCloseQr");
@@ -1079,9 +1014,56 @@
   const btnSwitchCamera = document.getElementById("btnSwitchCamera");
   const qrHelp = document.getElementById("qrHelp");
 
-  // =========================
-  // UI HELPERS
-  // =========================
+  let store = { equipamentos: [] };
+  let selectedEqpId = null;
+  let appInitialized = false;
+  let editingTask = null;
+  let originalBtnAddText = null;
+
+  const todayISO = ()=> new Date().toISOString().slice(0,10);
+
+  const addDays = (iso, n)=>{
+    const d = iso ? new Date(iso) : new Date();
+    d.setHours(12,0,0,0);
+    d.setDate(d.getDate()+n);
+    return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10);
+  };
+
+  const diffDays = (a,b)=> Math.floor((new Date(a)-new Date(b))/(1000*60*60*24));
+  const fmtBR = (iso)=> iso ? new Date(iso + "T00:00:00").toLocaleDateString("pt-BR") : "—";
+  const uid = ()=> "id-"+Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(4);
+
+  function escapeHtml(str){
+    return String(str ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function normName(s){
+    return String(s || "").trim().toLowerCase().replace(/\s+/g," ");
+  }
+
+  function setLoginLoading(isLoading){
+    btnLogin.disabled = isLoading;
+    btnLogin.textContent = isLoading ? "Entrando..." : "Entrar";
+  }
+
+  function showLogin(){
+    loginScreen.style.display = "flex";
+    appWrap.style.display = "none";
+    loginError.textContent = "";
+    loginSenha.value = "";
+  }
+
+  function showApp(user){
+    loginScreen.style.display = "none";
+    appWrap.style.display = "block";
+    userInfoTop.textContent = "Logado como: " + user.email;
+  }
+
   function openTab(which){
     const isM = which === "maquinas";
     tabMaquinas.classList.toggle("active", isM);
@@ -1114,9 +1096,6 @@
     }
   }
 
-  // =========================
-  // LOCAL STORAGE
-  // =========================
   function loadLocal(){
     try{
       const raw = localStorage.getItem("preventivas");
@@ -1130,9 +1109,6 @@
     }catch{}
   }
 
-  // =========================
-  // FIREBASE SAVE/LOAD
-  // =========================
   function saveRemote(){
     setSyncStatus("enviando ao servidor…");
     db.ref(DB_PATH).set(store)
@@ -1171,9 +1147,6 @@
       });
   }
 
-  // =========================
-  // MÁQUINAS
-  // =========================
   function clearEqpForm(){
     selectedEqpId = null;
     eqNome.value = "";
@@ -1282,7 +1255,6 @@
       btnDel.className = "err";
       btnDel.type = "button";
       btnDel.textContent = "Excluir";
-      btnDel.title = "Excluir máquina";
 
       btnDel.addEventListener("click", (ev)=>{
         ev.stopPropagation();
@@ -1364,9 +1336,6 @@
     }
   }
 
-  // =========================
-  // TAREFAS
-  // =========================
   function clearTaskForm(){
     tkTitulo.value = "";
     tkPeriodo.value = "30";
@@ -1431,9 +1400,6 @@
     clearTaskForm();
   }
 
-  // =========================
-  // TABELA / KPI
-  // =========================
   function computeNext(ultimaISO, periodo){
     const base = ultimaISO || todayISO();
     return addDays(base, periodo);
@@ -1499,15 +1465,22 @@
       const passBusca = !q || `${r.eqpNome} ${r.tarefa} ${r.local} ${r.serie} ${r.obs}`.toLowerCase().includes(q);
       let passFiltro = true;
       const d = diffDays(r.proxima, t);
+
       if(fil === "atrasadas") passFiltro = r.proxima < t;
       else if(fil === "sete") passFiltro = d >= 0 && d <= 7;
       else if(fil === "trinta") passFiltro = d >= 0 && d <= 30;
+
       return passBusca && passFiltro;
     });
 
-    lista.sort((a,b)=> a.proxima.localeCompare(b.proxima));
+    lista.sort((a,b)=>{
+      const nomeComp = a.eqpNome.localeCompare(b.eqpNome, "pt-BR");
+      if(nomeComp !== 0) return nomeComp;
+      return a.proxima.localeCompare(b.proxima);
+    });
 
     tbody.innerHTML = "";
+
     if(!lista.length){
       const tr = document.createElement("tr");
       tr.innerHTML = '<td colspan="7" class="muted">Nenhuma tarefa cadastrada para o filtro atual.</td>';
@@ -1515,28 +1488,54 @@
       return;
     }
 
-    lista.forEach(r=>{
-      const metaParts = [];
-      if(r.local) metaParts.push(r.local);
-      if(r.serie) metaParts.push(r.serie);
+    const grupos = {};
+    lista.forEach(item=>{
+      if(!grupos[item.eqpId]){
+        grupos[item.eqpId] = {
+          nome: item.eqpNome,
+          local: item.local,
+          serie: item.serie,
+          tarefas: []
+        };
+      }
+      grupos[item.eqpId].tarefas.push(item);
+    });
 
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td><b>${escapeHtml(r.eqpNome)}</b><div class="muted">${escapeHtml(metaParts.join(" • "))}</div></td>
-        <td>${escapeHtml(r.tarefa)}<div class="muted">${escapeHtml(r.obs || "")}</div></td>
-        <td>${escapeHtml(String(r.periodo))}d</td>
-        <td>${escapeHtml(fmtBR(r.ultima))}</td>
-        <td>${escapeHtml(fmtBR(r.proxima))}</td>
-        <td><span class="badge ${r.status.cls}">${escapeHtml(r.status.label)}</span></td>
-        <td>
-          <div class="row">
-            <button class="ok" data-done="${r.eqpId}|${r.tkId}" type="button">Feita hoje</button>
-            <button class="ghost" data-edit="${r.eqpId}|${r.tkId}" type="button">Editar</button>
-            <button class="err" data-del="${r.eqpId}|${r.tkId}" type="button">Excluir</button>
+    Object.entries(grupos).forEach(([eqpId, grupo])=>{
+      const trGroup = document.createElement("tr");
+      trGroup.className = "group-row";
+      trGroup.innerHTML = `
+        <td colspan="7">
+          <div style="font-size:15px;">${escapeHtml(grupo.nome)}</div>
+          <div class="muted" style="margin-top:2px;">
+            ${escapeHtml([grupo.local, grupo.serie].filter(Boolean).join(" • "))}
           </div>
         </td>
       `;
-      tbody.appendChild(tr);
+      tbody.appendChild(trGroup);
+
+      grupo.tarefas.forEach(r=>{
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td class="task-bullet">•</td>
+          <td>
+            ${escapeHtml(r.tarefa)}
+            <div class="muted">${escapeHtml(r.obs || "")}</div>
+          </td>
+          <td>${escapeHtml(String(r.periodo))}d</td>
+          <td>${escapeHtml(fmtBR(r.ultima))}</td>
+          <td>${escapeHtml(fmtBR(r.proxima))}</td>
+          <td><span class="badge ${r.status.cls}">${escapeHtml(r.status.label)}</span></td>
+          <td>
+            <div class="row">
+              <button class="ok" data-done="${r.eqpId}|${r.tkId}" type="button">Feita hoje</button>
+              <button class="ghost" data-edit="${r.eqpId}|${r.tkId}" type="button">Editar</button>
+              <button class="err" data-del="${r.eqpId}|${r.tkId}" type="button">Excluir</button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
     });
   }
 
@@ -1591,9 +1590,6 @@
     }
   });
 
-  // =========================
-  // CSV
-  // =========================
   function exportCsv(){
     const rows = buildRows();
     const t = todayISO();
@@ -1645,9 +1641,6 @@
     URL.revokeObjectURL(a.href);
   }
 
-  // =========================
-  // QR
-  // =========================
   let qrScanner = null;
   let cameraList = [];
   let cameraIndex = 0;
@@ -1794,9 +1787,6 @@
     }
   });
 
-  // =========================
-  // INIT
-  // =========================
   function initAppOnce(){
     if(appInitialized) return;
     appInitialized = true;
@@ -1845,9 +1835,6 @@
     setTaskMode(false);
   }
 
-  // =========================
-  // AUTH
-  // =========================
   auth.onAuthStateChanged(user=>{
     if(user && allowedEmails.includes(user.email)){
       showApp(user);
