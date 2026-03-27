@@ -7,22 +7,40 @@
 
   <style>
     :root{
-      --bg:#e9eef5;
-      --bg2:#dfe7f1;
-      --panel:#ffffff;
-      --panel-soft:#f7faff;
-      --panel-strong:#eef4ff;
+      --bg:#edf3fb;
+      --bg2:#e5eefb;
+      --surface:#ffffff;
+      --surface-soft:#f7fbff;
+      --surface-strong:#eef5ff;
+
       --text:#0f172a;
       --muted:#64748b;
-      --border:#cfd9e6;
-      --border2:#dde7f3;
-      --primary:#1e40af;
-      --primary2:#2563eb;
+
+      --line:#d9e4f2;
+      --line-soft:#e8eef8;
+
+      --primary:#1d4ed8;
+      --primary-2:#2563eb;
+      --primary-3:#0ea5e9;
+      --primary-soft:#dbeafe;
+
       --ok:#16a34a;
+      --ok-soft:#dcfce7;
+
       --warn:#f59e0b;
+      --warn-soft:#fef3c7;
+
       --err:#ef4444;
-      --shadow:0 14px 35px rgba(15,23,42,.10);
-      --shadow2:0 8px 22px rgba(15,23,42,.08);
+      --err-soft:#fee2e2;
+
+      --shadow-xl:0 18px 40px rgba(15,23,42,.10);
+      --shadow-lg:0 10px 22px rgba(15,23,42,.08);
+      --shadow-sm:0 2px 8px rgba(15,23,42,.04);
+
+      --radius-xl:22px;
+      --radius-lg:18px;
+      --radius-md:14px;
+      --radius-sm:12px;
     }
 
     *{box-sizing:border-box}
@@ -34,16 +52,16 @@
       color:var(--text);
       background:
         radial-gradient(900px 500px at 10% -10%, rgba(37,99,235,.16), transparent 55%),
-        radial-gradient(900px 500px at 100% 0%, rgba(14,165,233,.10), transparent 50%),
+        radial-gradient(900px 500px at 95% 0%, rgba(14,165,233,.12), transparent 50%),
         linear-gradient(180deg,var(--bg2),var(--bg));
       min-height:100dvh;
-      padding:16px;
+      padding:18px;
     }
 
     /* LOGIN */
     #login-screen{
       width:100%;
-      min-height:calc(100dvh - 32px);
+      min-height:calc(100dvh - 36px);
       display:flex;
       align-items:center;
       justify-content:center;
@@ -51,12 +69,12 @@
 
     .login-card{
       width:100%;
-      max-width:430px;
-      padding:20px;
-      border-radius:20px;
-      border:1px solid var(--border);
-      background:linear-gradient(180deg,#ffffff,#f7fbff);
-      box-shadow:var(--shadow);
+      max-width:440px;
+      padding:22px;
+      border-radius:26px;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg,#fff,#f8fbff);
+      box-shadow:var(--shadow-xl);
       display:flex;
       flex-direction:column;
       gap:10px;
@@ -64,31 +82,38 @@
 
     .login-head{
       display:flex;
-      gap:10px;
+      gap:12px;
       align-items:center;
+      margin-bottom:2px;
     }
 
     .login-logo{
-      width:48px;
-      height:48px;
-      border-radius:15px;
-      background:linear-gradient(135deg,#eaf1ff,#f5f9ff);
-      border:1px solid var(--border);
+      width:54px;
+      height:54px;
+      border-radius:16px;
+      background:linear-gradient(135deg,#eaf2ff,#f8fbff);
+      border:1px solid var(--line);
       display:grid;
       place-items:center;
-      color:var(--primary);
-      box-shadow:0 10px 18px rgba(37,99,235,.10);
+      box-shadow:var(--shadow-sm);
       flex:0 0 auto;
     }
 
-    .login-card h1{
-      margin:0;
-      font-size:18px;
-      font-weight:1000;
-      color:var(--primary);
+    .login-title{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
     }
 
-    .login-card p{
+    .login-title h1{
+      margin:0;
+      font-size:20px;
+      font-weight:1000;
+      color:var(--primary);
+      line-height:1;
+    }
+
+    .login-title p{
       margin:0;
       color:var(--muted);
       font-size:13px;
@@ -105,199 +130,216 @@
     .field label{
       font-size:12px;
       color:var(--muted);
-      font-weight:800;
+      font-weight:900;
     }
 
     .field input{
       width:100%;
-      padding:11px 12px;
-      border-radius:12px;
-      border:1px solid var(--border);
+      padding:12px 13px;
+      border-radius:14px;
+      border:1px solid var(--line);
       background:#fff;
       color:var(--text);
       outline:none;
       font-size:14px;
+      transition:.15s ease;
     }
 
     .field input:focus{
       border-color:rgba(37,99,235,.45);
-      box-shadow:0 0 0 3px rgba(37,99,235,.12);
+      box-shadow:0 0 0 4px rgba(37,99,235,.10);
     }
 
-    .btn{
-      margin-top:8px;
+    .btn-login{
+      margin-top:10px;
       width:100%;
-      padding:11px 12px;
+      padding:12px 14px;
+      border:none;
       border-radius:999px;
-      border:1px solid rgba(37,99,235,.25);
-      background:linear-gradient(135deg,var(--primary),var(--primary2));
+      background:linear-gradient(135deg,var(--primary),var(--primary-2));
       color:#fff;
       font-weight:1000;
       cursor:pointer;
-      box-shadow:0 10px 20px rgba(37,99,235,.18);
+      box-shadow:0 12px 24px rgba(37,99,235,.18);
     }
 
-    .btn:disabled{opacity:.65;cursor:wait}
-    .login-error{margin-top:4px;font-size:12px;color:var(--err);min-height:14px}
-    .login-foot{font-size:11px;color:var(--muted);margin-top:2px}
+    .btn-login:disabled{opacity:.65;cursor:wait}
+
+    .login-error{
+      font-size:12px;
+      color:var(--err);
+      min-height:14px;
+      margin-top:2px;
+    }
+
+    .login-foot{
+      color:var(--muted);
+      font-size:11px;
+      margin-top:2px;
+    }
 
     /* APP */
-    .wrap{width:100%;max-width:1260px;margin:0 auto}
+    .app{
+      max-width:1400px;
+      margin:0 auto;
+    }
 
-    .topbar{
+    .hero{
       display:flex;
       justify-content:space-between;
+      gap:16px;
       align-items:flex-start;
-      gap:12px;
-      padding:16px;
-      border-radius:20px;
+      background:linear-gradient(135deg,#1e40af,#2563eb 58%,#0ea5e9);
       border:1px solid rgba(255,255,255,.18);
-      background:linear-gradient(135deg,#1e40af,#2563eb 60%, #0ea5e9);
-      box-shadow:var(--shadow);
+      border-radius:28px;
+      padding:18px 18px 16px;
+      box-shadow:var(--shadow-xl);
       margin-bottom:16px;
     }
 
-    .brand{
+    .hero-left{
       display:flex;
-      gap:10px;
+      gap:12px;
       align-items:center;
-      min-width:260px;
     }
 
-    .logo{
-      width:48px;
-      height:48px;
-      border-radius:15px;
-      border:1px solid rgba(255,255,255,.25);
-      background:rgba(255,255,255,.16);
-      backdrop-filter:blur(6px);
+    .hero-logo{
+      width:56px;
+      height:56px;
+      border-radius:18px;
       display:grid;
       place-items:center;
+      background:rgba(255,255,255,.14);
+      border:1px solid rgba(255,255,255,.22);
       color:#fff;
+      backdrop-filter:blur(8px);
       flex:0 0 auto;
     }
 
-    .brand h1{
+    .hero h1{
       margin:0;
-      font-size:18px;
-      font-weight:1000;
-      line-height:1.1;
       color:#fff;
+      font-size:22px;
+      font-weight:1000;
+      line-height:1;
     }
 
-    #userInfoTop{
-      font-size:11px;
-      color:rgba(255,255,255,.88);
-      margin-top:4px;
+    .hero-sub{
+      color:rgba(255,255,255,.9);
+      font-size:12px;
+      margin-top:5px;
     }
 
-    .controls{
+    .hero-actions{
       display:flex;
       flex-wrap:wrap;
-      justify-content:flex-end;
       gap:8px;
-      align-items:center;
+      justify-content:flex-end;
     }
 
-    button{
-      appearance:none;
-      border:1px solid var(--border);
+    .hero-actions button{
+      border:1px solid rgba(255,255,255,.22);
+      background:rgba(255,255,255,.92);
+      color:#0f172a;
       border-radius:12px;
-      padding:9px 12px;
+      padding:10px 12px;
       font-weight:900;
       cursor:pointer;
-      color:var(--text);
-      background:#fff;
-      transition:transform .08s ease, box-shadow .12s ease, border-color .12s ease;
-      box-shadow:0 1px 0 rgba(15,23,42,.04);
     }
 
-    button:hover{
-      border-color:#bdd0e7;
-      box-shadow:0 8px 18px rgba(15,23,42,.08);
-    }
-
-    button:active{transform:translateY(1px)}
-    .ghost{background:#fff}
-
-    .primary{
-      color:#fff;
-      border-color:rgba(37,99,235,.25);
-      background:linear-gradient(135deg,var(--primary),var(--primary2));
-      box-shadow:0 10px 20px rgba(37,99,235,.18);
-    }
-
-    .ok{
-      color:#fff;
-      border-color:rgba(22,163,74,.25);
-      background:linear-gradient(135deg,#22c55e,#16a34a);
-    }
-
-    .warn{
-      color:#fff;
-      border-color:rgba(245,158,11,.25);
-      background:linear-gradient(135deg,#fbbf24,#f59e0b);
-    }
-
-    .err{
-      color:#fff;
-      border-color:rgba(239,68,68,.25);
-      background:linear-gradient(135deg,#f87171,#ef4444);
-    }
-
-    .grid{
+    .layout{
       display:grid;
-      gap:16px;
       grid-template-columns:390px 1fr;
+      gap:16px;
       align-items:start;
     }
 
     .card{
-      border:1px solid var(--border);
-      background:linear-gradient(180deg,var(--panel),var(--panel-soft));
-      border-radius:20px;
-      box-shadow:var(--shadow2);
+      background:linear-gradient(180deg,#fff,#f8fbff);
+      border:1px solid var(--line);
+      border-radius:var(--radius-xl);
+      box-shadow:var(--shadow-lg);
       padding:16px;
     }
 
-    .grid > .card:first-child{background:linear-gradient(180deg,#ffffff,#f3f8ff)}
-    .grid > .card:last-child{background:linear-gradient(180deg,#ffffff,#f8fbff)}
+    .card h3{
+      margin:0;
+      font-size:15px;
+      font-weight:1000;
+      color:#0f2f67;
+    }
 
-    h3,h4{margin:0}
-    h3{font-size:14px;font-weight:1000;color:#102a56}
-    h4{font-size:13px;font-weight:950;color:var(--text);opacity:.95}
-    .muted{color:var(--muted);font-size:12px;line-height:1.35}
-    .sep{height:1px;background:var(--border2);margin:14px 0}
+    .muted{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.35;
+    }
+
+    .section-gap{margin-top:14px}
+    .sep{
+      height:1px;
+      background:var(--line-soft);
+      margin:14px 0;
+    }
+
+    .tabs{
+      display:flex;
+      gap:8px;
+      margin-bottom:12px;
+      padding-bottom:10px;
+      border-bottom:1px solid var(--line-soft);
+    }
+
+    .tab{
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--text);
+      border-radius:999px;
+      padding:9px 14px;
+      font-size:12px;
+      font-weight:1000;
+      cursor:pointer;
+    }
+
+    .tab.active{
+      background:var(--primary-soft);
+      color:#0b2a7a;
+      border-color:#bfd5ff;
+    }
+
+    .pane{display:none}
+    .pane.active{display:block}
 
     label{
       display:block;
-      font-weight:900;
       margin:10px 0 6px;
-      color:rgba(15,23,42,.85);
       font-size:12px;
+      font-weight:900;
+      color:#334155;
     }
 
     input,select,textarea{
       width:100%;
-      padding:10px 12px;
-      border:1px solid var(--border);
-      border-radius:12px;
+      border:1px solid var(--line);
+      border-radius:14px;
       background:#fff;
+      padding:11px 12px;
+      font-size:14px;
       color:var(--text);
       outline:none;
-      font-size:14px;
+      transition:.15s ease;
     }
 
     textarea{
       min-height:48px;
-      max-height:140px;
+      max-height:160px;
       resize:vertical;
       line-height:1.35;
     }
 
     input:focus,select:focus,textarea:focus{
-      border-color:rgba(37,99,235,.42);
-      box-shadow:0 0 0 3px rgba(37,99,235,.12);
+      border-color:rgba(37,99,235,.45);
+      box-shadow:0 0 0 4px rgba(37,99,235,.10);
     }
 
     .row{
@@ -307,193 +349,87 @@
       align-items:center;
     }
 
-    #syncStatus{font-size:11px;color:var(--muted);margin-top:6px}
-
-    .tabs{
-      display:flex;
-      gap:8px;
-      border-bottom:1px solid var(--border2);
-      padding-bottom:10px;
-      margin-bottom:12px;
+    .row > *{
+      flex:1;
+      min-width:140px;
     }
 
-    .tab{
-      border:1px solid var(--border);
-      background:#fff;
-      color:var(--text);
-      border-radius:999px;
-      padding:8px 14px;
+    .btn-primary,.btn-secondary,.btn-danger,.btn-success,.btn-warning{
+      border:none;
+      border-radius:13px;
+      padding:10px 12px;
       font-weight:1000;
-      font-size:12px;
-      box-shadow:0 1px 0 rgba(15,23,42,.04);
+      cursor:pointer;
     }
 
-    .tab.active{
-      border-color:rgba(37,99,235,.35);
-      background:var(--panel-strong);
-      color:#0b2a7a;
+    .btn-primary{
+      background:linear-gradient(135deg,var(--primary),var(--primary-2));
+      color:#fff;
+      box-shadow:0 10px 18px rgba(37,99,235,.16);
     }
 
-    .pane{display:none}
-    .pane.active{display:block}
+    .btn-secondary{
+      background:#fff;
+      color:#0f172a;
+      border:1px solid var(--line);
+    }
 
-    #listaEqp{
+    .btn-danger{
+      background:linear-gradient(135deg,#f87171,#ef4444);
+      color:#fff;
+    }
+
+    .btn-success{
+      background:linear-gradient(135deg,#22c55e,#16a34a);
+      color:#fff;
+    }
+
+    .btn-warning{
+      background:linear-gradient(135deg,#fbbf24,#f59e0b);
+      color:#fff;
+    }
+
+    .machine-list{
       margin-top:8px;
-      max-height:300px;
+      max-height:320px;
       overflow:auto;
       padding-right:2px;
     }
 
-    #listaEqp::-webkit-scrollbar{width:8px}
-    #listaEqp::-webkit-scrollbar-thumb{
-      background:rgba(15,23,42,.12);
-      border-radius:999px;
-    }
-
-    .chip-eqp{
-      border-radius:14px;
-      border:1px solid var(--border);
-      padding:11px;
-      margin:8px 0;
+    .machine-item{
       display:flex;
       justify-content:space-between;
+      gap:10px;
       align-items:flex-start;
-      font-size:12px;
-      cursor:pointer;
-      background:#fff;
-      transition:background .12s ease, border-color .12s ease, transform .08s ease;
-      gap:10px;
-    }
-
-    .chip-eqp:hover{
-      background:#f8fbff;
-      border-color:#bdd0e7;
-    }
-
-    .chip-eqp:active{transform:translateY(1px)}
-    .chip-eqp .title{font-weight:1000;color:#0f2550}
-    .chip-eqp .sub{color:var(--muted);margin-top:3px}
-    .chip-eqp.active{
-      background:linear-gradient(135deg,#eaf2ff,#f5f9ff);
-      border-color:rgba(37,99,235,.35);
-    }
-
-    .chip-eqp button{
-      padding:7px 10px;
-      font-size:11px;
-      border-radius:12px;
-      white-space:nowrap;
-      box-shadow:none;
-    }
-
-    .filters{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      align-items:center;
-      margin-bottom:10px;
-      padding:10px;
-      border:1px solid var(--border2);
-      background:#f7fbff;
-      border-radius:14px;
-    }
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:8px 10px;
-      border-radius:999px;
-      background:#fff;
-      border:1px solid var(--border);
-      font-weight:950;
-      font-size:11px;
-      color:var(--muted);
-    }
-
-    .kpi{
-      display:grid;
-      gap:10px;
-      grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-      margin:10px 0 8px;
-    }
-
-    .kpi .card{
-      padding:14px;
+      padding:12px;
+      border:1px solid var(--line);
       border-radius:16px;
-      box-shadow:none;
-      border:1px solid #d7e5fb;
-      background:linear-gradient(180deg,#eef5ff,#f8fbff);
-    }
-
-    .kpi .big{
-      font-size:24px;
-      font-weight:1000;
-      margin-top:4px;
-      letter-spacing:.2px;
-      color:var(--primary);
-    }
-
-    .table{
-      width:100%;
-      border-collapse:separate;
-      border-spacing:0;
-      overflow:hidden;
-      border-radius:16px;
+      background:#fff;
       margin-top:8px;
-      border:1px solid var(--border);
-      background:#fff;
+      cursor:pointer;
+      transition:.15s ease;
     }
 
-    .table th,.table td{
-      padding:10px 10px;
-      font-size:13px;
-      text-align:left;
-      vertical-align:top;
-      border-bottom:1px solid var(--border2);
+    .machine-item:hover{
+      background:#f8fbff;
+      border-color:#bfd5ff;
     }
 
-    .table th{
-      background:linear-gradient(180deg,#eef5ff,#f7fbff);
-      color:#1f3f78;
+    .machine-item.active{
+      background:linear-gradient(180deg,#eef5ff,#f8fbff);
+      border-color:#bfd5ff;
+    }
+
+    .machine-title{
+      font-weight:1000;
+      color:#0f2550;
+      margin-bottom:3px;
+    }
+
+    .machine-sub{
+      color:var(--muted);
       font-size:12px;
-      letter-spacing:.2px;
-      position:sticky;
-      top:0;
-      z-index:1;
     }
-
-    .table tr:last-child td{border-bottom:none}
-
-    .group-row td{
-      background:linear-gradient(180deg,#eef5ff,#f7fbff);
-      font-weight:1000;
-      color:#16346b;
-      border-top:1px solid #dbe7f7;
-    }
-
-    .task-bullet{
-      width:32px;
-      text-align:center;
-      color:#64748b;
-      font-weight:1000;
-      padding-left:18px !important;
-    }
-
-    .badge{
-      display:inline-block;
-      padding:5px 10px;
-      border-radius:999px;
-      font-weight:1000;
-      font-size:11px;
-      letter-spacing:.2px;
-      border:1px solid var(--border);
-      background:#fff;
-    }
-
-    .b-ok{background:#ecfdf5;color:#166534;border-color:#86efac}
-    .b-warn{background:#fffbeb;color:#92400e;border-color:#fde68a}
-    .b-err{background:#fef2f2;color:#991b1b;border-color:#fecaca}
 
     .editbar{
       display:none;
@@ -509,33 +445,250 @@
 
     .editbar.show{display:block}
 
-    .foot{
-      margin-top:12px;
+    .filters{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+      padding:10px;
+      border:1px solid var(--line-soft);
+      background:#f7fbff;
+      border-radius:16px;
+      margin-bottom:12px;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:8px 10px;
+      border-radius:999px;
+      background:#fff;
+      border:1px solid var(--line);
+      font-weight:900;
+      font-size:11px;
+      color:var(--muted);
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+      gap:10px;
+      margin-bottom:14px;
+    }
+
+    .stat{
+      background:linear-gradient(180deg,#eef5ff,#f8fbff);
+      border:1px solid #d7e5fb;
+      border-radius:18px;
+      padding:14px;
+      box-shadow:var(--shadow-sm);
+    }
+
+    .stat .label{
+      font-size:12px;
+      color:var(--muted);
+      font-weight:900;
+    }
+
+    .stat .value{
+      font-size:26px;
+      font-weight:1000;
+      color:var(--primary);
+      margin-top:4px;
+      line-height:1;
+    }
+
+    .board{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+
+    .machine-panel{
+      border:1px solid var(--line);
+      border-radius:22px;
+      background:linear-gradient(180deg,#fff,#f9fbff);
+      overflow:hidden;
+      box-shadow:var(--shadow-sm);
+    }
+
+    .machine-panel-head{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:center;
+      padding:14px 16px;
+      background:linear-gradient(180deg,#edf5ff,#f8fbff);
+      border-bottom:1px solid var(--line-soft);
+    }
+
+    .machine-panel-title{
+      font-size:16px;
+      font-weight:1000;
+      color:#12356f;
+      margin:0;
+    }
+
+    .machine-panel-sub{
+      margin-top:4px;
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .machine-panel-count{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:8px 10px;
+      font-size:11px;
+      font-weight:1000;
+      color:#334155;
+      white-space:nowrap;
+    }
+
+    .task-list{
+      padding:10px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .task-card{
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:#fff;
+      padding:12px;
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:12px;
+      align-items:start;
+    }
+
+    .task-main{
+      min-width:0;
+    }
+
+    .task-title{
+      font-size:14px;
+      font-weight:1000;
+      color:#0f172a;
+      line-height:1.35;
+      margin:0;
+    }
+
+    .task-obs{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:6px;
+      line-height:1.35;
+    }
+
+    .task-meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:10px;
+    }
+
+    .meta-chip{
+      border:1px solid var(--line);
+      background:#f8fbff;
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:11px;
+      font-weight:900;
+      color:#475569;
+    }
+
+    .task-actions{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      min-width:122px;
+    }
+
+    .badge{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      font-weight:1000;
+      font-size:11px;
+      border:1px solid var(--line);
+      white-space:nowrap;
+    }
+
+    .b-ok{
+      background:var(--ok-soft);
+      color:#166534;
+      border-color:#86efac;
+    }
+
+    .b-warn{
+      background:var(--warn-soft);
+      color:#92400e;
+      border-color:#fcd34d;
+    }
+
+    .b-err{
+      background:var(--err-soft);
+      color:#991b1b;
+      border-color:#fca5a5;
+    }
+
+    .empty{
+      border:1px dashed var(--line);
+      border-radius:18px;
+      background:#fff;
+      color:var(--muted);
+      padding:18px;
+      text-align:center;
+      font-size:13px;
+    }
+
+    .footer-note{
+      margin-top:14px;
       color:rgba(100,116,139,.95);
       text-align:center;
       font-size:12px;
     }
 
-    @media (max-width:980px){
+    @media (max-width:1080px){
+      .layout{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width:720px){
       body{padding:12px}
-      .grid{grid-template-columns:1fr}
-      .controls{justify-content:flex-start}
-      .topbar{padding:14px}
-      .card{padding:14px}
+      .hero{
+        flex-direction:column;
+        align-items:stretch;
+      }
+      .hero-actions{
+        justify-content:flex-start;
+      }
+      .task-card{
+        grid-template-columns:1fr;
+      }
+      .task-actions{
+        min-width:unset;
+        flex-direction:row;
+        flex-wrap:wrap;
+      }
     }
 
     @media print{
-      body{background:#fff;color:#000;padding:0}
+      body{background:#fff;padding:0}
       #login-screen{display:none !important}
-      .controls{display:none !important}
-      .card,.topbar{box-shadow:none !important}
-      .table{background:#fff}
+      .hero-actions,.tabs,.filters,.task-actions,.btn-secondary,.btn-primary,.btn-danger,.btn-success,.btn-warning{
+        display:none !important;
+      }
+      .card,.hero,.machine-panel{
+        box-shadow:none !important;
+      }
     }
   </style>
-
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
 </head>
 <body>
 
@@ -548,9 +701,9 @@
                   stroke="#1e40af" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </div>
-        <div>
-          <h1>Preventivas — Admin</h1>
-          <p>Acesso restrito. Faça login com seu e-mail corporativo autorizado.</p>
+        <div class="login-title">
+          <h1>Preventivas</h1>
+          <p>Painel administrativo de manutenção preventiva</p>
         </div>
       </div>
 
@@ -564,39 +717,38 @@
         <input type="password" id="loginSenha" autocomplete="current-password" placeholder="••••••••">
       </div>
 
-      <button class="btn" id="btnLogin" type="button">Entrar</button>
+      <button class="btn-login" id="btnLogin" type="button">Entrar</button>
       <div class="login-error" id="loginError"></div>
-
-      <div class="login-foot">
-        Usuários válidos são gerenciados no Firebase Authentication (E-mail/Senha).
-      </div>
+      <div class="login-foot">Usuários válidos são controlados no Firebase Authentication.</div>
     </div>
   </section>
 
-  <div class="wrap" id="app-wrap" style="display:none">
-    <div class="topbar">
-      <div class="brand">
-        <div class="logo" aria-hidden="true">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+  <div class="app" id="app-wrap" style="display:none">
+    <div class="hero">
+      <div class="hero-left">
+        <div class="hero-logo" aria-hidden="true">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
             <path d="M21.2 7.6a6.3 6.3 0 0 1-8.7 5.8l-6.8 6.8a2 2 0 0 1-2.8-2.8l6.8-6.8A6.3 6.3 0 0 1 16.4 2.8l-3.3 3.3 1.9 1.9 3.3-3.3Z"
                   stroke="#ffffff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </div>
         <div>
           <h1>Preventivas</h1>
-          <div id="userInfoTop"></div>
+          <div class="hero-sub">Grilazer • Gestão de manutenção preventiva</div>
+          <div class="hero-sub" id="userInfoTop"></div>
         </div>
       </div>
 
-      <div class="controls">
-        <button class="ghost" id="btnNovo" type="button">Novo</button>
-        <button class="ghost" id="btnPrint" type="button">Imprimir</button>
-        <button class="ghost" id="btnCsv" type="button">CSV</button>
-        <button class="ghost" id="btnLogout" type="button">Sair</button>
+      <div class="hero-actions">
+        <button id="btnNovo" type="button">Novo</button>
+        <button id="btnPrint" type="button">Imprimir</button>
+        <button id="btnCsv" type="button">Exportar CSV</button>
+        <button id="btnLogout" type="button">Sair</button>
       </div>
     </div>
 
-    <div class="grid">
+    <div class="layout">
+      <!-- LADO ESQUERDO -->
       <div class="card">
         <div class="tabs">
           <button class="tab active" id="tabMaquinas" type="button">Máquinas</button>
@@ -604,38 +756,36 @@
         </div>
 
         <div class="pane active" id="paneMaquinas">
-          <div>
-            <h3>Cadastro de Máquina</h3>
-            <div class="muted" id="infoEqpSel">Nenhuma máquina selecionada.</div>
-            <div id="syncStatus">Sincronização: carregando...</div>
-          </div>
+          <h3>Cadastro de máquina</h3>
+          <div class="muted" id="infoEqpSel">Nenhuma máquina selecionada.</div>
+          <div id="syncStatus">Sincronização: carregando...</div>
 
           <label for="eqNome">Nome da máquina</label>
-          <input id="eqNome" placeholder="...">
+          <input id="eqNome" placeholder="Ex.: PRENSA 30T">
 
           <label for="eqLocal">Localização</label>
-          <input id="eqLocal" placeholder="...">
+          <input id="eqLocal" placeholder="Ex.: Metalúrgica, Setor A">
 
           <label for="eqSerie">Nº de Série / Patrimônio</label>
-          <input id="eqSerie" placeholder="...">
+          <input id="eqSerie" placeholder="Ex.: SER-000123 / PAT-045">
 
-          <div class="row" style="margin-top:10px">
-            <button class="primary" id="btnSalvarEqp" type="button">Salvar</button>
-            <button class="ghost" id="btnLimparEqp" type="button">Limpar</button>
+          <div class="row section-gap">
+            <button class="btn-primary" id="btnSalvarEqp" type="button">Salvar máquina</button>
+            <button class="btn-secondary" id="btnLimparEqp" type="button">Limpar</button>
           </div>
 
           <div class="sep"></div>
 
-          <div class="row" style="justify-content:space-between;align-items:baseline">
+          <div class="row" style="justify-content:space-between">
             <h4>Máquinas cadastradas</h4>
-            <span class="muted">Clique para selecionar</span>
+            <div class="muted">Clique para selecionar</div>
           </div>
 
-          <div id="listaEqp"></div>
+          <div id="listaEqp" class="machine-list"></div>
         </div>
 
         <div class="pane" id="paneTarefas">
-          <h3>Cadastro de Tarefa</h3>
+          <h3>Cadastro de tarefa</h3>
           <div class="muted">Selecione a máquina e cadastre a tarefa</div>
 
           <div class="editbar" id="editbar">
@@ -650,7 +800,7 @@
           <textarea id="tkTitulo" placeholder="Ex.: Lubrificar mancais&#10;Verificar possível folga&#10;Conferir vazamento"></textarea>
 
           <div class="row">
-            <div style="flex:1;min-width:140px">
+            <div>
               <label for="tkPeriodo">Periodicidade</label>
               <select id="tkPeriodo">
                 <option value="7">7 dias</option>
@@ -659,11 +809,10 @@
                 <option value="60">60 dias</option>
                 <option value="90">90 dias</option>
                 <option value="180">180 dias</option>
-                <option value="360">360 dias</option>
               </select>
             </div>
 
-            <div style="flex:1;min-width:140px">
+            <div>
               <label for="tkUltima">Última execução</label>
               <input id="tkUltima" type="date">
             </div>
@@ -672,68 +821,60 @@
           <label for="tkObs">Observações</label>
           <textarea id="tkObs" placeholder="Materiais, torque, check-list, segurança, etc."></textarea>
 
-          <div class="row" style="margin-top:10px">
-            <button class="primary" id="btnAddTarefa" type="button">Adicionar</button>
-            <button class="ghost" id="btnLimparTarefa" type="button">Limpar</button>
-            <button class="ghost" id="btnCancelEdit" type="button" style="display:none">Cancelar edição</button>
+          <div class="row section-gap">
+            <button class="btn-primary" id="btnAddTarefa" type="button">Salvar tarefa</button>
+            <button class="btn-secondary" id="btnLimparTarefa" type="button">Limpar</button>
+            <button class="btn-secondary" id="btnCancelEdit" type="button" style="display:none">Cancelar edição</button>
           </div>
+
+          <div class="muted section-gap">Dica: o título da tarefa aceita múltiplas linhas.</div>
         </div>
       </div>
 
-      <div class="card">
-        <div class="filters">
-          <input id="busca" placeholder="Buscar por máquina/tarefa..." style="flex:1;min-width:220px">
-          <span class="pill">Hoje: <span id="today"></span></span>
-
-          <select id="filtroMaquina" title="Filtrar por máquina">
-            <option value="">Todas as máquinas</option>
-          </select>
-
-          <select id="selFiltro">
-            <option value="todos">Todos</option>
-            <option value="atrasadas">Atrasadas</option>
-            <option value="sete">Próx. 7 dias</option>
-            <option value="trinta">Próx. 30 dias</option>
-          </select>
-        </div>
-
-        <div class="kpi">
-          <div class="card">
-            <div class="muted">Atrasadas</div>
-            <div class="big" id="kpiAtr">0</div>
+      <!-- LADO DIREITO -->
+      <div>
+        <div class="stats">
+          <div class="stat">
+            <div class="label">Atrasadas</div>
+            <div class="value" id="kpiAtr">0</div>
           </div>
-          <div class="card">
-            <div class="muted">Até 7 dias</div>
-            <div class="big" id="kpi7">0</div>
+          <div class="stat">
+            <div class="label">Até 7 dias</div>
+            <div class="value" id="kpi7">0</div>
           </div>
-          <div class="card">
-            <div class="muted">Até 30 dias</div>
-            <div class="big" id="kpi30">0</div>
+          <div class="stat">
+            <div class="label">Até 30 dias</div>
+            <div class="value" id="kpi30">0</div>
           </div>
-          <div class="card">
-            <div class="muted">Total tarefas</div>
-            <div class="big" id="kpiTot">0</div>
+          <div class="stat">
+            <div class="label">Total de tarefas</div>
+            <div class="value" id="kpiTot">0</div>
           </div>
         </div>
 
-        <table class="table">
-          <thead>
-            <tr>
-              <th style="width:36px"></th>
-              <th>Tarefa</th>
-              <th>Período</th>
-              <th>Última</th>
-              <th>Próxima</th>
-              <th>Status</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody id="tbody"></tbody>
-        </table>
+        <div class="card">
+          <div class="filters">
+            <input id="busca" placeholder="Buscar por máquina, tarefa, localização..." style="flex:1;min-width:220px">
+            <span class="pill">Hoje: <span id="today"></span></span>
+
+            <select id="filtroMaquina" title="Filtrar por máquina" style="min-width:180px">
+              <option value="">Todas as máquinas</option>
+            </select>
+
+            <select id="selFiltro" style="min-width:150px">
+              <option value="todos">Todos</option>
+              <option value="atrasadas">Atrasadas</option>
+              <option value="sete">Próx. 7 dias</option>
+              <option value="trinta">Próx. 30 dias</option>
+            </select>
+          </div>
+
+          <div id="board" class="board"></div>
+        </div>
       </div>
     </div>
 
-    <div class="foot">Grilazer — Preventivas</div>
+    <div class="footer-note">Grilazer — Painel de Preventivas</div>
   </div>
 
   <script>
@@ -792,7 +933,6 @@
     const kpi7 = document.getElementById("kpi7");
     const kpi30 = document.getElementById("kpi30");
     const kpiTot = document.getElementById("kpiTot");
-    const tbody = document.getElementById("tbody");
 
     const btnSalvarEqp = document.getElementById("btnSalvarEqp");
     const btnLimparEqp = document.getElementById("btnLimparEqp");
@@ -806,6 +946,7 @@
 
     const editbar = document.getElementById("editbar");
     const editbarTxt = document.getElementById("editbarTxt");
+    const board = document.getElementById("board");
 
     let store = { equipamentos: [] };
     let selectedEqpId = null;
@@ -874,19 +1015,19 @@
     }
 
     function setTaskMode(isEdit, label){
-      if(!originalBtnAddText) originalBtnAddText = btnAddTarefa.textContent || "Adicionar";
+      if(!originalBtnAddText) originalBtnAddText = btnAddTarefa.textContent || "Salvar tarefa";
 
       if(isEdit){
         btnAddTarefa.textContent = "Salvar alterações";
-        btnAddTarefa.classList.add("warn");
-        btnAddTarefa.classList.remove("primary");
+        btnAddTarefa.classList.remove("btn-primary");
+        btnAddTarefa.classList.add("btn-warning");
         btnCancelEdit.style.display = "inline-block";
         editbar.classList.add("show");
         editbarTxt.textContent = label || "Você está alterando uma tarefa.";
       }else{
-        btnAddTarefa.textContent = originalBtnAddText || "Adicionar";
-        btnAddTarefa.classList.add("primary");
-        btnAddTarefa.classList.remove("warn");
+        btnAddTarefa.textContent = originalBtnAddText || "Salvar tarefa";
+        btnAddTarefa.classList.remove("btn-warning");
+        btnAddTarefa.classList.add("btn-primary");
         btnCancelEdit.style.display = "none";
         editbar.classList.remove("show");
         editingTask = null;
@@ -895,7 +1036,7 @@
 
     function autoGrowTextarea(el){
       el.style.height = "auto";
-      el.style.height = Math.min(el.scrollHeight, 140) + "px";
+      el.style.height = Math.min(el.scrollHeight, 160) + "px";
     }
 
     function loadLocal(){
@@ -924,10 +1065,7 @@
 
     function fullSave(){
       saveLocal();
-      renderEqpList();
-      renderEqpSelect();
-      renderFiltroMaquina();
-      renderTabela();
+      renderAll();
       return saveRemote();
     }
 
@@ -946,12 +1084,16 @@
           setSyncStatus("erro ao carregar (usando local)");
         })
         .finally(()=>{
-          renderEqpList();
-          renderEqpSelect();
-          renderFiltroMaquina();
-          renderTabela();
+          renderAll();
           setSyncStatus("ok");
         });
+    }
+
+    function buildEqpHint(eqp){
+      const parts = [];
+      if(eqp.local) parts.push("Local: " + eqp.local);
+      if(eqp.serie) parts.push("Patrimônio/Série: " + eqp.serie);
+      return parts.join(" • ");
     }
 
     function clearEqpForm(){
@@ -960,17 +1102,7 @@
       eqLocal.value = "";
       eqSerie.value = "";
       infoEqpSel.textContent = "Nenhuma máquina selecionada.";
-      renderEqpList();
-      renderEqpSelect();
-      renderFiltroMaquina();
-      renderTabela();
-    }
-
-    function buildEqpHint(eqp){
-      const parts = [];
-      if(eqp.local) parts.push("Local: " + eqp.local);
-      if(eqp.serie) parts.push("Patrimônio/Série: " + eqp.serie);
-      return parts.join(" • ");
+      renderAll();
     }
 
     function setSelectedEqp(eqp){
@@ -987,10 +1119,12 @@
 
       renderEqpSelect();
       renderFiltroMaquina();
+
       selEqpTarefa.value = eqp.id;
       hintEqpTarefa.textContent = buildEqpHint(eqp);
+
       renderEqpList();
-      renderTabela();
+      renderBoard();
     }
 
     async function addOrUpdateEquipamento(){
@@ -1016,6 +1150,7 @@
           eqp.nome = nome;
           eqp.local = local;
           eqp.serie = serie;
+          if(!Array.isArray(eqp.tarefas)) eqp.tarefas = [];
         }
       }else{
         const eqp = {
@@ -1031,16 +1166,126 @@
 
       try{
         await fullSave();
-        setSelectedEqp(store.equipamentos.find(e => e.id === selectedEqpId));
+        const eqpSalva = store.equipamentos.find(e => e.id === selectedEqpId);
+        if(eqpSalva){
+          setSelectedEqp(eqpSalva);
+        }
       }catch{
-        alert("Não foi possível salvar no Firebase. Verifique permissão/regras.");
+        alert("Não foi possível salvar no Firebase. Verifique as regras/permissões.");
       }
+    }
+
+    function clearTaskForm(){
+      tkTitulo.value = "";
+      tkPeriodo.value = "30";
+      tkUltima.value = "";
+      tkObs.value = "";
+      autoGrowTextarea(tkTitulo);
+      autoGrowTextarea(tkObs);
+      setTaskMode(false);
+    }
+
+    async function addTarefa(){
+      const eqpIdSel = selEqpTarefa.value || selectedEqpId || "";
+
+      if(!eqpIdSel){
+        alert("Selecione a máquina para cadastrar a tarefa.");
+        return;
+      }
+
+      const titulo = tkTitulo.value.trim();
+      if(!titulo){
+        alert("Informe o título da tarefa.");
+        return;
+      }
+
+      const periodo = parseInt(tkPeriodo.value, 10) || 30;
+      const ultimaISO = tkUltima.value || "";
+      const obs = tkObs.value.trim();
+
+      const eqp = store.equipamentos.find(e => e.id === eqpIdSel);
+      if(!eqp){
+        alert("Erro: máquina não encontrada.");
+        return;
+      }
+
+      if(!Array.isArray(eqp.tarefas)) eqp.tarefas = [];
+
+      const modoEdicao = !!editingTask;
+
+      if(editingTask && editingTask.eqpId === eqpIdSel){
+        const tk = eqp.tarefas.find(t => t.id === editingTask.tkId);
+        if(!tk){
+          alert("Erro: tarefa não encontrada.");
+          setTaskMode(false);
+          return;
+        }
+
+        tk.titulo = titulo;
+        tk.periodo = periodo;
+        tk.ultimaISO = ultimaISO;
+        tk.obs = obs;
+      }else{
+        eqp.tarefas.push({
+          id: uid(),
+          titulo,
+          periodo,
+          ultimaISO,
+          obs
+        });
+      }
+
+      try{
+        await fullSave();
+        clearTaskForm();
+        selEqpTarefa.value = eqpIdSel;
+        selectedEqpId = eqpIdSel;
+        if(modoEdicao) alert("Tarefa atualizada!");
+      }catch{
+        alert("Não foi possível salvar a tarefa no Firebase.");
+      }
+    }
+
+    function computeNext(ultimaISO, periodo){
+      const base = ultimaISO || todayISO();
+      return addDays(base, periodo);
+    }
+
+    function statusFor(nextISO){
+      const t = todayISO();
+      if(nextISO < t) return {label:"ATRASADA", cls:"b-err"};
+      const d = diffDays(nextISO, t);
+      if(d <= 7) return {label:"EM BREVE", cls:"b-warn"};
+      return {label:"OK", cls:"b-ok"};
+    }
+
+    function buildRows(){
+      const rows = [];
+      store.equipamentos.forEach(eqp=>{
+        (eqp.tarefas || []).forEach(tk=>{
+          const nextISO = computeNext(tk.ultimaISO, tk.periodo);
+          rows.push({
+            eqpId:eqp.id,
+            eqpNome:eqp.nome,
+            local:eqp.local || "",
+            serie:eqp.serie || "",
+            tkId:tk.id,
+            tarefa:tk.titulo,
+            periodo:tk.periodo,
+            ultima:tk.ultimaISO || "",
+            proxima:nextISO,
+            status:statusFor(nextISO),
+            obs:tk.obs || ""
+          });
+        });
+      });
+      return rows;
     }
 
     function renderEqpList(){
       listaEqp.innerHTML = "";
       if(!store.equipamentos.length){
-        listaEqp.innerHTML = '<div class="muted">Nenhuma máquina cadastrada ainda.</div>';
+        listaEqp.innerHTML = '<div class="empty">Nenhuma máquina cadastrada ainda.</div>';
         return;
       }
 
@@ -1048,7 +1293,7 @@
 
       sorted.forEach(eqp=>{
         const div = document.createElement("div");
-        div.className = "chip-eqp" + (eqp.id === selectedEqpId ? " active" : "");
+        div.className = "machine-item" + (eqp.id === selectedEqpId ? " active" : "");
 
         const left = document.createElement("div");
         const subParts = [];
@@ -1056,13 +1301,15 @@
         if(eqp.serie) subParts.push(eqp.serie);
 
         left.innerHTML = `
-          <div class="title">${escapeHtml(eqp.nome)}</div>
-          <div class="sub">${escapeHtml(subParts.join(" • "))}</div>
+          <div class="machine-title">${escapeHtml(eqp.nome)}</div>
+          <div class="machine-sub">${escapeHtml(subParts.join(" • "))}</div>
         `;
 
         const btnDel = document.createElement("button");
-        btnDel.className = "err";
+        btnDel.className = "btn-danger";
         btnDel.type = "button";
+        btnDel.style.flex = "0 0 auto";
+        btnDel.style.padding = "8px 10px";
         btnDel.textContent = "Excluir";
 
         btnDel.addEventListener("click", async (ev)=>{
@@ -1145,110 +1392,8 @@
       }
     }
 
-    function clearTaskForm(){
-      tkTitulo.value = "";
-      tkPeriodo.value = "30";
-      tkUltima.value = "";
-      tkObs.value = "";
-      autoGrowTextarea(tkTitulo);
-      autoGrowTextarea(tkObs);
-      setTaskMode(false);
-    }
-
-    async function addTarefa(){
-      const eqpIdSel = selEqpTarefa.value || "";
-      if(!eqpIdSel){
-        alert("Selecione a máquina para cadastrar a tarefa.");
-        return;
-      }
-
-      const titulo = tkTitulo.value.trim();
-      if(!titulo){
-        alert("Informe o título da tarefa");
-        return;
-      }
-
-      const periodo = parseInt(tkPeriodo.value, 10) || 30;
-      const ultimaISO = tkUltima.value || "";
-      const obs = tkObs.value.trim();
-
-      const eqp = store.equipamentos.find(e => e.id === eqpIdSel);
-      if(!eqp){
-        alert("Erro: máquina não encontrada.");
-        return;
-      }
-
-      if(editingTask && editingTask.eqpId === eqpIdSel){
-        const tk = (eqp.tarefas || []).find(t => t.id === editingTask.tkId);
-        if(!tk){
-          alert("Erro: tarefa não encontrada.");
-          setTaskMode(false);
-          return;
-        }
-
-        tk.titulo = titulo;
-        tk.periodo = periodo;
-        tk.ultimaISO = ultimaISO;
-        tk.obs = obs;
-      }else{
-        eqp.tarefas.push({
-          id: uid(),
-          titulo,
-          periodo,
-          ultimaISO,
-          obs
-        });
-      }
-
-      try{
-        await fullSave();
-        clearTaskForm();
-        if(editingTask) alert("Tarefa atualizada!");
-      }catch{
-        alert("Não foi possível salvar a tarefa no Firebase.");
-      }
-    }
-
-    function computeNext(ultimaISO, periodo){
-      const base = ultimaISO || todayISO();
-      return addDays(base, periodo);
-    }
-
-    function statusFor(nextISO){
+    function renderStats(rows){
       const t = todayISO();
-      if(nextISO < t) return {label:"ATRASADA", cls:"b-err"};
-      const d = diffDays(nextISO, t);
-      if(d <= 7) return {label:"EM BREVE", cls:"b-warn"};
-      return {label:"OK", cls:"b-ok"};
-    }
-
-    function buildRows(){
-      const rows = [];
-      store.equipamentos.forEach(eqp=>{
-        (eqp.tarefas || []).forEach(tk=>{
-          const nextISO = computeNext(tk.ultimaISO, tk.periodo);
-          rows.push({
-            eqpId: eqp.id,
-            eqpNome: eqp.nome,
-            local: eqp.local || "",
-            serie: eqp.serie || "",
-            tkId: tk.id,
-            tarefa: tk.titulo,
-            periodo: tk.periodo,
-            ultima: tk.ultimaISO || "",
-            proxima: nextISO,
-            status: statusFor(nextISO),
-            obs: tk.obs || ""
-          });
-        });
-      });
-      return rows;
-    }
-
-    function renderTabela(){
-      const rows = buildRows();
-      const t = todayISO();
-
       kpiAtr.textContent = rows.filter(r => r.proxima < t).length;
       kpi7.textContent = rows.filter(r => {
         const d = diffDays(r.proxima, t);
@@ -1259,7 +1404,13 @@
         return d >= 0 && d <= 30;
       }).length;
       kpiTot.textContent = rows.length;
+    }
 
+    function renderBoard(){
+      const rows = buildRows();
+      renderStats(rows);
+
+      const t = todayISO();
       const q = (busca.value || "").trim().toLowerCase();
       const fil = selFiltro.value;
       const eqpFilter = filtroMaquina.value || "";
@@ -1288,12 +1439,10 @@
         return a.proxima.localeCompare(b.proxima);
       });
 
-      tbody.innerHTML = "";
+      board.innerHTML = "";
 
       if(!lista.length){
-        const tr = document.createElement("tr");
-        tr.innerHTML = '<td colspan="7" class="muted">Nenhuma tarefa cadastrada para o filtro atual.</td>';
-        tbody.appendChild(tr);
+        board.innerHTML = '<div class="empty">Nenhuma tarefa encontrada para o filtro atual.</div>';
         return;
       }
 
@@ -1301,54 +1450,66 @@
       lista.forEach(item=>{
         if(!grupos[item.eqpId]){
           grupos[item.eqpId] = {
-            nome: item.eqpNome,
-            local: item.local,
-            serie: item.serie,
-            tarefas: []
+            nome:item.eqpNome,
+            local:item.local,
+            serie:item.serie,
+            tarefas:[]
           };
         }
         grupos[item.eqpId].tarefas.push(item);
       });
 
       Object.entries(grupos).forEach(([eqpId, grupo])=>{
-        const trGroup = document.createElement("tr");
-        trGroup.className = "group-row";
-        trGroup.innerHTML = `
-          <td colspan="7">
-            <div style="font-size:15px;">${escapeHtml(grupo.nome)}</div>
-            <div class="muted" style="margin-top:2px;">
-              ${escapeHtml([grupo.local, grupo.serie].filter(Boolean).join(" • "))}
+        const atrasadas = grupo.tarefas.filter(tk => tk.proxima < t).length;
+
+        const panel = document.createElement("div");
+        panel.className = "machine-panel";
+
+        panel.innerHTML = `
+          <div class="machine-panel-head">
+            <div>
+              <div class="machine-panel-title">${escapeHtml(grupo.nome)}</div>
+              <div class="machine-panel-sub">${escapeHtml([grupo.local, grupo.serie].filter(Boolean).join(" • "))}</div>
             </div>
-          </td>
+            <div class="machine-panel-count">
+              ${grupo.tarefas.length} tarefa(s)${atrasadas ? ` • ${atrasadas} atrasada(s)` : ""}
+            </div>
+          </div>
+          <div class="task-list"></div>
         `;
-        tbody.appendChild(trGroup);
+
+        const taskList = panel.querySelector(".task-list");
 
         grupo.tarefas.forEach(r=>{
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td class="task-bullet">•</td>
-            <td>
-              ${nl2brSafe(r.tarefa)}
-              <div class="muted">${nl2brSafe(r.obs || "")}</div>
-            </td>
-            <td>${escapeHtml(String(r.periodo))}d</td>
-            <td>${escapeHtml(fmtBR(r.ultima))}</td>
-            <td>${escapeHtml(fmtBR(r.proxima))}</td>
-            <td><span class="badge ${r.status.cls}">${escapeHtml(r.status.label)}</span></td>
-            <td>
-              <div class="row">
-                <button class="ok" data-done="${r.eqpId}|${r.tkId}" type="button">Feita hoje</button>
-                <button class="ghost" data-edit="${r.eqpId}|${r.tkId}" type="button">Editar</button>
-                <button class="err" data-del="${r.eqpId}|${r.tkId}" type="button">Excluir</button>
+          const task = document.createElement("div");
+          task.className = "task-card";
+
+          task.innerHTML = `
+            <div class="task-main">
+              <div class="task-title">${nl2brSafe(r.tarefa)}</div>
+              ${r.obs ? `<div class="task-obs">${nl2brSafe(r.obs)}</div>` : ""}
+              <div class="task-meta">
+                <span class="meta-chip">Periodicidade: ${escapeHtml(String(r.periodo))} dias</span>
+                <span class="meta-chip">Última: ${escapeHtml(fmtBR(r.ultima))}</span>
+                <span class="meta-chip">Próxima: ${escapeHtml(fmtBR(r.proxima))}</span>
               </div>
-            </td>
+            </div>
+            <div class="task-actions">
+              <span class="badge ${r.status.cls}">${escapeHtml(r.status.label)}</span>
+              <button class="btn-success" data-done="${r.eqpId}|${r.tkId}" type="button">Feita hoje</button>
+              <button class="btn-secondary" data-edit="${r.eqpId}|${r.tkId}" type="button">Editar</button>
+              <button class="btn-danger" data-del="${r.eqpId}|${r.tkId}" type="button">Excluir</button>
+            </div>
           `;
-          tbody.appendChild(tr);
+
+          taskList.appendChild(task);
         });
+
+        board.appendChild(panel);
       });
     }
 
-    tbody.addEventListener("click", async (ev)=>{
+    board.addEventListener("click", async (ev)=>{
       const el = ev.target;
       if(!(el instanceof HTMLElement)) return;
 
@@ -1368,6 +1529,7 @@
         const [eqpId, tkId] = el.getAttribute("data-edit").split("|");
         const eqp = store.equipamentos.find(e => e.id === eqpId);
         const tk = eqp?.tarefas?.find(x => x.id === tkId);
+
         if(eqp && tk){
           openTab("tarefas");
           selectedEqpId = eqp.id;
@@ -1384,7 +1546,7 @@
           autoGrowTextarea(tkObs);
 
           editingTask = { eqpId, tkId };
-          setTaskMode(true, `Editando: ${eqp.nome}`);
+          setTaskMode(true, `Editando tarefa de ${eqp.nome}`);
           window.scrollTo({ top:0, behavior:"smooth" });
         }
       }else if(el.hasAttribute("data-del")){
@@ -1457,6 +1619,13 @@
       URL.revokeObjectURL(a.href);
     }
 
+    function renderAll(){
+      renderEqpList();
+      renderEqpSelect();
+      renderFiltroMaquina();
+      renderBoard();
+    }
+
     function initAppOnce(){
       if(appInitialized) return;
       appInitialized = true;
@@ -1464,10 +1633,7 @@
       todaySpan.textContent = new Date().toLocaleDateString("pt-BR");
 
       loadLocal();
-      renderEqpList();
-      renderEqpSelect();
-      renderFiltroMaquina();
-      renderTabela();
+      renderAll();
       syncFromFirebaseOnce();
 
       autoGrowTextarea(tkTitulo);
@@ -1482,9 +1648,13 @@
       selEqpTarefa.addEventListener("change", ()=>{
         const id = selEqpTarefa.value;
         selectedEqpId = id || null;
+
         const eqp = store.equipamentos.find(e => e.id === id);
         hintEqpTarefa.textContent = eqp ? buildEqpHint(eqp) : "";
-        setTaskMode(false);
+
+        if (editingTask && editingTask.eqpId !== id) {
+          setTaskMode(false);
+        }
       });
 
       btnSalvarEqp.addEventListener("click", addOrUpdateEquipamento);
@@ -1502,9 +1672,9 @@
       btnPrint.addEventListener("click", ()=> window.print());
       btnCsv.addEventListener("click", exportCsv);
 
-      busca.addEventListener("input", renderTabela);
-      selFiltro.addEventListener("change", renderTabela);
-      filtroMaquina.addEventListener("change", renderTabela);
+      busca.addEventListener("input", renderBoard);
+      selFiltro.addEventListener("change", renderBoard);
+      filtroMaquina.addEventListener("change", renderBoard);
     }
 
     auth.onAuthStateChanged(user=>{
