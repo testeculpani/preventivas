@@ -689,11 +689,15 @@
       }
     }
   </style>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
 </head>
 <body>
 
   <section id="login-screen">
-    <div class="login-card">
+    <form class="login-card" id="loginForm">
       <div class="login-head">
         <div class="login-logo" aria-hidden="true">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -717,10 +721,10 @@
         <input type="password" id="loginSenha" autocomplete="current-password" placeholder="••••••••">
       </div>
 
-      <button class="btn-login" id="btnLogin" type="button">Entrar</button>
+      <button class="btn-login" id="btnLogin" type="submit">Entrar</button>
       <div class="login-error" id="loginError"></div>
       <div class="login-foot">Usuários válidos são controlados no Firebase Authentication.</div>
-    </div>
+    </form>
   </section>
 
   <div class="app" id="app-wrap" style="display:none">
@@ -748,7 +752,6 @@
     </div>
 
     <div class="layout">
-      <!-- LADO ESQUERDO -->
       <div class="card">
         <div class="tabs">
           <button class="tab active" id="tabMaquinas" type="button">Máquinas</button>
@@ -831,7 +834,6 @@
         </div>
       </div>
 
-      <!-- LADO DIREITO -->
       <div>
         <div class="stats">
           <div class="stat">
@@ -897,6 +899,7 @@
 
     const loginScreen = document.getElementById("login-screen");
     const appWrap = document.getElementById("app-wrap");
+    const loginForm = document.getElementById("loginForm");
     const loginEmail = document.getElementById("loginEmail");
     const loginSenha = document.getElementById("loginSenha");
     const btnLogin = document.getElementById("btnLogin");
@@ -985,21 +988,24 @@
     }
 
     function setLoginLoading(isLoading){
+      if (!btnLogin) return;
       btnLogin.disabled = isLoading;
       btnLogin.textContent = isLoading ? "Entrando..." : "Entrar";
     }
 
     function showLogin(){
-      loginScreen.style.display = "flex";
-      appWrap.style.display = "none";
-      loginError.textContent = "";
-      loginSenha.value = "";
+      if (loginScreen) loginScreen.style.display = "flex";
+      if (appWrap) appWrap.style.display = "none";
+      if (loginError) loginError.textContent = "";
+      if (loginSenha) loginSenha.value = "";
     }
 
     function showApp(user){
-      loginScreen.style.display = "none";
-      appWrap.style.display = "block";
-      userInfoTop.textContent = "Logado como: " + user.email;
+      if (loginScreen) loginScreen.style.display = "none";
+      if (appWrap) appWrap.style.display = "block";
+      if (userInfoTop && user) {
+        userInfoTop.textContent = "Logado como: " + (user.email || "");
+      }
     }
 
     function openTab(which){
@@ -1677,46 +1683,70 @@
       filtroMaquina.addEventListener("change", renderBoard);
     }
 
-    auth.onAuthStateChanged(user=>{
-      if(user && allowedEmails.includes(user.email)){
-        showApp(user);
-        initAppOnce();
-      }else{
-        if(user && !allowedEmails.includes(user.email)){
-          auth.signOut();
+    auth.onAuthStateChanged((user)=>{
+      try{
+        if(user && allowedEmails.includes(user.email)){
+          showApp(user);
+          initAppOnce();
+        }else{
+          if(user && !allowedEmails.includes(user.email)){
+            auth.signOut();
+          }
+          showLogin();
         }
+      }catch(err){
+        console.error("Erro no onAuthStateChanged:", err);
         showLogin();
       }
     });
 
-    btnLogin.addEventListener("click", ()=>{
-      const email = loginEmail.value.trim();
-      const senha = loginSenha.value;
+    async function doLogin(){
+      const email = (loginEmail?.value || "").trim();
+      const senha = loginSenha?.value || "";
 
       if(!email || !senha){
-        loginError.textContent = "Preencha e-mail e senha.";
+        if (loginError) loginError.textContent = "Preencha e-mail e senha.";
         return;
       }
 
-      setLoginLoading(true);
-      loginError.textContent = "";
+      try{
+        setLoginLoading(true);
+        if (loginError) loginError.textContent = "";
 
-      auth.signInWithEmailAndPassword(email, senha)
-        .then(cred=>{
-          const user = cred.user;
-          if(!allowedEmails.includes(user.email)){
-            auth.signOut();
-            loginError.textContent = "Seu usuário não tem permissão para acessar este painel.";
-          }
-        })
-        .catch(err=>{
-          console.error(err);
-          loginError.textContent = "Login inválido. Verifique e-mail e senha.";
-        })
-        .finally(()=> setLoginLoading(false));
-    });
+        const cred = await auth.signInWithEmailAndPassword(email, senha);
+        const user = cred.user;
 
-    btnLogout.addEventListener("click", ()=> auth.signOut());
+        if(!user || !allowedEmails.includes(user.email)){
+          await auth.signOut();
+          if (loginError) loginError.textContent = "Seu usuário não tem permissão para acessar este painel.";
+          return;
+        }
+      }catch(err){
+        console.error("Erro no login:", err);
+        if (loginError) {
+          if (err.code === "auth/user-not-found") loginError.textContent = "Usuário não encontrado.";
+          else if (err.code === "auth/wrong-password") loginError.textContent = "Senha incorreta.";
+          else if (err.code === "auth/invalid-email") loginError.textContent = "E-mail inválido.";
+          else if (err.code === "auth/too-many-requests") loginError.textContent = "Muitas tentativas. Tente novamente depois.";
+          else loginError.textContent = "Não foi possível entrar. Verifique e-mail e senha.";
+        }
+      }finally{
+        setLoginLoading(false);
+      }
+    }
+
+    if (loginForm){
+      loginForm.addEventListener("submit", (e)=>{
+        e.preventDefault();
+        doLogin();
+      });
+    }
+
+    if (btnLogout){
+      btnLogout.addEventListener("click", ()=>{
+        auth.signOut();
+      });
+    }
 
     showLogin();
   </script>
